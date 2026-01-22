@@ -35,11 +35,7 @@ php artisan vendor:publish --tag=lfm_public
 
 ### 3. Configure Routes
 
-Add Laravel Filemanager routes to your application. You have several options:
-
-#### Option A: Basic Auth (Default Guard)
-
-Add to `routes/web.php`:
+Add Laravel Filemanager routes to `routes/web.php`:
 
 ```php
 Route::prefix('cms/laravel-filemanager')->middleware(['auth'])->group(function () {
@@ -47,58 +43,17 @@ Route::prefix('cms/laravel-filemanager')->middleware(['auth'])->group(function (
 });
 ```
 
-#### Option B: Custom Auth Guard
+**Custom auth guard?** Replace `['auth']` with `['auth:staff']` or your guard name.
 
-If you use a custom guard (e.g., `auth:staff`):
-
-```php
-Route::prefix('cms/laravel-filemanager')->middleware(['auth:staff'])->group(function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
-});
-```
-
-#### Option C: Multiple Middleware
-
-For additional security (email verification, permissions, etc.):
+**Need more security?** Add additional middleware:
 
 ```php
 Route::prefix('cms/laravel-filemanager')->middleware([
     'auth:staff',
     \App\Http\Middleware\EnsureStaffEmailIsVerified::class,
-    \App\Http\Middleware\CheckPermission::class,
 ])->group(function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
-```
-
-#### Option D: Separate Route File
-
-Create `routes/cms.php` for admin routes:
-
-```php
-<?php
-
-use Illuminate\Support\Facades\Route;
-
-Route::prefix('cms/laravel-filemanager')->middleware(['auth:staff'])->group(function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
-});
-
-// Other CMS routes...
-```
-
-Register in `bootstrap/app.php` (Laravel 11+):
-
-```php
-->withRouting(
-    web: __DIR__.'/../routes/web.php',
-    commands: __DIR__.'/../routes/console.php',
-    health: '/up',
-    then: function () {
-        Route::middleware('web')
-            ->group(base_path('routes/cms.php'));
-    }
-)
 ```
 
 ### 4. Environment Configuration
@@ -146,169 +101,22 @@ npm install @tiptap/extension-image @tiptap/extension-link prosemirror-state
 Add to your `resources/js/app.js`:
 
 ```javascript
-import { Image } from '@tiptap/extension-image'
-import Link from '@tiptap/extension-link'
-import { Plugin, PluginKey } from 'prosemirror-state'
 import { initLaravelFilemanager } from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'
-import { getDragDropConfig, processImageFile } from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/drag-drop-config.js'
 import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css'
 import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'
-
-// Register extensions
-document.addEventListener('flux:editor', (e) => {
-    if (e.detail?.registerExtension) {
-        // Link extension
-        e.detail.registerExtension(Link.configure({
-            openOnClick: false,
-        }).extend({
-            addAttributes() {
-                return {
-                    ...this.parent?.(),
-                    target: {
-                        default: null,
-                        parseHTML: element => element.getAttribute('target'),
-                        renderHTML: attributes => attributes.target ? { target: attributes.target } : {},
-                    },
-                    class: {
-                        default: null,
-                        parseHTML: element => element.getAttribute('class'),
-                        renderHTML: attributes => attributes.class ? { class: attributes.class } : {},
-                    },
-                    style: {
-                        default: null,
-                        parseHTML: element => element.getAttribute('style'),
-                        renderHTML: attributes => attributes.style ? { style: attributes.style } : {},
-                    },
-                }
-            },
-        }))
-
-        // Image extension with drag & drop
-        e.detail.registerExtension(Image.extend({
-            addAttributes() {
-                return {
-                    ...this.parent?.(),
-                    width: {
-                        default: null,
-                        parseHTML: element => element.getAttribute('width') || element.style.width,
-                        renderHTML: attributes => attributes.width ? { width: attributes.width } : {},
-                    },
-                    style: {
-                        default: null,
-                        parseHTML: element => element.getAttribute('style'),
-                        renderHTML: attributes => attributes.style ? { style: attributes.style } : {},
-                    },
-                    'data-align': {
-                        default: null,
-                        parseHTML: element => element.getAttribute('data-align'),
-                        renderHTML: attributes => attributes['data-align'] ? { 'data-align': attributes['data-align'] } : {},
-                    },
-                    class: {
-                        default: 'tiptap-image',
-                        parseHTML: element => element.getAttribute('class'),
-                        renderHTML: attributes => ({ class: attributes.class }),
-                    },
-                    alt: {
-                        default: null,
-                        parseHTML: element => element.getAttribute('alt'),
-                        renderHTML: attributes => attributes.alt ? { alt: attributes.alt } : {},
-                    },
-                    title: {
-                        default: null,
-                        parseHTML: element => element.getAttribute('title'),
-                        renderHTML: attributes => attributes.title ? { title: attributes.title } : {},
-                    },
-                }
-            },
-            addProseMirrorPlugins() {
-                return [
-                    new Plugin({
-                        key: new PluginKey('imageDrop'),
-                        props: {
-                            handleDrop(view, event, slice, moved) {
-                                if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
-                                    const files = Array.from(event.dataTransfer.files)
-                                    const imageFiles = files.filter(file => file.type.startsWith('image/'))
-                                    
-                                    if (imageFiles.length === 0) return false
-                                    
-                                    event.preventDefault()
-                                    
-                                    const editorElement = view.dom.closest('ui-editor')
-                                    const config = getDragDropConfig(editorElement)
-                                    
-                                    imageFiles.forEach(async (file) => {
-                                        try {
-                                            const src = await processImageFile(file, config)
-                                            
-                                            const { schema } = view.state
-                                            const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY })
-                                            
-                                            const node = schema.nodes.image.create({
-                                                src: src,
-                                                class: 'tiptap-image',
-                                            })
-                                            
-                                            const transaction = view.state.tr.insert(coordinates.pos, node)
-                                            view.dispatch(transaction)
-                                        } catch (error) {
-                                            console.error('Failed to process image:', error)
-                                            alert(error.message || 'Failed to process image')
-                                        }
-                                    })
-                                    
-                                    return true
-                                }
-                                return false
-                            },
-                            handlePaste(view, event, slice) {
-                                const items = Array.from(event.clipboardData?.items || [])
-                                const imageItems = items.filter(item => item.type.startsWith('image/'))
-                                
-                                if (imageItems.length === 0) return false
-                                
-                                event.preventDefault()
-                                
-                                const editorElement = view.dom.closest('ui-editor')
-                                const config = getDragDropConfig(editorElement)
-                                
-                                imageItems.forEach(async (item) => {
-                                    const file = item.getAsFile()
-                                    if (!file) return
-                                    
-                                    try {
-                                        const src = await processImageFile(file, config)
-                                        
-                                        const { schema } = view.state
-                                        
-                                        const node = schema.nodes.image.create({
-                                            src: src,
-                                            class: 'tiptap-image',
-                                        })
-                                        
-                                        const transaction = view.state.tr.replaceSelectionWith(node)
-                                        view.dispatch(transaction)
-                                    } catch (error) {
-                                        console.error('Failed to process image:', error)
-                                        alert(error.message || 'Failed to process image')
-                                    }
-                                })
-                                
-                                return true
-                            },
-                        },
-                    }),
-                ]
-            },
-        }))
-    }
-})
 
 // Initialize Laravel Filemanager
 initLaravelFilemanager()
 ```
 
-See [`examples/app.js`](../examples/app.js) for the complete example.
+**For complete TipTap configuration with Image and Link extensions, drag & drop, and paste support:**
+
+See the complete working example in [`examples/app.js`](../examples/app.js) which includes:
+- Image extension with all attributes (width, alt, title, alignment, classes, styles)
+- Link extension with target, class, and style support
+- Drag & drop handler for images
+- Paste handler for clipboard images
+- Full ProseMirror plugin configuration
 
 ### 8. Build Assets
 
@@ -316,25 +124,13 @@ See [`examples/app.js`](../examples/app.js) for the complete example.
 npm run build
 ```
 
-### 9. Use in Livewire Components
-
-```php
-use Livewire\Component;
-
-class PageEdit extends Component
-{
-    public string $content = '';
-
-    public function render()
-    {
-        return view('livewire.page-edit');
-    }
-}
-```
+### 9. Use in Your Application
 
 ```blade
-<x-flux-filemanager-editor wire:model="content" toolbar="full" :rows="20" />
+<x-flux-filemanager-editor wire:model="content" />
 ```
+
+See [Usage Examples](../examples/README.md) for more examples.
 
 ## Troubleshooting
 

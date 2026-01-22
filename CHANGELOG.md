@@ -4,6 +4,23 @@ All notable changes to `livewire-flux-editor-filemanager` will be documented in 
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-01-22
+
+### Changed
+- **Documentation Restructuring** - Improved KISS & DRY principles across all documentation
+- Simplified INSTALLATION.md (47% shorter) - removed 160+ lines of duplicated TipTap code
+- Simplified DRAG-DROP.md (38% shorter) - removed duplicated setup instructions
+- Transformed WORKFLOW.md (61% shorter) - now a technical reference instead of installation guide
+- All documentation now references `examples/app.js` for complete code (DRY principle)
+- Simplified README.md (65% shorter) - focused on quick start instead of technical details
+- Improved route configuration examples - reduced from 4 options to 1 basic + 1 advanced
+
+### Improved
+- Documentation is now more accessible for beginners
+- Clear separation between installation, features, and technical reference
+- No code duplication across documentation files
+- Consistent structure and cross-references between docs
+
 ## [1.1.0] - 2026-01-22
 
 ### Added

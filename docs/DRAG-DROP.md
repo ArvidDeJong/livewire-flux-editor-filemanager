@@ -59,110 +59,14 @@ FILEMANAGER_MAX_FILE_SIZE=5242880
 
 ## Setup
 
-### 1. Install Required Package
+Drag & drop functionality is included in the standard installation.
 
-```bash
-npm install prosemirror-state
-```
+**Prerequisites:**
+1. Follow the [Installation Guide](INSTALLATION.md)
+2. Ensure `prosemirror-state` is installed
+3. Complete TipTap configuration from [`examples/app.js`](../examples/app.js)
 
-### 2. Import ProseMirror Plugin
-
-Add the ProseMirror imports to your `resources/js/app.js`:
-
-```javascript
-import { Plugin, PluginKey } from 'prosemirror-state'
-```
-
-### 3. Add Plugin to Image Extension
-
-Extend the Image extension with the drag & drop plugin:
-
-```javascript
-e.detail.registerExtension(Image.configure({
-    inline: true,
-    allowBase64: true,
-    HTMLAttributes: {
-        class: 'tiptap-image',
-    },
-}).extend({
-    addAttributes() {
-        // ... your attributes
-    },
-    addProseMirrorPlugins() {
-        return [
-            new Plugin({
-                key: new PluginKey('imageDrop'),
-                props: {
-                    handleDrop(view, event, slice, moved) {
-                        if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
-                            const files = Array.from(event.dataTransfer.files)
-                            const imageFiles = files.filter(file => file.type.startsWith('image/'))
-                            
-                            if (imageFiles.length === 0) return false
-                            
-                            event.preventDefault()
-                            
-                            imageFiles.forEach(file => {
-                                const reader = new FileReader()
-                                
-                                reader.onload = (e) => {
-                                    const { schema } = view.state
-                                    const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY })
-                                    
-                                    const node = schema.nodes.image.create({
-                                        src: e.target.result,
-                                        class: 'tiptap-image',
-                                    })
-                                    
-                                    const transaction = view.state.tr.insert(coordinates.pos, node)
-                                    view.dispatch(transaction)
-                                }
-                                
-                                reader.readAsDataURL(file)
-                            })
-                            
-                            return true
-                        }
-                        return false
-                    },
-                    handlePaste(view, event, slice) {
-                        const items = Array.from(event.clipboardData?.items || [])
-                        const imageItems = items.filter(item => item.type.startsWith('image/'))
-                        
-                        if (imageItems.length === 0) return false
-                        
-                        event.preventDefault()
-                        
-                        imageItems.forEach(item => {
-                            const file = item.getAsFile()
-                            if (!file) return
-                            
-                            const reader = new FileReader()
-                            
-                            reader.onload = (e) => {
-                                const { schema } = view.state
-                                const { selection } = view.state
-                                
-                                const node = schema.nodes.image.create({
-                                    src: e.target.result,
-                                    class: 'tiptap-image',
-                                })
-                                
-                                const transaction = view.state.tr.replaceSelectionWith(node)
-                                view.dispatch(transaction)
-                            }
-                            
-                            reader.readAsDataURL(file)
-                        })
-                        
-                        return true
-                    },
-                },
-            }),
-        ]
-    },
-}))
-```
+The drag & drop handlers are part of the Image extension's ProseMirror plugins.
 
 ## Usage
 
@@ -238,34 +142,13 @@ The `handlePaste` function:
 
 ### Server Upload (Alternative)
 
-If you prefer to upload images to the server instead of base64, you can modify the handlers to use an upload endpoint:
+To use server upload instead of base64:
 
-```javascript
-reader.onload = async (e) => {
-    // Upload to server
-    const formData = new FormData()
-    formData.append('image', file)
-    
-    const response = await fetch('/api/upload-image', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        }
-    })
-    
-    const data = await response.json()
-    
-    // Insert with server URL
-    const node = schema.nodes.image.create({
-        src: data.url,
-        class: 'tiptap-image',
-    })
-    
-    const transaction = view.state.tr.insert(coordinates.pos, node)
-    view.dispatch(transaction)
-}
-```
+1. Set in `.env`: `FILEMANAGER_DRAG_DROP_METHOD=upload`
+2. Configure upload endpoint: `FILEMANAGER_UPLOAD_URL=/cms/laravel-filemanager/upload`
+3. The package handles the upload automatically
+
+See [`examples/app.js`](../examples/app.js) for the implementation details.
 
 ## Editing Dropped Images
 
