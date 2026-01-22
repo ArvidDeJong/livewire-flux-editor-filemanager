@@ -74,4 +74,29 @@ return [
         'filemanager_not_found' => 'Laravel Filemanager could not be loaded. Please check your installation.',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Drag & Drop Settings
+    |--------------------------------------------------------------------------
+    |
+    | Configure how drag & drop and paste images are handled.
+    |
+    */
+
+    'drag_drop' => [
+        // Upload method: 'base64' or 'upload'
+        // - base64: Images are embedded directly in the HTML (no server upload)
+        // - upload: Images are uploaded to server via Laravel Filemanager
+        'method' => env('FILEMANAGER_DRAG_DROP_METHOD', 'base64'),
+
+        // Upload endpoint (only used when method is 'upload')
+        'upload_url' => env('FILEMANAGER_UPLOAD_URL', '/cms/laravel-filemanager/upload'),
+
+        // Maximum file size in bytes (default: 5MB)
+        'max_file_size' => env('FILEMANAGER_MAX_FILE_SIZE', 5242880),
+
+        // Allowed image types
+        'allowed_types' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+    ],
+
 ];

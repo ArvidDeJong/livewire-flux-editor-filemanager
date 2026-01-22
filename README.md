@@ -4,13 +4,29 @@ Laravel Filemanager integration for Flux TipTap Editor with image resize and ali
 
 ## Features
 
-✅ **WYSIWYG** - Images immediately visible in editor  
-✅ **Native TipTap** - Uses standard Image extension  
-✅ **Image Resize** - Quick presets (25%, 50%, 75%, 100%) + custom input  
-✅ **Image Align** - Left, center, right alignment  
-✅ **Laravel Filemanager** - Easy image management  
-✅ **Reusable Component** - `<x-flux-filemanager-editor>` with multiple toolbar presets  
-✅ **KISS & DRY** - Simple, maintainable code without duplication
+- 🖼️ **Image Upload** - Upload and insert images via Laravel Filemanager
+- 🎯 **Drag & Drop** - Drag images from your computer directly into the editor
+- 📋 **Paste Images** - Paste images from clipboard (screenshots, copied images)
+- 📐 **Image Resize** - Quick resize menu with preset sizes (25%, 50%, 75%, 100%)
+- 🎯 **Image Alignment** - Left, center, right alignment options
+- ✏️ **Image Editing** - Complete modal for editing alt text, title, size, alignment, classes, and styles
+- 🔗 **File Links** - Add links to PDFs, documents, and other files
+- 🎨 **Custom Styling** - Add CSS classes and inline styles to images and links
+- 🌍 **Multilingual** - Built-in support for Dutch, English, and German
+- ⚡ **Flux UI** - Seamless integration with Livewire Flux design system
+- ✅ **WYSIWYG** - Images immediately visible in editor  
+- ✅ **Native TipTap** - Uses standard Image extension  
+- ✅ **Reusable Component** - `<x-flux-filemanager-editor>` with multiple toolbar presets  
+- ✅ **KISS & DRY** - Simple, maintainable code without duplication
+
+## Examples
+
+Complete example files are available in the [`examples/`](examples/) directory:
+- `app.js` - Full TipTap configuration with drag & drop
+- `EditorDemo.php` - Simple demo Livewire component
+- `editor-demo.blade.php` - Simple demo Blade view
+
+See [examples/README.md](examples/README.md) for detailed usage instructions.
 
 ## Requirements
 
@@ -21,6 +37,8 @@ Laravel Filemanager integration for Flux TipTap Editor with image resize and ali
 - Laravel Filemanager (UniSharp)
 
 ## Installation
+
+> **📖 For detailed installation instructions, see [docs/INSTALLATION.md](docs/INSTALLATION.md)**
 
 ### Quick Install (Recommended for Beginners)
 
@@ -89,58 +107,262 @@ For more configuration options, see the [Laravel Filemanager documentation](http
 Add the package to your `composer.json`:
 
 ```json
-{
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../Packages/livewire-flux-editor-filemanager"
-        }
-    ]
-}
-```
-
-Then install:
 
 ```bash
 composer require darvis/livewire-flux-editor-filemanager
 ```
 
-### 3. Install NPM Dependencies
+### 2. Install Laravel Filemanager
+
+Follow the [Laravel Filemanager installation guide](https://unisharp.github.io/laravel-filemanager/installation).
+
+### 3. Configure Routes
+
+Add Laravel Filemanager routes to your `routes/web.php` or separate route file:
+
+**Basic Setup (Default Auth):**
+```php
+Route::prefix('cms/laravel-filemanager')->middleware(['auth'])->group(function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+```
+
+**Custom Auth Guard:**
+```php
+Route::prefix('cms/laravel-filemanager')->middleware(['auth:staff'])->group(function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+```
+
+**Multiple Middleware:**
+```php
+Route::prefix('cms/laravel-filemanager')->middleware([
+    'auth:staff',
+    \App\Http\Middleware\EnsureStaffEmailIsVerified::class
+])->group(function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+```
+
+**Important:** The route prefix must match the `FILEMANAGER_URL` in your `.env` file:
+```env
+FILEMANAGER_URL=/cms/laravel-filemanager
+```
+
+### 4. Publish Configuration (Optional)
+
+```bash
+php artisan vendor:publish --tag=flux-filemanager-config
+```
+
+This will create `config/flux-filemanager.php` where you can customize:
+- Laravel Filemanager URL (must match your route prefix)
+- Popup window dimensions
+- Image resize presets
+- Custom width range
+- Drag & drop settings (base64 vs server upload)
+- Error messages
+
+**Example `.env` configuration:**
+```env
+FILEMANAGER_URL=/cms/laravel-filemanager
+FILEMANAGER_DRAG_DROP_METHOD=base64
+FILEMANAGER_MAX_FILE_SIZE=5242880
+```
+
+### 5. Install NPM Dependencies
 
 ```bash
 npm install @tiptap/extension-image
 ```
 
-### 4. Publish Assets
-
-```bash
-php artisan vendor:publish --tag=flux-filemanager-config
-php artisan vendor:publish --tag=flux-filemanager-assets
-php artisan vendor:publish --tag=flux-filemanager-views
-```
-
-This will publish:
-- Configuration file to `config/flux-filemanager.php`
-- JavaScript and CSS to `resources/js/vendor/flux-filemanager/` and `resources/css/vendor/flux-filemanager/`
-- Blade components to `resources/views/components/`
-
-### 5. Import JavaScript & CSS
-
-In your `resources/js/app.js`:
+### 6. Build Assets
 
 ```javascript
-import Image from '@tiptap/extension-image'
-import { initLaravelFilemanager } from './vendor/flux-filemanager/laravel-filemanager'
-import '../css/vendor/flux-filemanager/tiptap-image.css'
+import { Image } from '@tiptap/extension-image'
+import Link from '@tiptap/extension-link'
+import { Plugin, PluginKey } from 'prosemirror-state'
+import { initLaravelFilemanager } from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'
+import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css'
+import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'
 
-// Add Image extension to Flux editor with resize support
+// Add Image and Link extensions to Flux editor
 document.addEventListener('flux:editor', (e) => {
     if (e.detail?.registerExtension) {
+        // Register Link extension with target, class, and style attributes
+        e.detail.registerExtension(Link.configure({
+            openOnClick: false,
+            HTMLAttributes: {
+                rel: 'noopener noreferrer nofollow',
+            },
+        }).extend({
+            addAttributes() {
+                return {
+                    ...this.parent?.(),
+                    target: {
+                        default: '_blank',
+                        parseHTML: element => element.getAttribute('target'),
+                        renderHTML: attributes => {
+                            if (!attributes.target) return {}
+                            return { target: attributes.target }
+                        },
+                    },
+                    class: {
+                        default: null,
+                        parseHTML: element => element.getAttribute('class'),
+                        renderHTML: attributes => {
+                            if (!attributes.class) return {}
+                            return { class: attributes.class }
+                        },
+                    },
+                    style: {
+                        default: null,
+                        parseHTML: element => element.getAttribute('style'),
+                        renderHTML: attributes => {
+                            if (!attributes.style) return {}
+                            return { style: attributes.style }
+                        },
+                    },
+                }
+            },
+        }))
+
+        // Register Image extension with drag & drop, paste, and all attributes
         e.detail.registerExtension(Image.configure({
             inline: true,
             allowBase64: true,
             HTMLAttributes: {
                 class: 'tiptap-image',
+            },
+        }).extend({
+            addAttributes() {
+                return {
+                    ...this.parent?.(),
+                    width: {
+                        default: null,
+                        parseHTML: element => element.getAttribute('width') || element.style.width,
+                        renderHTML: attributes => {
+                            if (!attributes.width) return {}
+                            return {
+                                width: attributes.width,
+                                style: `width: ${attributes.width}`
+                            }
+                        },
+                    },
+                    style: {
+                        default: null,
+                        parseHTML: element => element.getAttribute('style'),
+                        renderHTML: attributes => {
+                            if (!attributes.style) return {}
+                            return { style: attributes.style }
+                        },
+                    },
+                    'data-align': {
+                        default: null,
+                        parseHTML: element => element.getAttribute('data-align'),
+                        renderHTML: attributes => {
+                            if (!attributes['data-align']) return {}
+                            return { 'data-align': attributes['data-align'] }
+                        },
+                    },
+                    class: {
+                        default: 'tiptap-image',
+                        parseHTML: element => element.getAttribute('class'),
+                        renderHTML: attributes => {
+                            if (!attributes.class) return {}
+                            return { class: attributes.class }
+                        },
+                    },
+                    alt: {
+                        default: null,
+                        parseHTML: element => element.getAttribute('alt'),
+                        renderHTML: attributes => {
+                            if (!attributes.alt) return {}
+                            return { alt: attributes.alt }
+                        },
+                    },
+                    title: {
+                        default: null,
+                        parseHTML: element => element.getAttribute('title'),
+                        renderHTML: attributes => {
+                            if (!attributes.title) return {}
+                            return { title: attributes.title }
+                        },
+                    },
+                }
+            },
+            addProseMirrorPlugins() {
+                return [
+                    new Plugin({
+                        key: new PluginKey('imageDrop'),
+                        props: {
+                            handleDrop(view, event, slice, moved) {
+                                if (!moved && event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length) {
+                                    const files = Array.from(event.dataTransfer.files)
+                                    const imageFiles = files.filter(file => file.type.startsWith('image/'))
+                                    
+                                    if (imageFiles.length === 0) return false
+                                    
+                                    event.preventDefault()
+                                    
+                                    imageFiles.forEach(file => {
+                                        const reader = new FileReader()
+                                        
+                                        reader.onload = (e) => {
+                                            const { schema } = view.state
+                                            const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY })
+                                            
+                                            const node = schema.nodes.image.create({
+                                                src: e.target.result,
+                                                class: 'tiptap-image',
+                                            })
+                                            
+                                            const transaction = view.state.tr.insert(coordinates.pos, node)
+                                            view.dispatch(transaction)
+                                        }
+                                        
+                                        reader.readAsDataURL(file)
+                                    })
+                                    
+                                    return true
+                                }
+                                return false
+                            },
+                            handlePaste(view, event, slice) {
+                                const items = Array.from(event.clipboardData?.items || [])
+                                const imageItems = items.filter(item => item.type.startsWith('image/'))
+                                
+                                if (imageItems.length === 0) return false
+                                
+                                event.preventDefault()
+                                
+                                imageItems.forEach(item => {
+                                    const file = item.getAsFile()
+                                    if (!file) return
+                                    
+                                    const reader = new FileReader()
+                                    
+                                    reader.onload = (e) => {
+                                        const { schema } = view.state
+                                        const { selection } = view.state
+                                        
+                                        const node = schema.nodes.image.create({
+                                            src: e.target.result,
+                                            class: 'tiptap-image',
+                                        })
+                                        
+                                        const transaction = view.state.tr.replaceSelectionWith(node)
+                                        view.dispatch(transaction)
+                                    }
+                                    
+                                    reader.readAsDataURL(file)
+                                })
+                                
+                                return true
+                            },
+                        },
+                    }),
+                ]
             },
         }))
     }
@@ -214,6 +436,15 @@ Simply output the content:
 ```
 
 Images are stored as HTML `<img>` tags with inline styles and work out-of-the-box.
+
+## Drag & Drop and Paste
+
+Add images quickly by dragging them from your computer or pasting from clipboard:
+- **Drag & Drop** - Drag images directly into the editor
+- **Paste** - Paste screenshots or copied images with `Cmd/Ctrl + V`
+- **Base64** - Images are automatically converted to base64 data URLs
+
+See [docs/DRAG-DROP.md](docs/DRAG-DROP.md) for detailed drag & drop documentation.
 
 ## File Links
 

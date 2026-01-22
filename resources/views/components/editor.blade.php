@@ -2,9 +2,15 @@
     'id' => null,
     'rows' => 12,
     'toolbar' => 'default', // 'default', 'minimal', 'full', or false for custom
+    'dragDropMethod' => config('flux-filemanager.drag_drop.method', 'base64'),
+    'uploadUrl' => config('flux-filemanager.drag_drop.upload_url'),
+    'maxFileSize' => config('flux-filemanager.drag_drop.max_file_size'),
+    'allowedTypes' => implode(',', config('flux-filemanager.drag_drop.allowed_types', [])),
 ])
 
-<flux:editor :id="$id" {{ $attributes }} :rows="$rows">
+<flux:editor :id="$id" {{ $attributes }} :rows="$rows"
+    data-drag-drop-method="{{ $dragDropMethod }}" data-upload-url="{{ $uploadUrl }}"
+    data-max-file-size="{{ $maxFileSize }}" data-allowed-types="{{ $allowedTypes }}">
     @if ($toolbar !== false)
         <flux:editor.toolbar>
             @if ($toolbar === 'minimal')

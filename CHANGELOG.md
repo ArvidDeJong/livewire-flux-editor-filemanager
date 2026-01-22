@@ -4,6 +4,27 @@ All notable changes to `livewire-flux-editor-filemanager` will be documented in 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-01-22
+
+### Added
+- **Drag & Drop Support** - Drag images from computer directly into the editor
+- **Paste Images** - Paste images from clipboard (screenshots, copied images)
+- ProseMirror plugin for handling drop and paste events
+- Base64 encoding for dropped/pasted images
+- Support for multiple images at once
+- Position control for dropped images
+- Documentation for drag & drop functionality ([docs/DRAG-DROP.md](docs/DRAG-DROP.md))
+
+### Changed
+- Updated README with drag & drop features
+- Enhanced Image extension with ProseMirror plugins
+- Improved installation instructions with npm package requirements
+
+### Technical
+- Added `prosemirror-state` dependency requirement
+- Implemented `handleDrop` and `handlePaste` handlers
+- FileReader API integration for base64 conversion
+
 ## [1.0.1] - 2026-01-22
 
 ### Added
