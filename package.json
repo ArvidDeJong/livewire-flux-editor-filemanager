@@ -1,0 +1,26 @@
+{
+    "name": "livewire-flux-editor-filemanager",
+    "version": "1.0.0",
+    "description": "Laravel Filemanager integration for Flux TipTap Editor with image resize and align",
+    "keywords": [
+        "laravel",
+        "livewire",
+        "flux",
+        "tiptap",
+        "filemanager",
+        "wysiwyg",
+        "editor"
+    ],
+    "author": {
+        "name": "Arvid de Jong",
+        "email": "info@arvid.nl"
+    },
+    "license": "MIT",
+    "peerDependencies": {
+        "@tiptap/extension-image": "^2.10.5"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/darvis/livewire-flux-editor-filemanager"
+    }
+}

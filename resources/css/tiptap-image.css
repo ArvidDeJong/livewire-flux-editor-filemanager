@@ -1,0 +1,148 @@
+/**
+ * TipTap Image Resize Styles
+ * Click on image to show resize menu
+ */
+
+/* Image styling */
+.ProseMirror img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 0.375rem;
+}
+
+/* Image hover state */
+.ProseMirror img:hover {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Selected/Active image state */
+.ProseMirror img.ProseMirror-selectednode,
+.ProseMirror img.active-resize {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Resize menu */
+.image-resize-menu {
+    position: absolute;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    display: none;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.image-resize-menu.show {
+    display: flex;
+}
+
+/* Resize section */
+.resize-section {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Align section */
+.align-section {
+    display: flex;
+    gap: 0.25rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid #e5e7eb;
+}
+
+.image-resize-menu button {
+    padding: 0.5rem 1rem;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    transition: all 0.15s;
+}
+
+.image-resize-menu button:hover {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.image-resize-menu button:active {
+    transform: scale(0.95);
+}
+
+/* Custom width input */
+.custom-width-input {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    padding-left: 0.5rem;
+    border-left: 1px solid #e5e7eb;
+}
+
+.custom-width-input .width-input {
+    width: 80px;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    color: #374151;
+    transition: all 0.15s;
+}
+
+.custom-width-input .width-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.custom-width-input .apply-custom {
+    padding: 0.5rem 0.75rem;
+    background: #3b82f6;
+    color: white;
+    border: 1px solid #3b82f6;
+}
+
+.custom-width-input .apply-custom:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* Align buttons */
+.align-section button {
+    padding: 0.5rem;
+    min-width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.align-section button svg {
+    display: block;
+}
+
+/* Image alignment classes */
+.ProseMirror img.align-left {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.ProseMirror img.align-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ProseMirror img.align-right {
+    margin-left: auto;
+    margin-right: 0;
+}

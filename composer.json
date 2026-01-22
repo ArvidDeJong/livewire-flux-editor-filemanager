@@ -1,0 +1,48 @@
+{
+    "name": "darvis/livewire-flux-editor-filemanager",
+    "description": "Laravel Filemanager integration for Flux TipTap Editor with image resize and align",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arvid de Jong",
+            "email": "info@arvid.nl"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "livewire/livewire": "^3.0|^4.0",
+        "livewire/flux": "^1.0|^2.0",
+        "livewire/flux-pro": "^1.0|^2.0",
+        "unisharp/laravel-filemanager": "^2.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Darvis\\FluxFilemanager\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Darvis\\FluxFilemanager\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "test-filter": "vendor/bin/phpunit --filter"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Darvis\\FluxFilemanager\\FluxFilemanagerServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
