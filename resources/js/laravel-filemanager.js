@@ -94,10 +94,348 @@ function insertImageFromFilemanager(editor) {
 }
 
 /**
+ * Insert file link via Laravel Filemanager
+ * @param {object} editor - TipTap editor instance
+ */
+function insertFileLinkFromFilemanager(editor) {
+    openLaravelFilemanager('Files', (urls) => {
+        if (!urls.length) return
+
+        const url = urls[0] // Take first selected file
+
+        // Show modal for link configuration
+        showFileLinkModal(editor, url)
+    })
+}
+
+/**
+ * Show file link configuration modal
+ * @param {object} editor - TipTap editor instance
+ * @param {string} url - File URL
+ */
+function showFileLinkModal(editor, url) {
+    // Create modal
+    const modal = document.createElement('div')
+    modal.className = 'file-link-modal-overlay'
+
+    // Get filename from URL
+    const filename = url.split('/').pop()
+
+    modal.innerHTML = `
+        <div class="file-link-modal">
+            <div class="file-link-modal-header">
+                <h3>Insert File Link</h3>
+                <button class="file-link-modal-close" type="button">&times;</button>
+            </div>
+            <div class="file-link-modal-body">
+                <div class="form-group">
+                    <label>File:</label>
+                    <input type="text" class="file-url" value="${url}" readonly />
+                </div>
+                <div class="form-group">
+                    <label>Link text:</label>
+                    <input type="text" class="link-text" value="${filename}" placeholder="Click here to download" />
+                </div>
+                <div class="form-group">
+                    <label>Target:</label>
+                    <select class="link-target">
+                        <option value="_blank">New window (_blank)</option>
+                        <option value="_self">Same window (_self)</option>
+                        <option value="_parent">Parent window (_parent)</option>
+                        <option value="_top">Top window (_top)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Extra CSS Classes:</label>
+                    <input type="text" class="link-classes" value="" placeholder="e.g. btn btn-primary" />
+                </div>
+                <div class="form-group">
+                    <label>Extra Styles:</label>
+                    <input type="text" class="link-styles" value="" placeholder="e.g. color: blue; font-weight: bold;" />
+                </div>
+            </div>
+            <div class="file-link-modal-footer">
+                <button class="btn-cancel" type="button">Cancel</button>
+                <button class="btn-insert" type="button">Insert</button>
+            </div>
+        </div>
+    `
+
+    document.body.appendChild(modal)
+
+    // Focus on link text input
+    const linkTextInput = modal.querySelector('.link-text')
+    linkTextInput.focus()
+    linkTextInput.select()
+
+    // Handle close button
+    modal.querySelector('.file-link-modal-close').addEventListener('click', () => {
+        modal.remove()
+    })
+
+    // Handle cancel button
+    modal.querySelector('.btn-cancel').addEventListener('click', () => {
+        modal.remove()
+    })
+
+    // Handle insert/update button
+    modal.querySelector('.btn-insert').addEventListener('click', () => {
+        const linkText = modal.querySelector('.link-text').value.trim()
+        const target = modal.querySelector('.link-target').value
+        const extraClasses = modal.querySelector('.link-classes').value.trim()
+        const extraStyles = modal.querySelector('.link-styles').value.trim()
+
+        if (!linkText) {
+            alert('Please enter link text')
+            return
+        }
+
+        // Build link attributes
+        const linkAttrs = {
+            href: url,
+            target: target
+        }
+
+        if (extraClasses) linkAttrs.class = extraClasses
+        if (extraStyles) linkAttrs.style = extraStyles
+
+        // Insert new link
+        editor
+            .chain()
+            .focus()
+            .insertContent({
+                type: 'text',
+                text: linkText,
+                marks: [
+                    {
+                        type: 'link',
+                        attrs: linkAttrs
+                    }
+                ]
+            })
+            .run()
+
+        modal.remove()
+    })
+
+    // Handle Enter key
+    linkTextInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            modal.querySelector('.btn-insert').click()
+        }
+    })
+
+    // Handle Escape key
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            modal.remove()
+        }
+    })
+
+    // Close on overlay click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove()
+        }
+    })
+}
+
+/**
+ * Show image edit modal
+ * @param {object} editor - TipTap editor instance
+ * @param {HTMLElement} img - Image element
+ */
+function showImageEditModal(editor, img) {
+    const modal = document.createElement('div')
+    modal.className = 'file-link-modal-overlay'
+
+    const src = img.getAttribute('src')
+    const alt = img.getAttribute('alt') || ''
+    const title = img.getAttribute('title') || ''
+    const width = img.getAttribute('width') || '100%'
+    const dataAlign = img.getAttribute('data-align') || ''
+
+    modal.innerHTML = `
+        <div class="file-link-modal">
+            <div class="file-link-modal-header">
+                <h3>Edit Image</h3>
+                <button class="file-link-modal-close" type="button">&times;</button>
+            </div>
+            <div class="file-link-modal-body">
+                <div class="form-group">
+                    <label>Image:</label>
+                    <input type="text" class="image-src" value="${src}" readonly />
+                </div>
+                <div class="form-group">
+                    <label>Alt text:</label>
+                    <input type="text" class="image-alt" value="${alt}" placeholder="Image description" />
+                </div>
+                <div class="form-group">
+                    <label>Title:</label>
+                    <input type="text" class="image-title" value="${title}" placeholder="Tooltip text on hover" />
+                </div>
+                <div class="form-group">
+                    <label>Width:</label>
+                    <select class="image-width">
+                        <option value="25%" ${width === '25%' ? 'selected' : ''}>25%</option>
+                        <option value="50%" ${width === '50%' ? 'selected' : ''}>50%</option>
+                        <option value="75%" ${width === '75%' ? 'selected' : ''}>75%</option>
+                        <option value="100%" ${width === '100%' ? 'selected' : ''}>100%</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Alignment:</label>
+                    <select class="image-align">
+                        <option value="" ${!dataAlign ? 'selected' : ''}>None</option>
+                        <option value="left" ${dataAlign === 'left' ? 'selected' : ''}>Left</option>
+                        <option value="center" ${dataAlign === 'center' ? 'selected' : ''}>Center</option>
+                        <option value="right" ${dataAlign === 'right' ? 'selected' : ''}>Right</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Extra CSS Classes:</label>
+                    <input type="text" class="image-classes" value="" placeholder="e.g. rounded shadow-lg" />
+                </div>
+                <div class="form-group">
+                    <label>Extra Styles:</label>
+                    <input type="text" class="image-styles" value="" placeholder="e.g. border: 1px solid red;" />
+                </div>
+            </div>
+            <div class="file-link-modal-footer">
+                <button class="btn-cancel" type="button">Cancel</button>
+                <button class="btn-insert" type="button">Update</button>
+            </div>
+        </div>
+    `
+
+    document.body.appendChild(modal)
+
+    const altInput = modal.querySelector('.image-alt')
+    altInput.focus()
+    altInput.select()
+
+    // Handle close button
+    modal.querySelector('.file-link-modal-close').addEventListener('click', () => {
+        modal.remove()
+    })
+
+    // Handle cancel button
+    modal.querySelector('.btn-cancel').addEventListener('click', () => {
+        modal.remove()
+    })
+
+    // Handle update button
+    modal.querySelector('.btn-insert').addEventListener('click', () => {
+        const newAlt = modal.querySelector('.image-alt').value.trim()
+        const newTitle = modal.querySelector('.image-title').value.trim()
+        const newWidth = modal.querySelector('.image-width').value
+        const newAlign = modal.querySelector('.image-align').value
+        const extraClasses = modal.querySelector('.image-classes').value.trim()
+        const extraStyles = modal.querySelector('.image-styles').value.trim()
+
+        const editorElement = img.closest('ui-editor')
+        if (editorElement?.editor) {
+            const pos = editorElement.editor.view.posAtDOM(img, 0)
+
+            // Build class string
+            let classString = 'tiptap-image'
+            if (newAlign) classString += ` align-${newAlign}`
+            if (extraClasses) classString += ` ${extraClasses}`
+
+            // Calculate margin styles for alignment
+            let marginStyle = ''
+            if (newAlign === 'left') {
+                marginStyle = 'margin-left: 0; margin-right: auto;'
+            } else if (newAlign === 'center') {
+                marginStyle = 'margin-left: auto; margin-right: auto; display: block;'
+            } else if (newAlign === 'right') {
+                marginStyle = 'margin-left: auto; margin-right: 0;'
+            }
+
+            // Build style string
+            const widthStyle = `width: ${newWidth};`
+            let combinedStyle = marginStyle ? `${widthStyle} ${marginStyle}`.trim() : widthStyle
+            if (extraStyles) combinedStyle += ` ${extraStyles}`
+
+            editorElement.editor
+                .chain()
+                .focus()
+                .setNodeSelection(pos)
+                .updateAttributes('image', {
+                    alt: newAlt,
+                    title: newTitle,
+                    width: newWidth,
+                    style: combinedStyle.trim(),
+                    'data-align': newAlign,
+                    class: classString.trim()
+                })
+                .run()
+        }
+
+        modal.remove()
+    })
+
+    // Handle Enter key
+    modal.querySelector('.image-title').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            modal.querySelector('.btn-insert').click()
+        }
+    })
+
+    // Handle Escape key
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            modal.remove()
+        }
+    })
+
+    // Close on overlay click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove()
+        }
+    })
+}
+
+/**
+ * Enable link editing functionality
+ * Opens modal when clicking on links in the editor
+ */
+function enableLinkEditing() {
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('.ProseMirror a')
+        if (!link) return
+
+        e.preventDefault()
+
+        const editorElement = link.closest('ui-editor')
+        if (!editorElement?.editor) return
+
+        const href = link.getAttribute('href')
+        const target = link.getAttribute('target') || '_blank'
+        const text = link.textContent
+
+        showFileLinkModal(editorElement.editor, href, { text, target })
+    })
+}
+
+/**
  * Enable image resize functionality
  * Creates a resize menu when clicking on images in the editor
  */
 function enableImageResize() {
+    // Double click to edit image
+    document.addEventListener('dblclick', (e) => {
+        const img = e.target.closest('.ProseMirror img')
+        if (!img) return
+
+        e.preventDefault()
+
+        const editorElement = img.closest('ui-editor')
+        if (!editorElement?.editor) return
+
+        showImageEditModal(editorElement.editor, img)
+    })
 
     document.addEventListener('click', (e) => {
         const img = e.target.closest('.ProseMirror img')
@@ -347,32 +685,50 @@ export function initLaravelFilemanager() {
         document.addEventListener('DOMContentLoaded', () => {
             setupImageButtonListener()
             enableImageResize()
+            enableLinkEditing()
         })
     } else {
         setupImageButtonListener()
         enableImageResize()
+        enableLinkEditing()
     }
 }
 
 /**
- * Setup image button click listener
+ * Setup image and file link button listeners
  */
 function setupImageButtonListener() {
 
     // Event listener for image button (works for all Flux editors)
     document.addEventListener('click', (e) => {
         const imageButton = e.target.closest('[data-editor="image"]')
-        if (!imageButton) return
+        if (imageButton) {
+            e.preventDefault()
+            e.stopPropagation()
 
-        e.preventDefault()
-        e.stopPropagation()
+            const editorElement = imageButton.closest('ui-editor')
+            if (!editorElement?.editor) {
+                return
+            }
 
-        const editorElement = imageButton.closest('ui-editor')
-        if (!editorElement?.editor) {
+            insertImageFromFilemanager(editorElement.editor)
             return
         }
 
-        insertImageFromFilemanager(editorElement.editor)
+        // Event listener for file link button
+        const fileLinkButton = e.target.closest('[data-editor="file-link"]')
+        if (fileLinkButton) {
+            e.preventDefault()
+            e.stopPropagation()
+
+            const editorElement = fileLinkButton.closest('ui-editor')
+            if (!editorElement?.editor) {
+                return
+            }
+
+            insertFileLinkFromFilemanager(editorElement.editor)
+            return
+        }
     })
 }
 

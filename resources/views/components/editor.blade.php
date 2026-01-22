@@ -8,13 +8,13 @@
     @if ($toolbar !== false)
         <flux:editor.toolbar>
             @if ($toolbar === 'minimal')
-                {{-- Minimale toolbar: alleen basis formatting --}}
+                {{-- Minimal toolbar: basic formatting only --}}
                 <flux:editor.bold />
                 <flux:editor.italic />
                 <flux:editor.separator />
                 <flux:editor.link />
             @elseif($toolbar === 'full')
-                {{-- Volledige toolbar: alle opties --}}
+                {{-- Full toolbar: all options --}}
                 <flux:editor.heading />
                 <flux:editor.separator />
                 <flux:editor.bold />
@@ -28,12 +28,13 @@
                 <flux:editor.separator />
                 @include('flux-filemanager::flux.editor.image')
                 <flux:editor.link />
+                @include('flux-filemanager::flux.editor.file-link')
                 <flux:editor.separator />
                 <flux:editor.align />
                 <flux:editor.separator />
                 <flux:editor.code />
             @else
-                {{-- Standaard toolbar: meest gebruikte opties --}}
+                {{-- Default toolbar: most commonly used options --}}
                 <flux:editor.heading />
                 <flux:editor.separator />
                 <flux:editor.bold />
@@ -46,6 +47,7 @@
                 <flux:editor.separator />
                 @include('flux-filemanager::flux.editor.image')
                 <flux:editor.link />
+                @include('flux-filemanager::flux.editor.file-link')
                 <flux:editor.separator />
                 <flux:editor.align />
             @endif

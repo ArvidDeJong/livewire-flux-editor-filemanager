@@ -4,6 +4,22 @@ All notable changes to `livewire-flux-editor-filemanager` will be documented in 
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-01-22
+
+### Added
+- File link functionality for inserting downloadable file links (PDFs, Word docs, Excel, ZIP, etc.)
+- File link modal with configurable options (link text, target, CSS classes, styles)
+- File link button in editor toolbar
+
+### Changed
+- Translated all Dutch comments in Blade views to English
+- Translated all Dutch strings in JavaScript modals to English
+- Translated complete documentation to English (FILE-UPLOAD.md, IMAGE-EDITING.md, LOCALIZATION.md)
+- Updated JavaScript modal labels, placeholders, and buttons to English
+
+### Fixed
+- Removed undefined `isEdit` variable in file link modal JavaScript
+
 ## [1.0.0] - 2026-01-22
 
 ### Added

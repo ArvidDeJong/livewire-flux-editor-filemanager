@@ -4,7 +4,7 @@
     'kbd' => null,
 ])
 
-<flux:tooltip content="{{ __('Afbeelding invoegen') }}" :$kbd class="contents">
+<flux:tooltip content="{{ __('flux-filemanager::filemanager.insert_image') }}" :$kbd class="contents">
     <flux:editor.button data-editor="image">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true">

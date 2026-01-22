@@ -215,6 +215,32 @@ Simply output the content:
 
 Images are stored as HTML `<img>` tags with inline styles and work out-of-the-box.
 
+## File Links
+
+Add links to files (PDFs, Word documents, ZIP files, etc.) via Laravel Filemanager:
+1. Click the file link button (🔗) in the toolbar
+2. Select a file via Laravel Filemanager
+3. Configure the link (text, target, classes, styles)
+
+See [docs/FILE-UPLOAD.md](docs/FILE-UPLOAD.md) for detailed file link documentation.
+
+## Image Editing
+
+The package offers two ways to edit images:
+- **Single click** - Quick resize menu for fast adjustments
+- **Double click** - Complete edit modal with all options (alt, title, size, alignment, classes, styles)
+
+See [docs/IMAGE-EDITING.md](docs/IMAGE-EDITING.md) for detailed image editing documentation.
+
+## Localization
+
+The package supports multiple languages out of the box:
+- 🇳🇱 Dutch (nl)
+- 🇬🇧 English (en)
+- 🇩🇪 German (de)
+
+See [docs/LOCALIZATION.md](docs/LOCALIZATION.md) for detailed localization documentation.
+
 ## Configuration
 
 After publishing the config file, you can customize settings in `config/flux-filemanager.php`:
