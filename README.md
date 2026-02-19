@@ -176,20 +176,6 @@ Customize in `config/flux-filemanager.php`:
 
 [See full configuration options →](docs/INSTALLATION.md#configuration)
 
-## Local Development (Symlink)
-
-If you maintain this package locally, you can symlink it into a Laravel project:
-
-```bash
-ln -sfn ../../../Packages/livewire-flux-editor-filemanager vendor/darvis/livewire-flux-editor-filemanager
-```
-
-Verify the link:
-
-```bash
-ls -la vendor/darvis | grep livewire-flux-editor-filemanager
-```
-
 ## Documentation
 
 - [Installation Guide](docs/INSTALLATION.md) - Detailed installation with TipTap configuration
