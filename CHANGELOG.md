@@ -2,7 +2,7 @@
 
 All notable changes to `livewire-flux-editor-filemanager` will be documented in this file.
 
-## [Unreleased]
+## [1.1.2] - 2026-02-19
 
 ### Fixed
 
