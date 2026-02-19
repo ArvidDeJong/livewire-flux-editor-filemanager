@@ -15,7 +15,6 @@ Laravel Filemanager integration for Flux TipTap Editor with powerful image and f
 - 🌍 **Multilingual** - Dutch, English, and German support
 - ⚡ **Flux UI** - Seamless Livewire Flux integration
 
-
 ## Requirements
 
 - PHP 8.2+
@@ -38,7 +37,14 @@ composer require darvis/livewire-flux-editor-filemanager
 php artisan flux-filemanager:install
 ```
 
+For CI/non-interactive environments:
+
+```bash
+php artisan flux-filemanager:install --no-interaction
+```
+
 This interactive command will:
+
 - ✅ Install Laravel Filemanager
 - ✅ Publish configurations and assets
 - ✅ Create storage directories
@@ -60,11 +66,18 @@ Route::prefix('cms/laravel-filemanager')->middleware(['auth'])->group(function (
 Add to `resources/js/app.js`:
 
 ```javascript
-import { initLaravelFilemanager } from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'
-import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css'
-import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'
+import { initLaravelFilemanager } from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js";
+import {
+  getDragDropConfig,
+  processImageFile,
+} from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/drag-drop-config.js";
+import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
+import { Plugin, PluginKey } from "prosemirror-state";
+import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css";
+import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css";
 
-initLaravelFilemanager()
+initLaravelFilemanager();
 ```
 
 Then build:
@@ -116,6 +129,7 @@ npm run build
 ## Advanced Features
 
 ### 🎯 Drag & Drop and Paste
+
 - Drag images directly into the editor
 - Paste screenshots with `Cmd/Ctrl + V`
 - Automatic base64 conversion
@@ -123,6 +137,7 @@ npm run build
 [Read more →](docs/DRAG-DROP.md)
 
 ### 🔗 File Links
+
 - Add links to PDFs, Word docs, Excel, ZIP files
 - Configure link text, target, CSS classes, and styles
 - Click file link button (🔗) in toolbar
@@ -130,12 +145,14 @@ npm run build
 [Read more →](docs/FILE-UPLOAD.md)
 
 ### ✏️ Image Editing
+
 - **Single click** - Quick resize menu (25%, 50%, 75%, 100%, custom)
 - **Double click** - Full edit modal (alt, title, alignment, classes, styles)
 
 [Read more →](docs/IMAGE-EDITING.md)
 
 ### 🌍 Localization
+
 - Built-in: Dutch, English, German
 - Easy to add new languages
 - Automatic locale detection
@@ -151,12 +168,27 @@ php artisan vendor:publish --tag=flux-filemanager-config
 ```
 
 Customize in `config/flux-filemanager.php`:
+
 - Filemanager URL
 - Popup dimensions
 - Resize presets
 - Error messages
 
 [See full configuration options →](docs/INSTALLATION.md#configuration)
+
+## Local Development (Symlink)
+
+If you maintain this package locally, you can symlink it into a Laravel project:
+
+```bash
+ln -sfn ../../../Packages/livewire-flux-editor-filemanager vendor/darvis/livewire-flux-editor-filemanager
+```
+
+Verify the link:
+
+```bash
+ls -la vendor/darvis | grep livewire-flux-editor-filemanager
+```
 
 ## Documentation
 
@@ -170,6 +202,7 @@ Customize in `config/flux-filemanager.php`:
 ## Examples
 
 Complete working examples in [`examples/`](examples/) directory:
+
 - `app.js` - Full TipTap configuration
 - `EditorDemo.php` - Livewire component
 - `editor-demo.blade.php` - Blade view

@@ -93,25 +93,60 @@ This creates `config/flux-filemanager.php` where you can customize:
 ### 6. Install NPM Dependencies
 
 ```bash
-npm install @tiptap/extension-image @tiptap/extension-link prosemirror-state
+npm install @tiptap/core @tiptap/extension-image @tiptap/extension-link prosemirror-state
 ```
+
+> Use consistent TipTap major versions across all TipTap packages in your project.
 
 ### 7. Configure TipTap Extensions
 
 Add to your `resources/js/app.js`:
 
 ```javascript
-import { initLaravelFilemanager } from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'
-import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css'
-import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'
+import { initLaravelFilemanager } from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js";
+import {
+  getDragDropConfig,
+  processImageFile,
+} from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/drag-drop-config.js";
+import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
+import { Plugin, PluginKey } from "prosemirror-state";
+import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css";
+import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css";
 
-// Initialize Laravel Filemanager
-initLaravelFilemanager()
+document.addEventListener("flux:editor", (e) => {
+  if (!e.detail?.registerExtension) return;
+
+  e.detail.registerExtension(
+    Link.configure({
+      openOnClick: false,
+      HTMLAttributes: {
+        rel: "noopener noreferrer nofollow",
+      },
+    }),
+  );
+
+  e.detail.registerExtension(
+    Image.configure({
+      inline: true,
+      allowBase64: true,
+      HTMLAttributes: {
+        class: "tiptap-image",
+      },
+    }),
+  );
+
+  // Optional extra ProseMirror plugins for drag/drop and paste
+  // can be added here using Plugin and PluginKey.
+});
+
+initLaravelFilemanager();
 ```
 
 **For complete TipTap configuration with Image and Link extensions, drag & drop, and paste support:**
 
 See the complete working example in [`examples/app.js`](../examples/app.js) which includes:
+
 - Image extension with all attributes (width, alt, title, alignment, classes, styles)
 - Link extension with target, class, and style support
 - Drag & drop handler for images
@@ -127,10 +162,28 @@ npm run build
 ### 9. Use in Your Application
 
 ```blade
-<x-flux-filemanager-editor wire:model="content" />
+<flux:field>
+    <flux:label>Content</flux:label>
+    <x-flux-filemanager-editor id="content-editor" wire:model="content" rows="12" />
+    <flux:error name="content" />
+</flux:field>
 ```
 
 See [Usage Examples](../examples/README.md) for more examples.
+
+## Local Package Development (Symlink)
+
+If you maintain this package locally and want instant changes in your Laravel app:
+
+```bash
+ln -sfn ../../../Packages/livewire-flux-editor-filemanager vendor/darvis/livewire-flux-editor-filemanager
+```
+
+Confirm the symlink:
+
+```bash
+ls -la vendor/darvis | grep livewire-flux-editor-filemanager
+```
 
 ## Troubleshooting
 

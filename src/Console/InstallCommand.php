@@ -56,9 +56,27 @@ class InstallCommand extends Command
         return self::SUCCESS;
     }
 
+    protected function runTask(string $description, callable $callback): void
+    {
+        $this->line("- {$description}...");
+
+        try {
+            $success = (bool) $callback();
+        } catch (\Throwable $exception) {
+            $this->error("  ✗ {$description} mislukt: {$exception->getMessage()}");
+            return;
+        }
+
+        if ($success) {
+            $this->info("  ✓ {$description} voltooid");
+        } else {
+            $this->warn("  ⚠ {$description} niet volledig geslaagd");
+        }
+    }
+
     protected function step1InstallLaravelFilemanager(): void
     {
-        $this->task('Installing Laravel Filemanager', function () {
+        $this->runTask('Installing Laravel Filemanager', function () {
             exec('composer require unisharp/laravel-filemanager 2>&1', $output, $exitCode);
             return $exitCode === 0;
         });
@@ -66,7 +84,7 @@ class InstallCommand extends Command
 
     protected function step2PublishLfmConfig(): void
     {
-        $this->task('Publishing Laravel Filemanager configuration', function () {
+        $this->runTask('Publishing Laravel Filemanager configuration', function () {
             $this->call('vendor:publish', ['--tag' => 'lfm_config']);
             $this->call('vendor:publish', ['--tag' => 'lfm_public']);
             return true;
@@ -75,7 +93,7 @@ class InstallCommand extends Command
 
     protected function step3CreateStorageDirectories(): void
     {
-        $this->task('Creating storage directories', function () {
+        $this->runTask('Creating storage directories', function () {
             $this->call('storage:link');
             
             $directories = [
@@ -95,15 +113,15 @@ class InstallCommand extends Command
 
     protected function step4InstallNpmDependencies(): void
     {
-        $this->task('Installing NPM dependencies', function () {
-            exec('npm install @tiptap/extension-image 2>&1', $output, $exitCode);
+        $this->runTask('Installing NPM dependencies', function () {
+            exec('npm install @tiptap/core @tiptap/extension-image @tiptap/extension-link prosemirror-state 2>&1', $output, $exitCode);
             return $exitCode === 0;
         });
     }
 
     protected function step5PublishAssets(): void
     {
-        $this->task('Publishing Flux Filemanager assets', function () {
+        $this->runTask('Publishing Flux Filemanager assets', function () {
             $this->call('vendor:publish', [
                 '--tag' => 'flux-filemanager-config',
                 '--force' => $this->option('force'),
@@ -122,7 +140,7 @@ class InstallCommand extends Command
 
     protected function step6BuildAssets(): void
     {
-        $this->task('Building assets', function () {
+        $this->runTask('Building assets', function () {
             exec('npm run build 2>&1', $output, $exitCode);
             return $exitCode === 0;
         });
@@ -134,27 +152,22 @@ class InstallCommand extends Command
         $this->newLine();
 
         $this->line('1. Add Laravel Filemanager routes to your routes/web.php:');
-        $this->line('   <fg=gray>Route::group([\'prefix\' => \'cms\', \'middleware\' => [\'auth:staff\']], function () {</>');
+        $this->line('   <fg=gray>Route::prefix(\'cms/laravel-filemanager\')->middleware([\'auth\'])->group(function () {</>');
         $this->line('   <fg=gray>    \\UniSharp\\LaravelFilemanager\\Lfm::routes();</>');
         $this->line('   <fg=gray>});</>');
         $this->newLine();
+        $this->line('   <fg=gray>// For staff guard projects:</>');
+        $this->line('   <fg=gray>// ->middleware([\'auth:staff\', \\App\\Http\\Middleware\\EnsureStaffEmailIsVerified::class])</>');
+        $this->newLine();
 
         $this->line('2. Add the following to your resources/js/app.js:');
-        $this->line('   <fg=gray>import Image from \'@tiptap/extension-image\'</>');
-        $this->line('   <fg=gray>import { initLaravelFilemanager } from \'./vendor/flux-filemanager/laravel-filemanager\'</>');
-        $this->line('   <fg=gray>import \'../css/vendor/flux-filemanager/tiptap-image.css\'</>');
+        $this->line('   <fg=gray>import { initLaravelFilemanager } from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js"</>');
+        $this->line('   <fg=gray>import Link from "@tiptap/extension-link"</>');
+        $this->line('   <fg=gray>import Image from "@tiptap/extension-image"</>');
+        $this->line('   <fg=gray>import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css"</>');
+        $this->line('   <fg=gray>import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css"</>');
         $this->newLine();
-        $this->line('   <fg=gray>document.addEventListener(\'flux:editor\', (e) => {</>');
-        $this->line('   <fg=gray>    if (e.detail?.registerExtension) {</>');
-        $this->line('   <fg=gray>        e.detail.registerExtension(Image.configure({</>');
-        $this->line('   <fg=gray>            inline: true,</>');
-        $this->line('   <fg=gray>            allowBase64: true,</>');
-        $this->line('   <fg=gray>            HTMLAttributes: { class: \'tiptap-image\' },</>');
-        $this->line('   <fg=gray>        }))</>');
-        $this->line('   <fg=gray>    }</>');
-        $this->line('   <fg=gray>})</>');
-        $this->newLine();
-        $this->line('   <fg=gray>initLaravelFilemanager()</>');
+        $this->line('   <fg=gray>initLaravelFilemanager();</>');
         $this->newLine();
 
         $this->line('3. Use the component in your Blade files:');
