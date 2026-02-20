@@ -180,6 +180,8 @@ If the filemanager popup is blocked by the browser:
 
 ## Next Steps
 
+- Built-in demo: `/darvis/editor-demo`
+- Built-in checklist: `/darvis/filemanager-checklist`
 - [Usage Examples](../examples/README.md)
 - [Image Editing Features](IMAGE-EDITING.md)
 - [Drag & Drop Documentation](DRAG-DROP.md)

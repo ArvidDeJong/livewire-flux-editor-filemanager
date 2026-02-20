@@ -193,6 +193,11 @@ Complete working examples in [`examples/`](examples/) directory:
 - `EditorDemo.php` - Livewire component
 - `editor-demo.blade.php` - Blade view
 
+Quick package pages:
+
+- Demo: `/darvis/editor-demo`
+- Checklist: `/darvis/filemanager-checklist`
+
 ## Testing
 
 ```bash

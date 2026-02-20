@@ -50,12 +50,14 @@ Copy `examples/editor-demo.blade.php` to `resources/views/livewire/editor-demo.b
 ```php
 use App\Livewire\EditorDemo;
 
-Route::get('/editor-demo', EditorDemo::class);
+Route::get('/darvis/editor-demo', EditorDemo::class);
 ```
 
 ### 4. Visit the Demo
 
-Navigate to `/editor-demo` in your browser and start testing!
+Navigate to `/darvis/editor-demo` in your browser and start testing!
+
+For the package checklist, navigate to `/darvis/filemanager-checklist`.
 
 ## Customization
 
