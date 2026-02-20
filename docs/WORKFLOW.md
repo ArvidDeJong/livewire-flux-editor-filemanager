@@ -136,6 +136,10 @@ For the complete, working implementation see:
 - [`examples/EditorDemo.php`](../examples/EditorDemo.php) - Livewire component
 - [`examples/editor-demo.blade.php`](../examples/editor-demo.blade.php) - Blade view
 
+Quick package pages:
+- Demo: `/darvis/editor-demo`
+- Checklist: `/darvis/filemanager-checklist`
+
 ## See Also
 
 - [Installation Guide](INSTALLATION.md) - Step-by-step setup
