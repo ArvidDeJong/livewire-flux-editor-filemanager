@@ -20,6 +20,9 @@ class EditorDemo extends Component
 
     public function render()
     {
-        return \view('flux-filemanager::examples.editor-demo');
+        return \view('flux-filemanager::examples.editor-demo')
+            ->layout('flux-filemanager::examples.layout', [
+                'title' => \__('flux-filemanager::filemanager.demo_page_title'),
+            ]);
     }
 }

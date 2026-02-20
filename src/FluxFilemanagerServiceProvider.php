@@ -9,6 +9,9 @@ class FluxFilemanagerServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        // Load routes
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
         // Publish config file
         $this->publishes([
             __DIR__.'/../config/flux-filemanager.php' => config_path('flux-filemanager.php'),

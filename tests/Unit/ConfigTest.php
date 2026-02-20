@@ -1,71 +1,45 @@
 <?php
 
-namespace Darvis\FluxFilemanager\Tests\Unit;
+it('has default filemanager url', function () {
+    expect(config('flux-filemanager.url'))->toBe('/filemanager');
+});
 
-use Darvis\FluxFilemanager\Tests\TestCase;
+it('has popup configuration', function () {
+    $popup = config('flux-filemanager.popup');
 
-class ConfigTest extends TestCase
-{
-    /** @test */
-    public function it_has_default_filemanager_url()
-    {
-        $url = config('flux-filemanager.url');
-        
-        $this->assertEquals('/cms/laravel-filemanager', $url);
-    }
+    expect($popup)->toBeArray();
+    expect($popup)->toHaveKeys(['width', 'height']);
+    expect($popup['width'])->toBe(900);
+    expect($popup['height'])->toBe(600);
+});
 
-    /** @test */
-    public function it_has_popup_configuration()
-    {
-        $popup = config('flux-filemanager.popup');
-        
-        $this->assertIsArray($popup);
-        $this->assertArrayHasKey('width', $popup);
-        $this->assertArrayHasKey('height', $popup);
-        $this->assertEquals(900, $popup['width']);
-        $this->assertEquals(600, $popup['height']);
-    }
+it('has resize presets', function () {
+    $presets = config('flux-filemanager.resize_presets');
 
-    /** @test */
-    public function it_has_resize_presets()
-    {
-        $presets = config('flux-filemanager.resize_presets');
-        
-        $this->assertIsArray($presets);
-        $this->assertContains('25%', $presets);
-        $this->assertContains('50%', $presets);
-        $this->assertContains('75%', $presets);
-        $this->assertContains('100%', $presets);
-    }
+    expect($presets)->toBeArray();
+    expect($presets)->toContain('25%');
+    expect($presets)->toContain('50%');
+    expect($presets)->toContain('75%');
+    expect($presets)->toContain('100%');
+});
 
-    /** @test */
-    public function it_has_custom_width_range()
-    {
-        $customWidth = config('flux-filemanager.custom_width');
-        
-        $this->assertIsArray($customWidth);
-        $this->assertEquals(1, $customWidth['min']);
-        $this->assertEquals(100, $customWidth['max']);
-    }
+it('has custom width range', function () {
+    $customWidth = config('flux-filemanager.custom_width');
 
-    /** @test */
-    public function it_has_error_messages()
-    {
-        $messages = config('flux-filemanager.messages');
-        
-        $this->assertIsArray($messages);
-        $this->assertArrayHasKey('popup_blocked', $messages);
-        $this->assertArrayHasKey('no_images_selected', $messages);
-        $this->assertArrayHasKey('filemanager_not_found', $messages);
-    }
+    expect($customWidth)->toBeArray();
+    expect($customWidth['min'])->toBe(1);
+    expect($customWidth['max'])->toBe(100);
+});
 
-    /** @test */
-    public function filemanager_url_can_be_overridden_via_env()
-    {
-        config(['flux-filemanager.url' => '/admin/filemanager']);
-        
-        $url = config('flux-filemanager.url');
-        
-        $this->assertEquals('/admin/filemanager', $url);
-    }
-}
+it('has error messages', function () {
+    $messages = config('flux-filemanager.messages');
+
+    expect($messages)->toBeArray();
+    expect($messages)->toHaveKeys(['popup_blocked', 'no_images_selected', 'filemanager_not_found']);
+});
+
+it('filemanager url can be overridden via env', function () {
+    config(['flux-filemanager.url' => '/admin/filemanager']);
+
+    expect(config('flux-filemanager.url'))->toBe('/admin/filemanager');
+});

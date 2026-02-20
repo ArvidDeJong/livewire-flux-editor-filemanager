@@ -65,8 +65,8 @@ lang/vendor/flux-filemanager/
 // lang/vendor/flux-filemanager/nl/filemanager.php
 
 return [
-    'insert_image' => 'Foto invoegen',  // Was: 'Afbeelding invoegen'
-    'edit_image' => 'Foto Bewerken',    // Was: 'Afbeelding Bewerken'
+    'insert_image' => 'Insert photo',  // Previously: 'Insert image'
+    'edit_image' => 'Edit photo',      // Previously: 'Edit image'
     // ... rest of the translations
 ];
 ```
@@ -93,10 +93,10 @@ Copy the contents of an existing file and translate the strings:
 return [
     // Image button
     'insert_image' => 'Insérer une image',
-    
+
     // File link button
     'insert_file_link' => 'Insérer un lien de fichier',
-    
+
     // Image edit modal
     'edit_image' => 'Modifier l\'image',
     'image' => 'Image',
@@ -114,7 +114,7 @@ return [
     'extra_css_classes_placeholder' => 'par ex. rounded shadow-lg',
     'extra_styles' => 'Styles supplémentaires',
     'extra_styles_placeholder' => 'par ex. border: 1px solid red;',
-    
+
     // File link modal
     'edit_link' => 'Modifier le lien',
     'insert_link' => 'Insérer un lien de fichier',
@@ -128,12 +128,12 @@ return [
     'target_top' => 'Fenêtre supérieure (_top)',
     'link_css_classes_placeholder' => 'par ex. btn btn-primary',
     'link_styles_placeholder' => 'par ex. color: blue; font-weight: bold;',
-    
+
     // Buttons
     'cancel' => 'Annuler',
     'insert' => 'Insérer',
     'update' => 'Mettre à jour',
-    
+
     // Validation
     'enter_link_text' => 'Veuillez saisir le texte du lien',
 ];
@@ -253,6 +253,7 @@ Use the same terminology throughout your application:
 ### 4. Test All Locales
 
 Test your application in all supported languages to check if:
+
 - All strings are correctly translated
 - The UI doesn't break due to longer texts
 - Tooltips and labels are clear
@@ -262,6 +263,7 @@ Test your application in all supported languages to check if:
 ### Translations Not Loading
 
 1. **Clear cache:**
+
    ```bash
    php artisan cache:clear
    php artisan config:clear
@@ -269,6 +271,7 @@ Test your application in all supported languages to check if:
    ```
 
 2. **Check locale:**
+
    ```php
    dd(App::getLocale()); // Should be 'nl', 'en' or 'de'
    ```
@@ -297,7 +300,7 @@ if (App::getLocale() !== 'nl') {
 
 ## Contributing
 
-Want to add a new language or improve existing translations? 
+Want to add a new language or improve existing translations?
 
 1. Fork the repository
 2. Add your translation in `resources/lang/{locale}/filemanager.php`

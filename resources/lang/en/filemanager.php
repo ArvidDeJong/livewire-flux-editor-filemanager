@@ -46,4 +46,54 @@ return [
     
     // Validation
     'enter_link_text' => 'Please enter link text',
+
+    // Messages
+    'popup_blocked_message' => 'Popup was blocked by your browser. Please allow popups for this site.',
+    'filemanager_error_message' => 'Laravel Filemanager could not be loaded. Please check your installation.',
+
+    // Checklist
+    'open_checklist' => 'Open filemanager installation checklist',
+    'checklist_title' => 'Darvis Filemanager Checklist',
+    'checklist_summary' => 'Check of the main installation components. Status: :okCount/:totalCount passed.',
+    'checklist_installed' => 'Package darvis/livewire-flux-editor-filemanager installed',
+    'checklist_package_available' => 'Laravel Filemanager package available',
+    'checklist_flux_config_available' => 'Config flux-filemanager.php available',
+    'checklist_lfm_config_available' => 'Config lfm.php available',
+    'checklist_routes_enabled' => 'LFM package routes enabled',
+    'checklist_prefix_set' => 'LFM url_prefix is set to filemanager',
+    'checklist_js_init_available' => 'Flux Filemanager JS init available (initLaravelFilemanager)',
+    'checklist_app_url_matches_host' => 'APP_URL host matches current host',
+    'checklist_status_ok' => 'OK',
+    'checklist_status_missing' => 'MISSING',
+    'url' => 'URL',
+
+    // Image resize UI
+    'align_left_title' => 'Align left',
+    'align_center_title' => 'Align center',
+    'align_right_title' => 'Align right',
+    'apply' => 'Apply',
+
+    // Demo page
+    'demo_page_title' => 'Flux Filemanager Editor Demo',
+    'demo_title' => 'Editor Demo',
+    'demo_preview' => 'Preview',
+    'demo_save' => 'Save',
+    'demo_saved' => 'Content saved!',
+    'demo_content_label' => 'Content',
+    'demo_login_required_heading' => 'Login required',
+    'demo_login_required_text' => 'You must be logged in to use the Laravel Filemanager features in this editor.',
+    'demo_welcome_heading' => 'Welcome to the Editor Demo',
+    'demo_welcome_text' => 'Start typing or use the toolbar to add images and links!',
+    'demo_features_intro' => 'Try these features:',
+    'demo_feature_upload_images' => 'Click 🖼️ to upload images',
+    'demo_feature_add_file_links' => 'Click 🔗 to add file links',
+    'demo_feature_drag_drop' => 'Drag & drop images directly into the editor',
+    'demo_feature_paste' => 'Paste screenshots with Cmd/Ctrl + V',
+    'demo_feature_single_click_resize' => 'Single click on images to resize',
+    'demo_feature_double_click_edit' => 'Double click on images to edit details',
+    'demo_not_set' => 'not set',
+    'demo_app_url_heading' => 'APP_URL must match the current host for Laravel Filemanager',
+    'demo_app_url_status' => 'APP_URL host: :appUrlHost · Current host: :currentHost',
+    'demo_app_url_fix' => 'Fix: set APP_URL in your .env to this host (including scheme), then clear config cache.',
+    'demo_app_url_command' => 'Command: php artisan config:clear',
 ];

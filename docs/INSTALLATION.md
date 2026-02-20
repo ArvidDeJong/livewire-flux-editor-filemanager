@@ -35,20 +35,22 @@ php artisan vendor:publish --tag=lfm_public
 
 ### 3. Configure Routes
 
-Add Laravel Filemanager routes to `routes/web.php`:
+Use standard Laravel Filemanager package routes in `config/lfm.php`:
 
 ```php
-Route::prefix('cms/laravel-filemanager')->middleware(['auth'])->group(function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
-});
+'use_package_routes' => true,
+'middlewares' => ['web', 'auth'],
+'url_prefix' => 'filemanager',
 ```
+
+> If you use `php artisan flux-filemanager:install`, these settings are configured automatically.
 
 **Custom auth guard?** Replace `['auth']` with `['auth:staff']` or your guard name.
 
 **Need more security?** Add additional middleware:
 
 ```php
-Route::prefix('cms/laravel-filemanager')->middleware([
+Route::prefix('filemanager')->middleware([
     'auth:staff',
     \App\Http\Middleware\EnsureStaffEmailIsVerified::class,
 ])->group(function () {
@@ -58,21 +60,16 @@ Route::prefix('cms/laravel-filemanager')->middleware([
 
 ### 4. Environment Configuration
 
-Add to your `.env` file:
+No package-specific `FILEMANAGER_*` environment variables are required for the default setup.
 
-```env
-# Laravel Filemanager URL (must match route prefix)
-FILEMANAGER_URL=/cms/laravel-filemanager
+Use standard LFM defaults:
 
-# Drag & Drop Settings
-FILEMANAGER_DRAG_DROP_METHOD=base64  # or 'upload'
-FILEMANAGER_MAX_FILE_SIZE=5242880    # 5MB in bytes
+- Filemanager URL: `/filemanager`
+- Upload endpoint: `/filemanager/upload`
+- Drag & drop method: `base64`
+- Max file size: `5242880`
 
-# Upload endpoint (only for 'upload' method)
-FILEMANAGER_UPLOAD_URL=/cms/laravel-filemanager/upload
-```
-
-**Important:** The `FILEMANAGER_URL` must match your route prefix exactly!
+Set `APP_URL` to the actual host/port you use locally.
 
 ### 5. Publish Package Configuration (Optional)
 
@@ -93,65 +90,30 @@ This creates `config/flux-filemanager.php` where you can customize:
 ### 6. Install NPM Dependencies
 
 ```bash
-npm install @tiptap/core @tiptap/extension-image @tiptap/extension-link prosemirror-state
+npm install @tiptap/core @tiptap/extension-image @tiptap/extension-link
 ```
 
 > Use consistent TipTap major versions across all TipTap packages in your project.
 
-### 7. Configure TipTap Extensions
+### 7. Initialize Package in app.js
 
 Add to your `resources/js/app.js`:
 
 ```javascript
 import { initLaravelFilemanager } from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js";
-import {
-  getDragDropConfig,
-  processImageFile,
-} from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/drag-drop-config.js";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
-import { Plugin, PluginKey } from "prosemirror-state";
 import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css";
 import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css";
 
-document.addEventListener("flux:editor", (e) => {
-  if (!e.detail?.registerExtension) return;
-
-  e.detail.registerExtension(
-    Link.configure({
-      openOnClick: false,
-      HTMLAttributes: {
-        rel: "noopener noreferrer nofollow",
-      },
-    }),
-  );
-
-  e.detail.registerExtension(
-    Image.configure({
-      inline: true,
-      allowBase64: true,
-      HTMLAttributes: {
-        class: "tiptap-image",
-      },
-    }),
-  );
-
-  // Optional extra ProseMirror plugins for drag/drop and paste
-  // can be added here using Plugin and PluginKey.
-});
+// See examples/app.js for the Flux-safe extension registration block.
 
 initLaravelFilemanager();
 ```
 
-**For complete TipTap configuration with Image and Link extensions, drag & drop, and paste support:**
+Use the Flux-safe extension registration block from `examples/app.js`.
 
-See the complete working example in [`examples/app.js`](../examples/app.js) which includes:
-
-- Image extension with all attributes (width, alt, title, alignment, classes, styles)
-- Link extension with target, class, and style support
-- Drag & drop handler for images
-- Paste handler for clipboard images
-- Full ProseMirror plugin configuration
+> If you use `php artisan flux-filemanager:install`, this `resources/js/app.js` setup is added automatically.
 
 ### 8. Build Assets
 
@@ -193,7 +155,7 @@ If the filemanager popup is blocked by the browser:
 
 1. Allow popups for your domain
 2. Check browser console for errors
-3. Verify the `FILEMANAGER_URL` matches your route prefix
+3. Verify `/filemanager` routes are available and authenticated
 
 ### Images Not Uploading
 
@@ -204,16 +166,16 @@ If the filemanager popup is blocked by the browser:
 
 ### Drag & Drop Not Working
 
-1. Ensure NPM packages are installed: `prosemirror-state`
+1. Ensure NPM packages are installed: `@tiptap/extension-image` and `@tiptap/extension-link`
 2. Verify `app.js` includes drag & drop configuration
 3. Run `npm run build` after changes
 4. Hard refresh browser (Cmd/Ctrl + Shift + R)
 
 ### Upload Method Not Working
 
-1. Check `.env` configuration: `FILEMANAGER_DRAG_DROP_METHOD=upload`
+1. Update `config/flux-filemanager.php`: set `drag_drop.method` to `upload`
 2. Clear config cache: `php artisan config:clear`
-3. Verify upload endpoint exists and is accessible
+3. Verify `/filemanager/upload` exists and is accessible
 4. Check browser console for upload errors
 
 ## Next Steps

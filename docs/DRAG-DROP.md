@@ -20,24 +20,26 @@ You can configure how dropped/pasted images are handled in `config/flux-filemana
 'drag_drop' => [
     // Upload method: 'base64' or 'upload'
     'method' => env('FILEMANAGER_DRAG_DROP_METHOD', 'base64'),
-    
+
     // Upload endpoint (only used when method is 'upload')
-    'upload_url' => env('FILEMANAGER_UPLOAD_URL', '/cms/laravel-filemanager/upload'),
-    
+    'upload_url' => env('FILEMANAGER_UPLOAD_URL', '/filemanager/upload'),
+
     // Maximum file size in bytes (default: 5MB)
     'max_file_size' => env('FILEMANAGER_MAX_FILE_SIZE', 5242880),
-    
+
     // Allowed image types
     'allowed_types' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
 ],
 ```
 
 **Base64 Method (Default):**
+
 - Images are embedded directly in HTML
 - No server upload needed
 - Best for small images and quick demos
 
 **Upload Method:**
+
 - Images are uploaded to Laravel Filemanager
 - Stored on server like regular uploads
 - Better for production and large images
@@ -51,7 +53,7 @@ Add to your `.env` file:
 FILEMANAGER_DRAG_DROP_METHOD=base64
 
 # Upload endpoint (only for 'upload' method)
-FILEMANAGER_UPLOAD_URL=/cms/laravel-filemanager/upload
+FILEMANAGER_UPLOAD_URL=/filemanager/upload
 
 # Max file size in bytes (5MB = 5242880)
 FILEMANAGER_MAX_FILE_SIZE=5242880
@@ -62,6 +64,7 @@ FILEMANAGER_MAX_FILE_SIZE=5242880
 Drag & drop functionality is included in the standard installation.
 
 **Prerequisites:**
+
 1. Follow the [Installation Guide](INSTALLATION.md)
 2. Ensure `prosemirror-state` is installed
 3. Complete TipTap configuration from [`examples/app.js`](../examples/app.js)
@@ -79,6 +82,7 @@ The drag & drop handlers are part of the Image extension's ProseMirror plugins.
 5. Images are inserted automatically
 
 **Supported formats:**
+
 - PNG
 - JPG/JPEG
 - GIF
@@ -124,17 +128,20 @@ The `handlePaste` function:
 ### Base64 (Default)
 
 **Advantages:**
+
 - ✅ No server upload needed
 - ✅ Works immediately
 - ✅ No file management required
 - ✅ Images embedded in content
 
 **Disadvantages:**
+
 - ❌ Larger HTML size
 - ❌ Not ideal for large images
 - ❌ Slower page load for many images
 
 **Best for:**
+
 - Small images (< 100KB)
 - Icons and logos
 - Screenshots
@@ -145,7 +152,7 @@ The `handlePaste` function:
 To use server upload instead of base64:
 
 1. Set in `.env`: `FILEMANAGER_DRAG_DROP_METHOD=upload`
-2. Configure upload endpoint: `FILEMANAGER_UPLOAD_URL=/cms/laravel-filemanager/upload`
+2. Configure upload endpoint: `FILEMANAGER_UPLOAD_URL=/filemanager/upload`
 3. The package handles the upload automatically
 
 See [`examples/app.js`](../examples/app.js) for the implementation details.
@@ -155,10 +162,12 @@ See [`examples/app.js`](../examples/app.js) for the implementation details.
 After dropping or pasting an image, you can edit it like any other image:
 
 **Single click:**
+
 - Quick resize menu (25%, 50%, 75%, 100%)
 - Alignment buttons
 
 **Double click:**
+
 - Complete edit modal
 - Alt text
 - Title
@@ -176,6 +185,7 @@ See [IMAGE-EDITING.md](IMAGE-EDITING.md) for details.
 **Problem:** Nothing happens when dropping images
 
 **Solutions:**
+
 1. Check if `prosemirror-state` is installed
 2. Verify the plugin is registered correctly
 3. Check browser console for errors
@@ -186,6 +196,7 @@ See [IMAGE-EDITING.md](IMAGE-EDITING.md) for details.
 **Problem:** Paste doesn't insert images
 
 **Solutions:**
+
 1. Check if image is actually in clipboard
 2. Try with a screenshot first
 3. Check browser console for errors
@@ -196,14 +207,16 @@ See [IMAGE-EDITING.md](IMAGE-EDITING.md) for details.
 **Problem:** Editor becomes slow with large base64 images
 
 **Solutions:**
+
 1. Resize images before dropping
 2. Use server upload instead of base64
 3. Limit image size in handler:
 
 ```javascript
-if (file.size > 500000) { // 500KB
-    alert('Image too large. Please use an image smaller than 500KB.')
-    return
+if (file.size > 500000) {
+  // 500KB
+  alert("Image too large. Please use an image smaller than 500KB.");
+  return;
 }
 ```
 
@@ -215,16 +228,16 @@ if (file.size > 500000) { // 500KB
 
 ```javascript
 async function processFiles(files, view, coordinates) {
-    for (const file of files) {
-        await new Promise((resolve) => {
-            const reader = new FileReader()
-            reader.onload = (e) => {
-                // Insert image
-                resolve()
-            }
-            reader.readAsDataURL(file)
-        })
-    }
+  for (const file of files) {
+    await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        // Insert image
+        resolve();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 }
 ```
 
@@ -242,13 +255,13 @@ Add loading indicators for large images:
 
 ```javascript
 reader.onloadstart = () => {
-    // Show loading indicator
-}
+  // Show loading indicator
+};
 
 reader.onload = (e) => {
-    // Insert image
-    // Hide loading indicator
-}
+  // Insert image
+  // Hide loading indicator
+};
 ```
 
 ### 3. Validate File Types
@@ -256,13 +269,13 @@ reader.onload = (e) => {
 Ensure only images are processed:
 
 ```javascript
-const imageFiles = files.filter(file => {
-    return file.type.startsWith('image/') && file.size < 1000000 // 1MB limit
-})
+const imageFiles = files.filter((file) => {
+  return file.type.startsWith("image/") && file.size < 1000000; // 1MB limit
+});
 
 if (imageFiles.length === 0) {
-    alert('Please drop image files only (max 1MB)')
-    return false
+  alert("Please drop image files only (max 1MB)");
+  return false;
 }
 ```
 
@@ -272,8 +285,8 @@ Add error handling for failed reads:
 
 ```javascript
 reader.onerror = () => {
-    alert('Failed to read image file')
-}
+  alert("Failed to read image file");
+};
 ```
 
 ## See Also

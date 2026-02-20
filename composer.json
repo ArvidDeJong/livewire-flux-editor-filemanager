@@ -19,7 +19,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^9.0",
-        "phpunit/phpunit": "^11.0"
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -32,9 +33,9 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
-        "test-filter": "vendor/bin/phpunit --filter"
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage --coverage-html coverage",
+        "test-filter": "vendor/bin/pest --filter"
     },
     "extra": {
         "laravel": {

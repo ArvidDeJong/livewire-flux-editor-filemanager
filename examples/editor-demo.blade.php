@@ -8,11 +8,11 @@
 <div class="mx-auto max-w-4xl space-y-6 p-6">
     {{-- Header --}}
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold">Editor Demo</h1>
+        <flux:heading level="1" size="xl">{{ __('flux-filemanager::filemanager.demo_title') }}</flux:heading>
 
-        <button wire:click="save" class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-            Save
-        </button>
+        <flux:button wire:click="save">
+            {{ __('flux-filemanager::filemanager.demo_save') }}
+        </flux:button>
     </div>
 
     {{-- Success Message --}}
@@ -24,26 +24,25 @@
 
     {{-- Editor --}}
     <div class="rounded-lg bg-white p-6 shadow">
-        <label class="mb-2 block text-sm font-medium text-gray-700">
-            Content
-        </label>
+        <flux:text class="mb-2 block">{{ __('flux-filemanager::filemanager.demo_content_label') }}</flux:text>
 
         <x-flux-filemanager-editor wire:model="content" toolbar="full" :rows="15" />
 
-        <p class="mt-2 text-sm text-gray-500">
-            Try these features:
-            • Click 🖼️ to upload images
-            • Click 🔗 to add file links
-            • Drag & drop images directly into the editor
-            • Paste screenshots with Cmd/Ctrl + V
-            • Single click on images to resize
-            • Double click on images to edit details
-        </p>
+        <flux:text class="mt-2">
+            {{ __('flux-filemanager::filemanager.demo_features_intro') }}
+            • {{ __('flux-filemanager::filemanager.demo_feature_upload_images') }}
+            • {{ __('flux-filemanager::filemanager.demo_feature_add_file_links') }}
+            • {{ __('flux-filemanager::filemanager.demo_feature_drag_drop') }}
+            • {{ __('flux-filemanager::filemanager.demo_feature_paste') }}
+            • {{ __('flux-filemanager::filemanager.demo_feature_single_click_resize') }}
+            • {{ __('flux-filemanager::filemanager.demo_feature_double_click_edit') }}
+        </flux:text>
     </div>
 
     {{-- Preview --}}
     <div class="rounded-lg bg-white p-6 shadow">
-        <h2 class="mb-4 text-lg font-semibold">Preview</h2>
+        <flux:heading level="2" size="lg" class="mb-4">
+            {{ __('flux-filemanager::filemanager.demo_preview') }}</flux:heading>
 
         <div class="prose max-w-none">
             {!! $content !!}

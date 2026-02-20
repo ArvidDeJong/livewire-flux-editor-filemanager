@@ -12,7 +12,19 @@ return [
     |
     */
 
-    'url' => env('FILEMANAGER_URL', '/cms/laravel-filemanager'),
+    'url' => '/filemanager',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Installation Checklist URL
+    |--------------------------------------------------------------------------
+    |
+    | External/internal link used by the editor toolbar to quickly open the
+    | filemanager installation checklist.
+    |
+    */
+
+    'checklist_url' => env('FLUX_FILEMANAGER_CHECKLIST_URL', '/darvis/filemanager-checklist'),
 
     /*
     |--------------------------------------------------------------------------
@@ -87,13 +99,13 @@ return [
         // Upload method: 'base64' or 'upload'
         // - base64: Images are embedded directly in the HTML (no server upload)
         // - upload: Images are uploaded to server via Laravel Filemanager
-        'method' => env('FILEMANAGER_DRAG_DROP_METHOD', 'base64'),
+        'method' => 'base64',
 
         // Upload endpoint (only used when method is 'upload')
-        'upload_url' => env('FILEMANAGER_UPLOAD_URL', '/cms/laravel-filemanager/upload'),
+        'upload_url' => '/filemanager/upload',
 
         // Maximum file size in bytes (default: 5MB)
-        'max_file_size' => env('FILEMANAGER_MAX_FILE_SIZE', 5242880),
+        'max_file_size' => 5242880,
 
         // Allowed image types
         'allowed_types' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],

@@ -35,6 +35,7 @@
                 @include('flux-filemanager::flux.editor.image')
                 <flux:editor.link />
                 @include('flux-filemanager::flux.editor.file-link')
+                @include('flux-filemanager::flux.editor.checklist')
                 <flux:editor.separator />
                 <flux:editor.align />
                 <flux:editor.separator />
@@ -54,6 +55,7 @@
                 @include('flux-filemanager::flux.editor.image')
                 <flux:editor.link />
                 @include('flux-filemanager::flux.editor.file-link')
+                @include('flux-filemanager::flux.editor.checklist')
                 <flux:editor.separator />
                 <flux:editor.align />
             @endif

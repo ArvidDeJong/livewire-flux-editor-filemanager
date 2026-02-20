@@ -47,19 +47,20 @@ This interactive command will:
 
 - ✅ Install Laravel Filemanager
 - ✅ Publish configurations and assets
+- ✅ Enable standard LFM routes (`/filemanager`) automatically
 - ✅ Create storage directories
 - ✅ Install NPM dependencies
+- ✅ Configure `resources/js/app.js` automatically
 - ✅ Build assets
 
 ### 3. Configure Routes
 
-Add to `routes/web.php`:
+Use standard Laravel Filemanager package routes via `config/lfm.php`:
 
-```php
-Route::prefix('cms/laravel-filemanager')->middleware(['auth'])->group(function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
-});
-```
+- `use_package_routes` => `true`
+- `url_prefix` => `filemanager`
+
+The installer configures this automatically.
 
 ### 4. Add to Your JavaScript
 
@@ -67,18 +68,17 @@ Add to `resources/js/app.js`:
 
 ```javascript
 import { initLaravelFilemanager } from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js";
-import {
-  getDragDropConfig,
-  processImageFile,
-} from "../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/drag-drop-config.js";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
-import { Plugin, PluginKey } from "prosemirror-state";
 import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css";
 import "../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css";
 
+// See examples/app.js for the Flux-safe extension registration block.
+
 initLaravelFilemanager();
 ```
+
+When you run `php artisan flux-filemanager:install`, this setup (including Flux-safe extension registration) is added to `resources/js/app.js` automatically.
 
 Then build:
 

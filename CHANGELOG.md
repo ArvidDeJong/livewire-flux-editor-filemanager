@@ -2,6 +2,24 @@
 
 All notable changes to `livewire-flux-editor-filemanager` will be documented in this file.
 
+## [1.1.3] - 2026-02-20
+
+### Added
+
+- APP URL diagnostic callout in the demo view to verify whether `APP_URL` host matches the current request host.
+- Clear mismatch guidance in the demo callout, including a `php artisan config:clear` command hint.
+
+### Changed
+
+- Migrated demo headings and text blocks to Flux UI components (`flux:heading`, `flux:text`, `flux:callout`) for consistent package examples.
+- Localized remaining demo UI text in Blade views and demo Livewire components using translation keys.
+- Added new translation keys for demo labels/messages and APP URL diagnostics across `en`, `de`, and `nl` locale files.
+
+### Fixed
+
+- Passed runtime filemanager settings (`filemanager_url`, popup width, popup height) from Blade config to JavaScript, preventing incorrect fallback behavior in popup URLs.
+- Corrected malformed Blade JSON directive in editor component config bootstrapping.
+
 ## [1.1.2] - 2026-02-19
 
 ### Fixed

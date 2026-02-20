@@ -8,7 +8,7 @@
 export function getDragDropConfig(editorElement) {
     const config = {
         method: editorElement?.dataset?.dragDropMethod || 'base64',
-        uploadUrl: editorElement?.dataset?.uploadUrl || '/cms/laravel-filemanager/upload',
+        uploadUrl: editorElement?.dataset?.uploadUrl || '/filemanager/upload',
         maxFileSize: parseInt(editorElement?.dataset?.maxFileSize || '5242880'),
         allowedTypes: (editorElement?.dataset?.allowedTypes || 'image/jpeg,image/png,image/gif,image/webp,image/svg+xml').split(','),
     }

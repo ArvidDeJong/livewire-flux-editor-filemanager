@@ -27,7 +27,8 @@ The icon shows two linked rings (🔗), similar to a link icon but specifically 
 ### Tooltip
 
 On hover, the tooltip appears:
-- 🇳🇱 Dutch: "Bestand link invoegen"
+
+- 🇳🇱 Dutch: "Insert File Link"
 - 🇬🇧 English: "Insert File Link"
 - 🇩🇪 German: "Dateilink einfügen"
 
@@ -59,14 +60,14 @@ If the file doesn't exist yet:
 
 Laravel Filemanager supports by default:
 
-| Type | Extensions | Use |
-|------|-----------|---------|
-| **Documents** | `.pdf`, `.doc`, `.docx` | Manuals, reports |
-| **Spreadsheets** | `.xls`, `.xlsx`, `.csv` | Data, price lists |
-| **Presentations** | `.ppt`, `.pptx` | Presentations |
-| **Archives** | `.zip`, `.rar`, `.7z` | Multiple files |
-| **Text** | `.txt`, `.md` | Documentation |
-| **Other** | Configurable | Depends on setup |
+| Type              | Extensions              | Use               |
+| ----------------- | ----------------------- | ----------------- |
+| **Documents**     | `.pdf`, `.doc`, `.docx` | Manuals, reports  |
+| **Spreadsheets**  | `.xls`, `.xlsx`, `.csv` | Data, price lists |
+| **Presentations** | `.ppt`, `.pptx`         | Presentations     |
+| **Archives**      | `.zip`, `.rar`, `.7z`   | Multiple files    |
+| **Text**          | `.txt`, `.md`           | Documentation     |
+| **Other**         | Configurable            | Depends on setup  |
 
 ## Step 2: Configure Link
 
@@ -79,6 +80,7 @@ After selecting a file, a modal opens with the following fields:
 The full URL to the file.
 
 **Example:**
+
 ```
 https://example.com/storage/files/3/manual.pdf
 ```
@@ -90,6 +92,7 @@ This field is read-only and shows the selected file.
 The text that is visible in the editor and on the website.
 
 **Examples:**
+
 ```
 Download PDF
 View manual
@@ -98,6 +101,7 @@ Click here for more information
 ```
 
 **Tips:**
+
 - Make it descriptive
 - Mention the file type
 - Optionally mention the file size
@@ -107,12 +111,12 @@ Click here for more information
 
 Determines where the link opens:
 
-| Option | Value | Behavior |
-|-------|--------|--------|
-| **New window** | `_blank` | Opens in new tab (default) |
-| **Same window** | `_self` | Opens in the same tab |
-| **Parent window** | `_parent` | Opens in parent frame |
-| **Top window** | `_top` | Opens in top-level frame |
+| Option            | Value     | Behavior                   |
+| ----------------- | --------- | -------------------------- |
+| **New window**    | `_blank`  | Opens in new tab (default) |
+| **Same window**   | `_self`   | Opens in the same tab      |
+| **Parent window** | `_parent` | Opens in parent frame      |
+| **Top window**    | `_top`    | Opens in top-level frame   |
 
 **Recommendation:** Use `_blank` for downloads so users stay on the page.
 
@@ -123,16 +127,19 @@ Add CSS classes for styling.
 **Examples:**
 
 **Tailwind CSS:**
+
 ```
 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700
 ```
 
 **Bootstrap:**
+
 ```
 btn btn-primary btn-lg
 ```
 
 **Custom classes:**
+
 ```
 download-button pdf-link
 ```
@@ -144,23 +151,26 @@ Add inline CSS styling.
 **Examples:**
 
 **Button styling:**
+
 ```
 background: #3b82f6; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;
 ```
 
 **Icon styling:**
+
 ```
 padding-left: 24px; background: url('/icons/pdf.svg') no-repeat left center;
 ```
 
 ### Modal Actions
 
-| Button | Action |
-|--------|-------|
+| Button     | Action                           |
+| ---------- | -------------------------------- |
 | **Cancel** | Closes modal without adding link |
-| **Insert** | Adds link to the editor |
+| **Insert** | Adds link to the editor          |
 
 **Keyboard shortcuts:**
+
 - `Enter` - Insert (in last field)
 - `Esc` - Cancel
 
@@ -180,52 +190,52 @@ padding-left: 24px; background: url('/icons/pdf.svg') no-repeat left center;
 ### Basic Link
 
 ```html
-<a 
-    href="https://example.com/storage/files/handleiding.pdf" 
-    target="_blank" 
-    rel="noopener noreferrer nofollow"
+<a
+  href="https://example.com/storage/files/handleiding.pdf"
+  target="_blank"
+  rel="noopener noreferrer nofollow"
 >
-    Download PDF
+  Download PDF
 </a>
 ```
 
-### Link met Classes
+### Link with Classes
 
 ```html
-<a 
-    href="https://example.com/storage/files/prijslijst.xlsx" 
-    target="_blank" 
-    rel="noopener noreferrer nofollow"
-    class="btn btn-primary"
+<a
+  href="https://example.com/storage/files/price-list.xlsx"
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+  class="btn btn-primary"
 >
-    Prijslijst downloaden
+  Download price list
 </a>
 ```
 
 ### Link with Styles
 
 ```html
-<a 
-    href="https://example.com/storage/files/rapport.docx" 
-    target="_blank" 
-    rel="noopener noreferrer nofollow"
-    style="background: #3b82f6; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;"
+<a
+  href="https://example.com/storage/files/report.docx"
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+  style="background: #3b82f6; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;"
 >
-    Bekijk rapport
+  View report
 </a>
 ```
 
 ### Link with Classes and Styles
 
 ```html
-<a 
-    href="https://example.com/storage/files/archief.zip" 
-    target="_blank" 
-    rel="noopener noreferrer nofollow"
-    class="download-button inline-flex items-center"
-    style="font-weight: bold; color: #1e40af;"
+<a
+  href="https://example.com/storage/files/archive.zip"
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+  class="download-button inline-flex items-center"
+  style="font-weight: bold; color: #1e40af;"
 >
-    Download archief (ZIP, 15MB)
+  Download archive (ZIP, 15MB)
 </a>
 ```
 
@@ -245,6 +255,7 @@ padding-left: 24px; background: url('/icons/pdf.svg') no-repeat left center;
 ```
 
 **Why?**
+
 - Users know what to expect
 - Better for SEO
 - More accessible for screen readers
@@ -258,19 +269,19 @@ padding-left: 24px; background: url('/icons/pdf.svg') no-repeat left center;
 ```
 
 **Why?**
+
 - Users know what they're downloading
 - Prevents surprises with large files
 - Users can decide whether to download
 
-### 3. Use _blank for Downloads
+### 3. Use \_blank for Downloads
 
 ```html
-<a href="/storage/files/document.pdf" target="_blank">
-    Download document
-</a>
+<a href="/storage/files/document.pdf" target="_blank"> Download document </a>
 ```
 
 **Why?**
+
 - Users stay on the page
 - Document opens in new tab
 - Better user experience
@@ -305,10 +316,11 @@ Use the same classes for similar links:
 The package automatically adds `rel="noopener noreferrer nofollow"` for security:
 
 ```html
-<a href="..." target="_blank" rel="noopener noreferrer nofollow">
+<a href="..." target="_blank" rel="noopener noreferrer nofollow"></a>
 ```
 
 **What does this do?**
+
 - `noopener` - Prevents window.opener exploits
 - `noreferrer` - Hides referrer information
 - `nofollow` - Indicates that link should not be followed by search engines
@@ -318,57 +330,63 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 ### Example 1: PDF Download Button
 
 **Configuration:**
+
 - Link text: `Download product catalog 2024 (PDF, 5.2MB)`
 - Target: `_blank`
 - Classes: `inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition`
 
 **Result:**
+
 ```html
-<a 
-    href="https://example.com/storage/files/catalogus-2024.pdf" 
-    target="_blank" 
-    rel="noopener noreferrer nofollow"
-    class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+<a
+  href="https://example.com/storage/files/catalog-2024.pdf"
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+  class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
 >
-    Download product catalog 2024 (PDF, 5.2MB)
+  Download product catalog 2024 (PDF, 5.2MB)
 </a>
 ```
 
 ### Example 2: Excel Price List
 
 **Configuration:**
+
 - Link text: `View current price list (Excel)`
 - Target: `_blank`
 - Classes: `text-green-600 underline hover:text-green-800`
 
 **Result:**
+
 ```html
-<a 
-    href="https://example.com/storage/files/prijslijst.xlsx" 
-    target="_blank" 
-    rel="noopener noreferrer nofollow"
-    class="text-green-600 underline hover:text-green-800"
+<a
+  href="https://example.com/storage/files/price-list.xlsx"
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+  class="text-green-600 underline hover:text-green-800"
 >
-    View current price list (Excel)
+  View current price list (Excel)
 </a>
 ```
 
 ### Example 3: ZIP Archive with Icon
 
 **Configuration:**
+
 - Link text: `Download all photos (ZIP, 45MB)`
 - Target: `_blank`
 - Styles: `padding-left: 28px; background: url('/icons/zip.svg') no-repeat left center; background-size: 20px;`
 
 **Result:**
+
 ```html
-<a 
-    href="https://example.com/storage/files/fotos-2024.zip" 
-    target="_blank" 
-    rel="noopener noreferrer nofollow"
-    style="padding-left: 28px; background: url('/icons/zip.svg') no-repeat left center; background-size: 20px;"
+<a
+  href="https://example.com/storage/files/photos-2024.zip"
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+  style="padding-left: 28px; background: url('/icons/zip.svg') no-repeat left center; background-size: 20px;"
 >
-    Download all photos (ZIP, 45MB)
+  Download all photos (ZIP, 45MB)
 </a>
 ```
 
@@ -378,7 +396,7 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 
 ```html
 <a href="/storage/files/installation-manual.pdf" target="_blank">
-    Installation manual (PDF, 1.2MB)
+  Installation manual (PDF, 1.2MB)
 </a>
 ```
 
@@ -386,15 +404,19 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 
 ```html
 <a href="/storage/files/application-form.docx" target="_blank">
-    Download application form (Word)
+  Download application form (Word)
 </a>
 ```
 
 ### 3. Reports and Annual Reports
 
 ```html
-<a href="/storage/files/annual-report-2023.pdf" target="_blank" class="btn btn-primary">
-    Annual report 2023 (PDF, 8.5MB)
+<a
+  href="/storage/files/annual-report-2023.pdf"
+  target="_blank"
+  class="btn btn-primary"
+>
+  Annual report 2023 (PDF, 8.5MB)
 </a>
 ```
 
@@ -402,7 +424,7 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 
 ```html
 <a href="/storage/files/technical-specs.xlsx" target="_blank">
-    Technical specifications (Excel, 245KB)
+  Technical specifications (Excel, 245KB)
 </a>
 ```
 
@@ -410,7 +432,7 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 
 ```html
 <a href="/storage/files/software-v2.1.zip" target="_blank" class="download-btn">
-    Download Software v2.1 (ZIP, 125MB)
+  Download Software v2.1 (ZIP, 125MB)
 </a>
 ```
 
@@ -421,6 +443,7 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 **Problem:** The file link button doesn't appear in the toolbar
 
 **Solutions:**
+
 1. Check if you're using the package editor component
 2. Check if the toolbar includes the file-link button
 3. Refresh the page with `Cmd + Shift + R`
@@ -430,6 +453,7 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 **Problem:** Popup doesn't open when clicking the button
 
 **Solutions:**
+
 1. Check if Laravel Filemanager is correctly installed
 2. Check if the URL is correct in config
 3. Check browser console for errors
@@ -440,6 +464,7 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 **Problem:** Images tab opens instead of Files tab
 
 **Solution:**
+
 - This is normal behavior - manually navigate to the Files tab
 - Or use the image button for images
 
@@ -448,6 +473,7 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 **Problem:** After "Insert" the link doesn't appear
 
 **Solutions:**
+
 1. Check if Livewire is working correctly
 2. Check browser console for JavaScript errors
 3. Save the page in the CMS
@@ -458,6 +484,7 @@ The package automatically adds `rel="noopener noreferrer nofollow"` for security
 **Problem:** Link works but file cannot be downloaded
 
 **Solutions:**
+
 1. Check if file still exists in storage
 2. Check file permissions (must be readable)
 3. Check if storage link is correct: `php artisan storage:link`
@@ -489,13 +516,13 @@ Link.configure({
 
 ### Attributes
 
-| Attribute | Type | Description |
-|-----------|------|--------------|
-| `href` | String | File URL (required) |
-| `target` | String | Window target (_blank, _self, etc.) |
-| `rel` | String | Relationship (automatic: noopener noreferrer nofollow) |
-| `class` | String | CSS classes |
-| `style` | String | Inline CSS |
+| Attribute | Type   | Description                                            |
+| --------- | ------ | ------------------------------------------------------ |
+| `href`    | String | File URL (required)                                    |
+| `target`  | String | Window target (\_blank, \_self, etc.)                  |
+| `rel`     | String | Relationship (automatic: noopener noreferrer nofollow) |
+| `class`   | String | CSS classes                                            |
+| `style`   | String | Inline CSS                                             |
 
 ### Security
 

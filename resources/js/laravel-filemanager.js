@@ -16,6 +16,46 @@ function getConfig(key, defaultValue) {
     return defaultValue
 }
 
+function t(key, fallback) {
+    const translations = getConfig('i18n', {})
+    return translations?.[key] || fallback
+}
+
+function normalizePickedUrl(rawUrl) {
+    if (!rawUrl) return rawUrl
+
+    try {
+        const parsed = new URL(rawUrl, window.location.origin)
+        const pointsToLocalStorage = parsed.pathname.startsWith('/storage/')
+        const pointsToLfm = parsed.pathname.startsWith('/laravel-filemanager')
+            || parsed.pathname.startsWith('/filemanager')
+            || parsed.pathname.startsWith('/cms/filemanager')
+            || parsed.pathname.startsWith('/cms/laravel-filemanager')
+
+        if ((pointsToLocalStorage || pointsToLfm) && parsed.origin !== window.location.origin) {
+            return `${parsed.pathname}${parsed.search}${parsed.hash}`
+        }
+
+        return parsed.toString()
+    } catch {
+        return rawUrl
+    }
+}
+
+function extractUrlsFromLfmItems(items) {
+    if (!items) return []
+
+    const values = Array.isArray(items) ? items : [items]
+
+    return values
+        .map((item) => {
+            if (typeof item === 'string') return item
+            return item?.url || item?.path || item?.thumb_url || null
+        })
+        .map((url) => normalizePickedUrl(url))
+        .filter(Boolean)
+}
+
 /**
  * Open Laravel Filemanager popup
  * @param {string} type - 'Images' or 'Files'
@@ -25,7 +65,7 @@ function openLaravelFilemanager(type, onPicked) {
     const config = {
         width: getConfig('popup_width', 900),
         height: getConfig('popup_height', 600),
-        url: getConfig('filemanager_url', '/cms/laravel-filemanager')
+        url: getConfig('filemanager_url', '/filemanager')
     }
 
     const left = window.screenX + (window.outerWidth - config.width) / 2
@@ -43,22 +83,20 @@ function openLaravelFilemanager(type, onPicked) {
         // Check if popup was blocked
         if (!fm || fm.closed || typeof fm.closed === 'undefined') {
             const message = getConfig('popup_blocked_message',
-                'Popup was blocked by your browser. Please allow popups for this site.')
+                t('popup_blocked_message', 'Popup was blocked by your browser. Please allow popups for this site.'))
             alert(message)
             return
         }
 
         // UniSharp Laravel Filemanager callback
         window.SetUrl = function (items) {
-            const urls = (items || [])
-                .map(i => i?.url)
-                .filter(Boolean)
+            const urls = extractUrlsFromLfmItems(items)
 
             try {
-                if (urls.length === 0) {
-                }
+                if (urls.length === 0) return
                 onPicked(urls)
             } catch (error) {
+                console.error('Failed processing selected filemanager items:', error)
             } finally {
                 delete window.SetUrl
                 if (fm && !fm.closed) {
@@ -71,7 +109,7 @@ function openLaravelFilemanager(type, onPicked) {
         }
     } catch (error) {
         const message = getConfig('filemanager_error_message',
-            'Laravel Filemanager could not be loaded. Please check your installation.')
+            t('filemanager_error_message', 'Laravel Filemanager could not be loaded. Please check your installation.'))
         alert(message)
     }
 }
@@ -85,10 +123,40 @@ function insertImageFromFilemanager(editor) {
         if (!urls.length) return
 
         urls.forEach((src) => {
-            editor.chain().focus().setImage({
-                src,
-                width: '100%' // Default width, can be resized via context menu
-            }).run()
+            try {
+                const inserted = editor.chain().focus().setImage({
+                    src,
+                    width: '400px' // Default width, can be resized via context menu
+                }).run()
+
+                if (inserted) {
+                    return
+                }
+            } catch (error) {
+                console.warn('setImage command failed, using fallback insertion.', error)
+            }
+
+            const escapedSrc = String(src).replace(/"/g, '&quot;')
+
+            try {
+                const insertedHtml = editor
+                    .chain()
+                    .focus()
+                    .insertContent(`<img src="${escapedSrc}" class="tiptap-image" style="width: 400px;" />`)
+                    .run()
+
+                if (insertedHtml) {
+                    return
+                }
+            } catch (error) {
+                console.warn('HTML image insertion failed, using link fallback.', error)
+            }
+
+            editor
+                .chain()
+                .focus()
+                .insertContent(`<a href="${escapedSrc}" target="_blank" rel="noopener noreferrer">${escapedSrc}</a>`)
+                .run()
         })
     })
 }
@@ -124,39 +192,39 @@ function showFileLinkModal(editor, url) {
     modal.innerHTML = `
         <div class="file-link-modal">
             <div class="file-link-modal-header">
-                <h3>Insert File Link</h3>
+                <h3>${t('insert_link', 'Insert File Link')}</h3>
                 <button class="file-link-modal-close" type="button">&times;</button>
             </div>
             <div class="file-link-modal-body">
                 <div class="form-group">
-                    <label>File:</label>
+                    <label>${t('file', 'File')}:</label>
                     <input type="text" class="file-url" value="${url}" readonly />
                 </div>
                 <div class="form-group">
-                    <label>Link text:</label>
-                    <input type="text" class="link-text" value="${filename}" placeholder="Click here to download" />
+                    <label>${t('link_text', 'Link Text')}:</label>
+                    <input type="text" class="link-text" value="${filename}" placeholder="${t('link_text_placeholder', 'Click here to download')}" />
                 </div>
                 <div class="form-group">
-                    <label>Target:</label>
+                    <label>${t('target', 'Target')}:</label>
                     <select class="link-target">
-                        <option value="_blank">New window (_blank)</option>
-                        <option value="_self">Same window (_self)</option>
-                        <option value="_parent">Parent window (_parent)</option>
-                        <option value="_top">Top window (_top)</option>
+                        <option value="_blank">${t('target_blank', 'New window (_blank)')}</option>
+                        <option value="_self">${t('target_self', 'Same window (_self)')}</option>
+                        <option value="_parent">${t('target_parent', 'Parent window (_parent)')}</option>
+                        <option value="_top">${t('target_top', 'Top window (_top)')}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Extra CSS Classes:</label>
-                    <input type="text" class="link-classes" value="" placeholder="e.g. btn btn-primary" />
+                    <label>${t('extra_css_classes', 'Extra CSS Classes')}:</label>
+                    <input type="text" class="link-classes" value="" placeholder="${t('link_css_classes_placeholder', 'e.g. btn btn-primary')}" />
                 </div>
                 <div class="form-group">
-                    <label>Extra Styles:</label>
-                    <input type="text" class="link-styles" value="" placeholder="e.g. color: blue; font-weight: bold;" />
+                    <label>${t('extra_styles', 'Extra Styles')}:</label>
+                    <input type="text" class="link-styles" value="" placeholder="${t('link_styles_placeholder', 'e.g. color: blue; font-weight: bold;')}" />
                 </div>
             </div>
             <div class="file-link-modal-footer">
-                <button class="btn-cancel" type="button">Cancel</button>
-                <button class="btn-insert" type="button">Insert</button>
+                <button class="btn-cancel" type="button">${t('cancel', 'Cancel')}</button>
+                <button class="btn-insert" type="button">${t('insert', 'Insert')}</button>
             </div>
         </div>
     `
@@ -186,7 +254,7 @@ function showFileLinkModal(editor, url) {
         const extraStyles = modal.querySelector('.link-styles').value.trim()
 
         if (!linkText) {
-            alert('Please enter link text')
+            alert(t('enter_link_text', 'Please enter link text'))
             return
         }
 
@@ -258,24 +326,24 @@ function showImageEditModal(editor, img) {
     modal.innerHTML = `
         <div class="file-link-modal">
             <div class="file-link-modal-header">
-                <h3>Edit Image</h3>
+                <h3>${t('edit_image', 'Edit Image')}</h3>
                 <button class="file-link-modal-close" type="button">&times;</button>
             </div>
             <div class="file-link-modal-body">
                 <div class="form-group">
-                    <label>Image:</label>
+                    <label>${t('image', 'Image')}:</label>
                     <input type="text" class="image-src" value="${src}" readonly />
                 </div>
                 <div class="form-group">
-                    <label>Alt text:</label>
-                    <input type="text" class="image-alt" value="${alt}" placeholder="Image description" />
+                    <label>${t('alt_text', 'Alt Text')}:</label>
+                    <input type="text" class="image-alt" value="${alt}" placeholder="${t('alt_text_placeholder', 'Description of the image')}" />
                 </div>
                 <div class="form-group">
-                    <label>Title:</label>
-                    <input type="text" class="image-title" value="${title}" placeholder="Tooltip text on hover" />
+                    <label>${t('title', 'Title')}:</label>
+                    <input type="text" class="image-title" value="${title}" placeholder="${t('title_placeholder', 'Tooltip text on hover')}" />
                 </div>
                 <div class="form-group">
-                    <label>Width:</label>
+                    <label>${t('width', 'Width')}:</label>
                     <select class="image-width">
                         <option value="25%" ${width === '25%' ? 'selected' : ''}>25%</option>
                         <option value="50%" ${width === '50%' ? 'selected' : ''}>50%</option>
@@ -284,26 +352,26 @@ function showImageEditModal(editor, img) {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Alignment:</label>
+                    <label>${t('alignment', 'Alignment')}:</label>
                     <select class="image-align">
-                        <option value="" ${!dataAlign ? 'selected' : ''}>None</option>
-                        <option value="left" ${dataAlign === 'left' ? 'selected' : ''}>Left</option>
-                        <option value="center" ${dataAlign === 'center' ? 'selected' : ''}>Center</option>
-                        <option value="right" ${dataAlign === 'right' ? 'selected' : ''}>Right</option>
+                        <option value="" ${!dataAlign ? 'selected' : ''}>${t('alignment_none', 'None')}</option>
+                        <option value="left" ${dataAlign === 'left' ? 'selected' : ''}>${t('alignment_left', 'Left')}</option>
+                        <option value="center" ${dataAlign === 'center' ? 'selected' : ''}>${t('alignment_center', 'Center')}</option>
+                        <option value="right" ${dataAlign === 'right' ? 'selected' : ''}>${t('alignment_right', 'Right')}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Extra CSS Classes:</label>
-                    <input type="text" class="image-classes" value="" placeholder="e.g. rounded shadow-lg" />
+                    <label>${t('extra_css_classes', 'Extra CSS Classes')}:</label>
+                    <input type="text" class="image-classes" value="" placeholder="${t('extra_css_classes_placeholder', 'e.g. rounded shadow-lg')}" />
                 </div>
                 <div class="form-group">
-                    <label>Extra Styles:</label>
-                    <input type="text" class="image-styles" value="" placeholder="e.g. border: 1px solid red;" />
+                    <label>${t('extra_styles', 'Extra Styles')}:</label>
+                    <input type="text" class="image-styles" value="" placeholder="${t('extra_styles_placeholder', 'e.g. border: 1px solid red;')}" />
                 </div>
             </div>
             <div class="file-link-modal-footer">
-                <button class="btn-cancel" type="button">Cancel</button>
-                <button class="btn-insert" type="button">Update</button>
+                <button class="btn-cancel" type="button">${t('cancel', 'Cancel')}</button>
+                <button class="btn-insert" type="button">${t('update', 'Update')}</button>
             </div>
         </div>
     `
@@ -456,25 +524,25 @@ function enableImageResize() {
                     <button data-width="100%">100%</button>
                     <div class="custom-width-input">
                         <input type="number" min="1" max="100" placeholder="%" class="width-input" />
-                        <button class="apply-custom">OK</button>
+                        <button class="apply-custom">${t('apply', 'Apply')}</button>
                     </div>
                 </div>
                 <div class="align-section">
-                    <button data-align="left" title="Align left">
+                    <button data-align="left" title="${t('align_left_title', 'Align left')}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="3" y1="6" x2="21" y2="6"></line>
                             <line x1="3" y1="12" x2="15" y2="12"></line>
                             <line x1="3" y1="18" x2="18" y2="18"></line>
                         </svg>
                     </button>
-                    <button data-align="center" title="Align center">
+                    <button data-align="center" title="${t('align_center_title', 'Align center')}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="3" y1="6" x2="21" y2="6"></line>
                             <line x1="6" y1="12" x2="18" y2="12"></line>
                             <line x1="5" y1="18" x2="19" y2="18"></line>
                         </svg>
                     </button>
-                    <button data-align="right" title="Align right">
+                    <button data-align="right" title="${t('align_right_title', 'Align right')}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="3" y1="6" x2="21" y2="6"></line>
                             <line x1="9" y1="12" x2="21" y2="12"></line>
@@ -679,7 +747,6 @@ function enableImageResize() {
  * Sets up the image button click handler and enables resize functionality
  */
 export function initLaravelFilemanager() {
-
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
@@ -728,6 +795,17 @@ function setupImageButtonListener() {
 
             insertFileLinkFromFilemanager(editorElement.editor)
             return
+        }
+
+        const checklistButton = e.target.closest('[data-filemanager-checklist]')
+        if (checklistButton) {
+            e.preventDefault()
+            e.stopPropagation()
+
+            const checklistUrl = checklistButton.getAttribute('data-filemanager-checklist')
+            if (checklistUrl) {
+                window.open(checklistUrl, '_blank', 'noopener,noreferrer')
+            }
         }
     })
 }
