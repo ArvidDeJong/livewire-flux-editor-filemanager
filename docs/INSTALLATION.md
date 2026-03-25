@@ -5,7 +5,7 @@ Complete installation guide for the Flux Filemanager Editor package.
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11.0+ or 12.0+
+- Laravel 11.0+ or 12.0+ or 13.0+
 - Livewire 3.0+ or 4.0+
 - Flux UI (with Flux Pro for Editor component)
 - Laravel Filemanager (UniSharp)

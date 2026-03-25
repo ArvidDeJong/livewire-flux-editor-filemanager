@@ -18,7 +18,7 @@ Laravel Filemanager integration for Flux TipTap Editor with powerful image and f
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11+ or 12+
+- Laravel 11+ or 12+ or 13+
 - Livewire 3+ or 4+
 - Flux UI with Flux Pro
 - Laravel Filemanager

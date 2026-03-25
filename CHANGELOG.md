@@ -2,6 +2,13 @@
 
 All notable changes to `livewire-flux-editor-filemanager` will be documented in this file.
 
+## [1.1.4] - 2026-03-25
+
+### Compatibility
+
+- Added Laravel 13 compatibility in package constraints (`illuminate/support: ^11.0|^12.0|^13.0`).
+- Updated package requirements in README and installation docs to mention Laravel 13 support.
+
 ## [1.1.3] - 2026-02-20
 
 ### Added
