@@ -28,6 +28,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Demo Routes
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, the package registers two unauthenticated pages on the
+    | web middleware group: /darvis/editor-demo, a working editor to try the
+    | integration, and /darvis/filemanager-checklist, which walks through
+    | the installation. Leave this off in production.
+    |
+    */
+
+    'demo_routes' => env('FLUX_FILEMANAGER_DEMO_ROUTES', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Popup Window Dimensions
     |--------------------------------------------------------------------------
     |

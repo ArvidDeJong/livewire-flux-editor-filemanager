@@ -1,1 +1,31 @@
-<?phpuse Darvis\FluxFilemanager\FluxFilemanagerServiceProvider;it('service provider is registered', function () {    $providers = $this->app->getLoadedProviders();    expect($providers)->toHaveKey(FluxFilemanagerServiceProvider::class);});it('config can be published', function () {    $this->artisan('vendor:publish', [        '--tag' => 'flux-filemanager-config',        '--force' => true,    ])->assertSuccessful();});it('views are loaded', function () {    expect(view()->exists('flux-filemanager::components.editor'))->toBeTrue();});it('blade component is registered', function () {    $componentAliases = $this->app->make('blade.compiler')->getClassComponentAliases();    expect($componentAliases)->toHaveKey('flux-filemanager-editor');});
+<?php
+
+use Darvis\FluxFilemanager\FluxFilemanagerServiceProvider;
+
+it('registers the service provider', function () {
+    expect($this->app->getLoadedProviders())->toHaveKey(FluxFilemanagerServiceProvider::class);
+});
+
+it('publishes the config', function () {
+    $this->artisan('vendor:publish', [
+        '--tag' => 'flux-filemanager-config',
+        '--force' => true,
+    ])->assertSuccessful();
+});
+
+it('loads the views', function () {
+    expect(view()->exists('flux-filemanager::components.editor'))->toBeTrue();
+});
+
+it('registers the blade component', function () {
+    $aliases = $this->app->make('blade.compiler')->getClassComponentAliases();
+
+    expect($aliases)->toHaveKey('flux-filemanager-editor');
+});
+
+it('does not register the demo routes by default', function () {
+    $routes = app('router')->getRoutes();
+
+    expect($routes->getByName('flux-filemanager.editor-demo'))->toBeNull();
+    expect($routes->getByName('flux-filemanager.filemanager-checklist'))->toBeNull();
+});

@@ -8,57 +8,62 @@ use Illuminate\Support\Facades\File;
 class InstallCommand extends Command
 {
     protected $signature = 'flux-filemanager:install
-                            {--force : Overwrite existing files}';
+                            {--force : Overwrite the published config file}';
 
-    protected $description = 'Install Flux Filemanager package with all dependencies';
+    protected $description = 'Install Flux Filemanager: Laravel Filemanager config and routes, storage, npm packages and the app.js setup';
+
+    private const NPM_PACKAGES = [
+        '@tiptap/core',
+        '@tiptap/pm',
+        '@tiptap/extension-image',
+        '@tiptap/extension-link',
+    ];
+
+    private const JS_MODULE = '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js';
+
+    private const IMPORTS = [
+        "import Link from '@tiptap/extension-link'",
+        "import Image from '@tiptap/extension-image'",
+        "import { initLaravelFilemanager, createImageDropPastePlugin } from '".self::JS_MODULE."'",
+        "import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css'",
+        "import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'",
+    ];
 
     public function handle(): int
     {
-        $this->info('🚀 Installing Flux Filemanager...');
+        $this->info('Installing Flux Filemanager...');
         $this->newLine();
 
-        // Step 1: Install Laravel Filemanager
-        if ($this->confirm('Install Laravel Filemanager?', true)) {
-            $this->step1InstallLaravelFilemanager();
+        if ($this->confirm('Publish the Laravel Filemanager configuration and assets?', true)) {
+            $this->publishLfmConfig();
         }
 
-        // Step 2: Publish Laravel Filemanager config
-        if ($this->confirm('Publish Laravel Filemanager configuration?', true)) {
-            $this->step2PublishLfmConfig();
+        if ($this->confirm('Enable the Laravel Filemanager routes at /filemanager?', true)) {
+            $this->configureLfmRoutes();
         }
 
-        // Step 3: Configure standard LFM routes
-        if ($this->confirm('Configure standard Laravel Filemanager routes?', true)) {
-            $this->step3ConfigureRoutes();
+        if ($this->confirm('Create the storage link and upload directories?', true)) {
+            $this->createStorageDirectories();
         }
 
-        // Step 4: Create storage directories
-        if ($this->confirm('Create storage directories?', true)) {
-            $this->step3CreateStorageDirectories();
+        if ($this->confirm('Install the npm packages (TipTap)?', true)) {
+            $this->installNpmDependencies();
         }
 
-        // Step 5: Install NPM dependencies
-        if ($this->confirm('Install NPM dependencies (@tiptap/extension-image)?', true)) {
-            $this->step4InstallNpmDependencies();
+        if ($this->confirm('Publish config/flux-filemanager.php?', true)) {
+            $this->publishConfig();
         }
 
-        // Step 6: Publish package assets
-        if ($this->confirm('Publish Flux Filemanager assets?', true)) {
-            $this->step5PublishAssets();
+        if ($this->confirm('Add the editor setup to resources/js/app.js?', true)) {
+            $this->configureAppJs();
         }
 
-        // Step 7: Auto-configure app.js resources
-        if ($this->confirm('Automatically configure resources/js/app.js?', true)) {
-            $this->step6ConfigureAppJs();
-        }
-
-        // Step 8: Build assets
-        if ($this->confirm('Build assets with npm?', true)) {
-            $this->step6BuildAssets();
+        if ($this->confirm('Build the assets with npm?', true)) {
+            $this->buildAssets();
         }
 
         $this->newLine();
-        $this->info('✅ Installation complete!');
+        $this->info('Installation complete.');
         $this->newLine();
 
         $this->displayNextSteps();
@@ -74,6 +79,7 @@ class InstallCommand extends Command
             $success = (bool) $callback();
         } catch (\Throwable $exception) {
             $this->error("  ✗ {$description} failed: {$exception->getMessage()}");
+
             return;
         }
 
@@ -84,65 +90,54 @@ class InstallCommand extends Command
         }
     }
 
-    protected function step1InstallLaravelFilemanager(): void
+    protected function publishLfmConfig(): void
     {
-        $this->runTask('Installing Laravel Filemanager', function () {
-            exec('composer require unisharp/laravel-filemanager 2>&1', $output, $exitCode);
-            return $exitCode === 0;
-        });
-    }
-
-    protected function step2PublishLfmConfig(): void
-    {
-        $this->runTask('Publishing Laravel Filemanager configuration', function () {
+        $this->runTask('Publishing Laravel Filemanager configuration and assets', function () {
             $this->call('vendor:publish', ['--tag' => 'lfm_config']);
             $this->call('vendor:publish', ['--tag' => 'lfm_public']);
+
             return true;
         });
     }
 
-    protected function step3ConfigureRoutes(): void
+    protected function configureLfmRoutes(): void
     {
-        $this->runTask('Configuring standard Laravel Filemanager routes', function () {
-            $lfmConfigPath = config_path('lfm.php');
+        $this->runTask('Enabling the Laravel Filemanager routes', function () {
+            $path = config_path('lfm.php');
 
-            if (! File::exists($lfmConfigPath)) {
+            if (! File::exists($path)) {
                 $this->warn('  ⚠ config/lfm.php not found, skipping route configuration.');
+
                 return false;
             }
 
-            $content = File::get($lfmConfigPath);
+            $content = File::get($path);
 
-            $content = preg_replace(
+            $content = (string) preg_replace(
                 "/'use_package_routes'\\s*=>\\s*(true|false),/",
                 "'use_package_routes' => true,",
                 $content
             );
 
-            $content = preg_replace(
+            $content = (string) preg_replace(
                 "/'url_prefix'\\s*=>\\s*'[^']*',/",
                 "'url_prefix' => 'filemanager',",
                 $content
             );
 
-            File::put($lfmConfigPath, $content);
+            File::put($path, $content);
 
             return true;
         });
     }
 
-    protected function step3CreateStorageDirectories(): void
+    protected function createStorageDirectories(): void
     {
-        $this->runTask('Creating storage directories', function () {
+        $this->runTask('Creating the storage link and upload directories', function () {
             $this->call('storage:link');
-            
-            $directories = [
-                public_path('storage/photos'),
-                public_path('storage/files'),
-            ];
 
-            foreach ($directories as $directory) {
-                if (!File::exists($directory)) {
+            foreach ([public_path('storage/photos'), public_path('storage/files')] as $directory) {
+                if (! File::exists($directory)) {
                     File::makeDirectory($directory, 0755, true);
                 }
             }
@@ -151,171 +146,78 @@ class InstallCommand extends Command
         });
     }
 
-    protected function step4InstallNpmDependencies(): void
+    protected function installNpmDependencies(): void
     {
-        $this->runTask('Installing NPM dependencies', function () {
-            exec('npm install @tiptap/core @tiptap/extension-image @tiptap/extension-link 2>&1', $output, $exitCode);
+        $this->runTask('Installing npm packages', function () {
+            exec('npm install '.implode(' ', self::NPM_PACKAGES).' 2>&1', $output, $exitCode);
+
             return $exitCode === 0;
         });
     }
 
-    protected function step5PublishAssets(): void
+    protected function publishConfig(): void
     {
-        $this->runTask('Publishing Flux Filemanager assets', function () {
+        $this->runTask('Publishing config/flux-filemanager.php', function () {
             $this->call('vendor:publish', [
                 '--tag' => 'flux-filemanager-config',
-                '--force' => $this->option('force'),
+                '--force' => (bool) $this->option('force'),
             ]);
-            $this->call('vendor:publish', [
-                '--tag' => 'flux-filemanager-assets',
-                '--force' => $this->option('force'),
-            ]);
-            $this->call('vendor:publish', [
-                '--tag' => 'flux-filemanager-views',
-                '--force' => $this->option('force'),
-            ]);
+
             return true;
         });
     }
 
-    protected function step6BuildAssets(): void
+    protected function buildAssets(): void
     {
         $this->runTask('Building assets', function () {
             exec('npm run build 2>&1', $output, $exitCode);
+
             return $exitCode === 0;
         });
     }
 
-    protected function step6ConfigureAppJs(): void
+    /**
+     * Adds the imports, the extension setup block from resources/stubs and the init call.
+     * Runs again without duplicating anything, and upgrades the import line from 1.1.x.
+     */
+    protected function configureAppJs(): void
     {
         $this->runTask('Configuring resources/js/app.js', function () {
-            $appJsPath = resource_path('js/app.js');
+            $path = resource_path('js/app.js');
 
-            if (! File::exists($appJsPath)) {
-                $this->warn('  ⚠ resources/js/app.js not found, skipping automatic JS configuration.');
+            if (! File::exists($path)) {
+                $this->warn('  ⚠ resources/js/app.js not found, skipping.');
+
                 return false;
             }
 
-            $content = File::get($appJsPath);
+            $content = File::get($path);
 
-            $importLines = [
-                "import Link from '@tiptap/extension-link'",
-                "import Image from '@tiptap/extension-image'",
-                "import { initLaravelFilemanager } from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'",
-                "import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css'",
-                "import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'",
-            ];
+            // 1.1.x imported initLaravelFilemanager alone; a second import of the same name would be a syntax error.
+            $content = str_replace(
+                "import { initLaravelFilemanager } from '".self::JS_MODULE."'",
+                "import { initLaravelFilemanager, createImageDropPastePlugin } from '".self::JS_MODULE."'",
+                $content
+            );
 
-            $missingImports = array_filter($importLines, fn ($line) => ! str_contains($content, $line));
+            $missingImports = array_filter(self::IMPORTS, fn (string $line) => ! str_contains($content, $line));
 
-            if (! empty($missingImports)) {
+            if ($missingImports !== []) {
                 $content = implode(PHP_EOL, $missingImports).PHP_EOL.$content;
             }
 
-            $setupMarkerStart = '// flux-filemanager:start';
-            $setupMarkerEnd = '// flux-filemanager:end';
-
-            if (! str_contains($content, $setupMarkerStart)) {
-                $setupBlock = <<<JS
-
-{$setupMarkerStart}
-const FluxSafeImage = Image.extend({
-    addNodeView() {
-        return () => null
-    },
-    addAttributes() {
-        return {
-            ...this.parent?.(),
-            class: {
-                default: 'tiptap-image',
-                parseHTML: element => element.getAttribute('class'),
-                renderHTML: attributes => {
-                    if (!attributes.class) return {}
-                    return { class: attributes.class }
-                },
-            },
-            style: {
-                default: null,
-                parseHTML: element => element.getAttribute('style'),
-                renderHTML: attributes => {
-                    if (!attributes.style) return {}
-                    return { style: attributes.style }
-                },
-            },
-            'data-align': {
-                default: null,
-                parseHTML: element => element.getAttribute('data-align'),
-                renderHTML: attributes => {
-                    if (!attributes['data-align']) return {}
-                    return { 'data-align': attributes['data-align'] }
-                },
-            },
-        }
-    },
-})
-
-document.addEventListener('flux:editor', (e) => {
-    if (!e.detail?.registerExtension || e.detail.__fluxFilemanagerExtensionsRegistered) return
-
-    e.detail.__fluxFilemanagerExtensionsRegistered = true
-
-    e.detail.registerExtension(Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-            rel: 'noopener noreferrer nofollow',
-        },
-    }).extend({
-        addAttributes() {
-            return {
-                ...this.parent?.(),
-                target: {
-                    default: '_blank',
-                    parseHTML: element => element.getAttribute('target'),
-                    renderHTML: attributes => {
-                        if (!attributes.target) return {}
-                        return { target: attributes.target }
-                    },
-                },
-                class: {
-                    default: null,
-                    parseHTML: element => element.getAttribute('class'),
-                    renderHTML: attributes => {
-                        if (!attributes.class) return {}
-                        return { class: attributes.class }
-                    },
-                },
-                style: {
-                    default: null,
-                    parseHTML: element => element.getAttribute('style'),
-                    renderHTML: attributes => {
-                        if (!attributes.style) return {}
-                        return { style: attributes.style }
-                    },
-                },
-            }
-        },
-    }))
-
-    e.detail.registerExtension(FluxSafeImage.configure({
-        inline: true,
-        allowBase64: true,
-        resize: false,
-        HTMLAttributes: {
-            class: 'tiptap-image',
-        },
-    }))
-})
-{$setupMarkerEnd}
-JS;
-
-                $content = rtrim($content).PHP_EOL.$setupBlock.PHP_EOL;
+            if (! str_contains($content, '// flux-filemanager:start')) {
+                $stub = File::get(__DIR__.'/../../resources/stubs/flux-filemanager-setup.js');
+                $content = rtrim($content).PHP_EOL.PHP_EOL.rtrim($stub).PHP_EOL;
+            } elseif (! str_contains($content, 'addProseMirrorPlugins')) {
+                $this->warn('  ⚠ app.js has a setup block from an older version without drag and drop. Compare it with examples/app.js in the package.');
             }
 
             if (! str_contains($content, 'initLaravelFilemanager()')) {
                 $content = rtrim($content).PHP_EOL.PHP_EOL.'initLaravelFilemanager()'.PHP_EOL;
             }
 
-            File::put($appJsPath, $content);
+            File::put($path, $content);
 
             return true;
         });
@@ -323,21 +225,19 @@ JS;
 
     protected function displayNextSteps(): void
     {
-        $this->warn('⚠️  IMPORTANT: Next steps:');
+        $this->warn('Next steps:');
         $this->newLine();
 
-        $this->line('1. Standard Laravel Filemanager routes are configured by setting `use_package_routes = true` in config/lfm.php.');
-        $this->line('   <fg=gray>// Default route prefix: /filemanager</>');
+        $this->line('1. Protect the file manager: set `middlewares` to [\'web\', \'auth\'] in config/lfm.php.');
         $this->newLine();
 
-        $this->line('2. resources/js/app.js is auto-configured by this installer (when enabled).');
-        $this->line('   <fg=gray>// Includes Flux-safe Link + Image extension setup and initLaravelFilemanager()</>');
-        $this->newLine();
-
-        $this->line('3. Use the component in your Blade files:');
+        $this->line('2. Use the component in a Livewire view:');
         $this->line('   <fg=gray><x-flux-filemanager-editor wire:model="content" /></>');
         $this->newLine();
 
-        $this->info('📚 For more information, see the README.md file.');
+        $this->line('3. To try it, set FLUX_FILEMANAGER_DEMO_ROUTES=true and open /darvis/editor-demo (local only, no auth).');
+        $this->newLine();
+
+        $this->info('Documentation: https://arviddejong.github.io/livewire-flux-editor-filemanager/');
     }
 }

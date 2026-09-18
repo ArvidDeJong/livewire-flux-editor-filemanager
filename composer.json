@@ -1,27 +1,38 @@
 {
     "name": "darvis/livewire-flux-editor-filemanager",
-    "description": "Laravel Filemanager integration for Flux TipTap Editor with image resize and align",
+    "description": "Laravel Filemanager integration for the Flux Pro editor: insert images and file links from Laravel Filemanager, resize and align images, drag and drop or paste images.",
+    "keywords": [
+        "laravel",
+        "livewire",
+        "flux",
+        "flux-ui",
+        "tiptap",
+        "editor",
+        "wysiwyg",
+        "filemanager",
+        "laravel-filemanager",
+        "images",
+        "laravel-boost"
+    ],
     "type": "library",
     "license": "MIT",
+    "homepage": "https://arviddejong.github.io/livewire-flux-editor-filemanager/",
     "authors": [
         {
             "name": "Arvid de Jong",
             "email": "info@arvid.nl"
         }
     ],
-    "require": {
-        "php": "^8.2",
-        "illuminate/support": "^11.0|^12.0|^13.0",
-        "livewire/livewire": "^3.0|^4.0",
-        "livewire/flux": "^1.0|^2.0",
-        "livewire/flux-pro": "^1.0|^2.0",
-        "unisharp/laravel-filemanager": "^2.0"
+    "support": {
+        "issues": "https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/issues",
+        "source": "https://github.com/ArvidDeJong/livewire-flux-editor-filemanager"
     },
-    "require-dev": {
-        "orchestra/testbench": "^9.0",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0"
-    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://composer.fluxui.dev"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Darvis\\FluxFilemanager\\": "src/"
@@ -32,11 +43,6 @@
             "Darvis\\FluxFilemanager\\Tests\\": "tests/"
         }
     },
-    "scripts": {
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage --coverage-html coverage",
-        "test-filter": "vendor/bin/pest --filter"
-    },
     "extra": {
         "laravel": {
             "providers": [
@@ -44,6 +50,33 @@
             ]
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0|^12.0|^13.0",
+        "livewire/livewire": "^3.0|^4.0",
+        "livewire/flux": "^2.0",
+        "livewire/flux-pro": "^2.0",
+        "unisharp/laravel-filemanager": "^2.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+        "phpunit/phpunit": "^11.0|^12.0|^13.0"
+    },
+    "scripts": {
+        "test": "pest tests",
+        "lint": "pint --test",
+        "format": "pint",
+        "analyse": "phpstan analyse --memory-limit=1G"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }

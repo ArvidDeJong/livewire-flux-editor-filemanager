@@ -10,7 +10,7 @@ class EditorDemo extends Component
 
     public function mount(): void
     {
-        $this->content = '<h2>' . \e(\__('flux-filemanager::filemanager.demo_welcome_heading')) . '</h2><p>' . \e(\__('flux-filemanager::filemanager.demo_welcome_text')) . '</p>';
+        $this->content = '<h2>'.\e(\__('flux-filemanager::filemanager.demo_welcome_heading')).'</h2><p>'.\e(\__('flux-filemanager::filemanager.demo_welcome_text')).'</p>';
     }
 
     public function save(): void

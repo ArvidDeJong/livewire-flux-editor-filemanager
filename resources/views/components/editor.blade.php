@@ -8,6 +8,11 @@
     'allowedTypes' => implode(',', config('flux-filemanager.drag_drop.allowed_types', [])),
 ])
 
+{{-- Settings and translations for laravel-filemanager.js; a JSON script tag needs no CSP nonce. --}}
+@once
+    <script type="application/json" data-flux-filemanager-config>@json($jsConfig())</script>
+@endonce
+
 <flux:editor :id="$id" {{ $attributes }} :rows="$rows"
     data-drag-drop-method="{{ $dragDropMethod }}" data-upload-url="{{ $uploadUrl }}"
     data-max-file-size="{{ $maxFileSize }}" data-allowed-types="{{ $allowedTypes }}">

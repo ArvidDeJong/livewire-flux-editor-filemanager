@@ -43,3 +43,16 @@ it('filemanager url can be overridden via env', function () {
 
     expect(config('flux-filemanager.url'))->toBe('/admin/filemanager');
 });
+
+it('keeps the demo routes off by default', function () {
+    $config = require packagePath('config/flux-filemanager.php');
+
+    expect($config['demo_routes'])->toBeFalse();
+});
+
+it('has drag and drop defaults', function () {
+    $dragDrop = config('flux-filemanager.drag_drop');
+
+    expect($dragDrop['method'])->toBe('base64');
+    expect($dragDrop['allowed_types'])->toContain('image/png');
+});

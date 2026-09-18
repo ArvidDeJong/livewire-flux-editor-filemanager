@@ -1,0 +1,48 @@
+title: Flux Editor Filemanager
+description: Laravel Filemanager integration for the Flux Pro editor. Insert images and file links, resize and align images, drag and drop or paste images.
+url: https://arviddejong.github.io
+baseurl: /livewire-flux-editor-filemanager
+
+remote_theme: just-the-docs/just-the-docs@v0.12.0
+plugins:
+  - jekyll-remote-theme
+  - jekyll-relative-links
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Facts about the package, used by the structured data and llms.txt.
+package:
+  name: darvis/livewire-flux-editor-filemanager
+  repository: https://github.com/ArvidDeJong/livewire-flux-editor-filemanager
+  packagist: https://packagist.org/packages/darvis/livewire-flux-editor-filemanager
+  license_url: https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/blob/main/LICENSE
+  requires: PHP 8.2+, Laravel 11, 12 or 13, Livewire 3 or 4, Flux Pro 2 and Laravel Filemanager 2
+  platforms: [Laravel, Livewire, Flux]
+  keywords: [laravel, livewire, flux, flux pro, tiptap, wysiwyg editor, laravel filemanager, image upload, file links]
+
+# Developer credit in the footer and the structured data.
+developer:
+  company: ARVID.NL
+  url: https://arvid.nl
+
+color_scheme: light
+search_enabled: true
+heading_anchors: true
+
+aux_links:
+  GitHub: https://github.com/ArvidDeJong/livewire-flux-editor-filemanager
+  Packagist: https://packagist.org/packages/darvis/livewire-flux-editor-filemanager
+aux_links_new_tab: true
+
+gh_edit_link: true
+gh_edit_link_text: Edit this page on GitHub
+gh_edit_repository: https://github.com/ArvidDeJong/livewire-flux-editor-filemanager
+gh_edit_branch: main
+gh_edit_source: docs
+gh_edit_view_mode: tree
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/social-preview.png

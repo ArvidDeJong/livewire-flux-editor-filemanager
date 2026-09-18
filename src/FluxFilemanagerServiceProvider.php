@@ -2,60 +2,48 @@
 
 namespace Darvis\FluxFilemanager;
 
+use Darvis\FluxFilemanager\Console\InstallCommand;
+use Darvis\FluxFilemanager\View\Components\Editor;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
 
 class FluxFilemanagerServiceProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/flux-filemanager.php', 'flux-filemanager');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommand::class,
+            ]);
+        }
+    }
+
     public function boot(): void
     {
-        // Load routes
-        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'flux-filemanager');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'flux-filemanager');
 
-        // Publish config file
+        $this->loadViewComponentsAs('flux-filemanager', [
+            'editor' => Editor::class,
+        ]);
+
+        // The demo and checklist pages are unauthenticated, so they are opt-in.
+        if ($this->app->make(Repository::class)->get('flux-filemanager.demo_routes', false)) {
+            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        }
+
         $this->publishes([
             __DIR__.'/../config/flux-filemanager.php' => config_path('flux-filemanager.php'),
         ], 'flux-filemanager-config');
 
-        // Load views
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'flux-filemanager');
-
-        // Publish views
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/flux-filemanager'),
         ], 'flux-filemanager-views');
 
-        // Load translations
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'flux-filemanager');
-
-        // Publish translations
         $this->publishes([
             __DIR__.'/../resources/lang' => $this->app->langPath('vendor/flux-filemanager'),
         ], 'flux-filemanager-lang');
-
-        // Register Livewire components
-        Livewire::component('flux-filemanager-editor', \Darvis\FluxFilemanager\View\Components\Editor::class);
-
-        // Merge config
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/flux-filemanager.php', 'flux-filemanager'
-        );
-
-        // Register console commands
-
-        // Register Blade components
-        $this->loadViewComponentsAs('flux-filemanager', [
-            'editor' => \Darvis\FluxFilemanager\View\Components\Editor::class,
-        ]);
-    }
-
-    public function register(): void
-    {
-        // Register commands
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                \Darvis\FluxFilemanager\Console\InstallCommand::class,
-            ]);
-        }
     }
 }

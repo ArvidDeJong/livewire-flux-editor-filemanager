@@ -1,0 +1,57 @@
+name: Bug report
+description: Something doesn't work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Most problems come from the JavaScript setup. Check the [installation page](https://arviddejong.github.io/livewire-flux-editor-filemanager/installation.html) first, and open the browser console: the package logs why a step was skipped.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead? Include the error from the browser console or the Laravel log if there is one.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: The Blade view with the editor and the extension setup from your app.js, trimmed to the smallest example that fails.
+      render: blade
+    validations:
+      required: true
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version
+      placeholder: "1.2.0"
+    validations:
+      required: true
+  - type: input
+    id: laravel-version
+    attributes:
+      label: Laravel version
+      placeholder: "13.0"
+    validations:
+      required: true
+  - type: input
+    id: livewire-version
+    attributes:
+      label: Livewire and Flux Pro versions
+      placeholder: "Livewire 4.4, Flux Pro 2.20"
+    validations:
+      required: true
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+      placeholder: "8.4"
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: For problems in the editor itself.
+      placeholder: "Chrome 131 on macOS"

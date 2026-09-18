@@ -3,10 +3,10 @@
 return [
     // Image button
     'insert_image' => 'Insert Image',
-    
+
     // File link button
     'insert_file_link' => 'Insert File Link',
-    
+
     // Image edit modal
     'edit_image' => 'Edit Image',
     'image' => 'Image',
@@ -24,7 +24,7 @@ return [
     'extra_css_classes_placeholder' => 'e.g. rounded shadow-lg',
     'extra_styles' => 'Extra Styles',
     'extra_styles_placeholder' => 'e.g. border: 1px solid red;',
-    
+
     // File link modal
     'edit_link' => 'Edit Link',
     'insert_link' => 'Insert File Link',
@@ -38,12 +38,12 @@ return [
     'target_top' => 'Top window (_top)',
     'link_css_classes_placeholder' => 'e.g. btn btn-primary',
     'link_styles_placeholder' => 'e.g. color: blue; font-weight: bold;',
-    
+
     // Buttons
     'cancel' => 'Cancel',
     'insert' => 'Insert',
     'update' => 'Update',
-    
+
     // Validation
     'enter_link_text' => 'Please enter link text',
 

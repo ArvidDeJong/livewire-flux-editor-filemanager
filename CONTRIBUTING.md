@@ -1,139 +1,38 @@
-# Contributing to Flux Filemanager
+# Contributing
 
-Thank you for considering contributing to Flux Filemanager! This document outlines the process for contributing to this project.
+Contributions are welcome: bug reports, fixes, documentation and ideas.
 
-## Code of Conduct
+## Before you start
 
-- Be respectful and inclusive
-- Provide constructive feedback
-- Focus on what is best for the community
+- **Bugs:** open an [issue](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/issues/new/choose) with the steps to reproduce.
+- **Features:** open an issue first. This package stays small on purpose, so let's agree a feature fits before you build it.
+- **Security issues:** don't open an issue; see [SECURITY.md](SECURITY.md).
 
-## How Can I Contribute?
-
-### Reporting Bugs
-
-Before creating bug reports, please check existing issues. When creating a bug report, include:
-
-- **Clear title and description**
-- **Steps to reproduce** the issue
-- **Expected behavior** vs actual behavior
-- **Environment details** (PHP version, Laravel version, etc.)
-- **Code samples** if applicable
-
-### Suggesting Enhancements
-
-Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, include:
-
-- **Clear title and description**
-- **Use case** - why would this be useful?
-- **Possible implementation** if you have ideas
-
-### Pull Requests
-
-1. **Fork the repository** and create your branch from `main`
-2. **Follow the coding standards** (PSR-12 for PHP, ESLint for JavaScript)
-3. **Write tests** for new features
-4. **Update documentation** if needed
-5. **Ensure tests pass** by running `composer test`
-6. **Write clear commit messages**
-
-## Development Setup
+## Development
 
 ```bash
-# Clone your fork
-git clone https://github.com/YOUR-USERNAME/livewire-flux-editor-filemanager.git
-
-# Install dependencies
+git clone https://github.com/ArvidDeJong/livewire-flux-editor-filemanager.git
+cd livewire-flux-editor-filemanager
+composer config http-basic.composer.fluxui.dev your-email your-flux-license-key
 composer install
-npm install
 
-# Run tests
-composer test
-
-# Run tests with coverage
-composer test-coverage
+composer test      # Pest
+composer lint      # Pint, check only (composer format fixes)
+composer analyse   # Larastan, level 8
 ```
 
-## Coding Standards
+`livewire/flux-pro` is a private package, so you need a [Flux Pro](https://fluxui.dev) licence to install the dependencies. CI runs the tests on PHP 8.2-8.4 with Laravel 11, 12 and 13, on the lowest and the latest dependencies, using the maintainer's licence.
 
-### PHP
+To try the editor in a browser, install the package in a Laravel app with Flux Pro, set `FLUX_FILEMANAGER_DEMO_ROUTES=true` and open `/darvis/editor-demo`.
 
-- Follow **PSR-12** coding standard
-- Use **type hints** for parameters and return types
-- Write **PHPDoc blocks** for classes and methods
-- Keep methods **focused and small**
+## Pull requests
 
-### JavaScript
+- Add or update tests for every change in behaviour.
+- Keep the public API compatible within 1.x: the `<x-flux-filemanager-editor>` component and its `id`, `rows` and `toolbar` attributes, the keys in `config/flux-filemanager.php`, the `flux-filemanager:install` command, `initLaravelFilemanager()` and the paths of `resources/js/laravel-filemanager.js` and the two stylesheets in `resources/css/`, which host apps import by path.
+- Write code, comments and messages in English. New translation keys go into `resources/lang/en`, `nl` and `de`.
+- Update `docs/`, `CHANGELOG.md` (under `Unreleased`) and `resources/boost/` when users will notice the change.
+- The documentation in `docs/` is also the website. Don't write `{{ }}` or `{% %}` there; Jekyll would render it.
 
-- Use **ES6+** syntax
-- Write **JSDoc comments** for functions
-- Use **descriptive variable names**
-- Handle **errors gracefully**
+## Code of conduct
 
-### Blade
-
-- Use **proper indentation** (4 spaces)
-- Keep templates **clean and readable**
-- Use **components** for reusable elements
-
-## Testing
-
-- Write tests for **new features**
-- Ensure **existing tests pass**
-- Aim for **high code coverage**
-- Test both **happy paths and edge cases**
-
-### Running Tests
-
-```bash
-# Run all tests
-composer test
-
-# Run specific test
-composer test-filter EditorComponentTest
-
-# Generate coverage report
-composer test-coverage
-```
-
-## Documentation
-
-- Update **README.md** for user-facing changes
-- Update **WORKFLOW.md** for technical details
-- Update **CHANGELOG.md** following [Keep a Changelog](https://keepachangelog.com/)
-- Add **code comments** for complex logic
-
-## Git Commit Messages
-
-- Use the **present tense** ("Add feature" not "Added feature")
-- Use the **imperative mood** ("Move cursor to..." not "Moves cursor to...")
-- **Limit the first line** to 72 characters
-- **Reference issues and pull requests** when applicable
-
-### Examples
-
-```
-Add image align functionality
-
-- Add left, center, right align buttons
-- Update CSS for alignment classes
-- Add tests for align functionality
-
-Fixes #123
-```
-
-## Release Process
-
-1. Update `CHANGELOG.md`
-2. Update version in `composer.json` and `package.json`
-3. Create a git tag
-4. Push to GitHub
-5. Create a GitHub release
-
-## Questions?
-
-Feel free to open an issue with your question or reach out to the maintainers.
-
-## License
-
-By contributing, you agree that your contributions will be licensed under the MIT License.
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).

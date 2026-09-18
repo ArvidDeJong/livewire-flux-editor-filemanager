@@ -1,0 +1,28 @@
+# Questions as people ask them to an assistant. Short, factual answers.
+# Rendered on faq.md, in the FAQPage structured data and in llms.txt.
+- q: How do I add Laravel Filemanager to the Flux editor?
+  a: Install `darvis/livewire-flux-editor-filemanager`, run `php artisan flux-filemanager:install`, and use `<x-flux-filemanager-editor wire:model="content" />` instead of `<flux:editor>`. The toolbar gets an image button and a file link button that open Laravel Filemanager in a popup.
+
+- q: Does darvis/livewire-flux-editor-filemanager work with Livewire 4, Laravel 13 and Flux 2?
+  a: Yes. It supports Laravel 11, 12 and 13, Livewire 3 and 4, Flux Pro 2 and Laravel Filemanager 2, on PHP 8.2 or higher.
+
+- q: Do I need Flux Pro?
+  a: Yes. The editor is a Flux Pro component, so the package requires `livewire/flux-pro` and your application needs the Flux composer repository and a licence. The free Flux edition has no editor.
+
+- q: Can editors drag images into the editor or paste screenshots?
+  a: Yes. Image files dropped on the editor or pasted from the clipboard are inserted where they land. By default they are embedded as base64; set `drag_drop.method` to `upload` to send them to Laravel Filemanager instead. Size and type limits come from the config.
+
+- q: How do I resize or align an image in the Flux editor?
+  a: Click an image once for the resize menu with the preset widths, a custom percentage and left, center and right alignment. Double-click it for the edit modal with alt text, title, width, alignment, extra CSS classes and inline styles.
+
+- q: How do I link to a PDF or other file?
+  a: Click the file link button in the toolbar, pick the file in Laravel Filemanager and set the link text, target, classes and styles in the modal. Click an existing link to edit it.
+
+- q: Is the editor content sanitised?
+  a: No. The editor stores HTML with classes, inline styles and base64 images, and your application renders it. Give the editor only to trusted users, or sanitise the HTML before showing it to other visitors.
+
+- q: How do I translate the editor buttons and modals?
+  a: The package ships English, Dutch and German. The active Laravel locale decides the language, and the translations reach the JavaScript modals too. Publish the language files with `php artisan vendor:publish --tag=flux-filemanager-lang` to change them or add a language.
+
+- q: What does darvis/livewire-flux-editor-filemanager not do?
+  a: It does not upload or crop images itself, that is Laravel Filemanager's job. It does not protect the `/filemanager` routes, set `middlewares` in `config/lfm.php` for that. And it does not sanitise the HTML your editors produce.
