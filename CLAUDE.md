@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. The conventions shared by every darvis package (language, releases, CI, docs site, Boost guidelines, public API policy) are in [../CLAUDE.md](../CLAUDE.md); this file only holds what is specific to this package.
 
 ## Package overview
 
@@ -21,7 +21,7 @@ composer analyse              # Larastan, level 8
 node --input-type=module --check < resources/js/laravel-filemanager.js   # the only JS check there is
 ```
 
-CI (`.github/workflows/tests.yml`) runs PHP 8.2–8.4 × Laravel 11/12/13 × lowest/stable, plus Pint and Larastan. It authenticates against composer.fluxui.dev with the `FLUX_USERNAME` and `FLUX_LICENSE_KEY` secrets and turns off Composer's advisory blocking, because every Laravel 11 release has an open advisory. `livewire/flux-pro` is private: `composer.json` declares the Flux repository so the package installs on its own, and host apps have it already.
+CI calls the shared workflow with `flux-pro: true`, so it authenticates against composer.fluxui.dev with the `FLUX_USERNAME` and `FLUX_LICENSE_KEY` secrets. `livewire/flux-pro` is private: `composer.json` declares the Flux repository so the package installs on its own, and host apps have it already.
 
 ## Architecture
 
@@ -49,9 +49,6 @@ CI (`.github/workflows/tests.yml`) runs PHP 8.2–8.4 × Laravel 11/12/13 × low
 
 ## Conventions
 
-- `docs/` holds the user documentation and is also the GitHub Pages site (Jekyll, Just the Docs, `docs/_config.yml`); the README only has the quick start and links. Keep both in step with behaviour changes. Every page needs `title`, `description` and `nav_order` front matter, unique per page, and no `: ` in an unquoted value. Don't write `{{ }}` or `{% %}` in pages: Jekyll's Liquid renders it. Liquid is intended only in `faq.md`, `llms.txt` and `_includes/`. Package facts live in `docs/_config.yml` (`package`, `developer`) and FAQ answers in `docs/_data/faq.yml`; the pages, the structured data and `llms.txt` read from there. The footer credit is `ARVID.NL` only, no personal name. `tests/DocsSiteTest.php` guards these rules.
-- `resources/boost/` holds the Laravel Boost guideline and skill that host apps receive. Update them when public behaviour or config changes. The guideline is a Blade file: no `{{ }}` or `{!! !!}` outside `@verbatim`.
+- `nav_order` must be unique per docs page.
 - Keep the public API compatible within 1.x: `<x-flux-filemanager-editor>` with `id`, `rows` and `toolbar`; the config keys; `flux-filemanager:install`; `initLaravelFilemanager()`, `createImageDropPastePlugin()` and the paths of `resources/js/laravel-filemanager.js` and the two CSS files, which host apps import from `vendor/`; the `data-editor` attributes; the translation keys.
-- A change a site owner notices (messages, defaults, generated HTML, what the installer does) is a minor release, not a patch.
-- Everything is in English: code, comments, messages, README and CHANGELOG. Translations live in `resources/lang/{en,nl,de}`; add every new key to all three, and any key the JS uses through `t()` must exist in `en`. `tests/Feature/TranslationsTest.php` checks both.
-- No `version` field in `composer.json`: Packagist reads the git tag and silently skips tags that don't match the field.
+- Translations live in `resources/lang/{en,nl,de}`; add every new key to all three, and any key the JS uses through `t()` must exist in `en`. `tests/Feature/TranslationsTest.php` checks both.
