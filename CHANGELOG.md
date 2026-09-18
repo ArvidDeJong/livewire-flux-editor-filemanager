@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-18
+### Added
+- `php artisan flux-filemanager:check` goes through the installation and prints what to do about every problem: Laravel Filemanager, `config/lfm.php`, the file manager routes, whether those routes are behind authentication, the storage link, the four TipTap npm packages, the setup in `resources/js/app.js` and the build. It needs no demo routes and exits non-zero when something is broken, so it also works in CI or a deploy script
+- A missing `auth` in `lfm.middlewares` is reported as a failure, not a note: the file manager has its own routes, and without it anyone can browse and upload
+- The check notices two things that are hard to see otherwise: a build older than the package's JavaScript, and a running Vite dev server, which does not watch `vendor/` and keeps serving the copy it read at startup
+- [Your first editor](https://arviddejong.github.io/livewire-flux-editor-filemanager/first-editor.html) in the documentation: the whole path from migration to published page, with the `longText` column, validation, rendering the HTML in a `prose` container, the CSS for `.tiptap-image` and the alignment classes, and the three problems people hit the first time
+- Three FAQ entries about the buttons doing nothing, showing saved content and checking the installation
+
+### Fixed
+- One toolbar button that stops working no longer means all of them do. The setup block in `app.js` read the package with a named import, so a `vendor/` copy without `createImageDropPastePlugin` (a running Vite dev server serves the copy it read at startup, because `vendor/` is in `server.watch.ignored`) was a fatal module error: `app.js` never ran, no listeners were registered, and clicking the image button did nothing. The block now uses one namespace import and calls the plugin factory with `?.()`, so a stale copy costs only drag and drop and logs what to do
+
+### Changed
+- `php artisan flux-filemanager:install` rewrites the named imports and calls that 1.1.x and 1.2.0 wrote into the namespace form, whatever their order and quoting, and running it twice changes nothing. Its next steps now say to restart `npm run dev` after an update. **Run it again after updating**, or change the import in your `app.js` to `import * as fluxFilemanager from '…/laravel-filemanager.js'` yourself
+- The checklist page at `/darvis/filemanager-checklist` runs the same checks as the command, through `Darvis\FluxFilemanager\Support\InstallationCheck`, and shows the fix under every failed check. It gained the authentication, storage, npm and build checks
+- `examples/app.js`, the installer stub, the documentation and the Boost guideline and skill describe the namespace import; the troubleshooting pages name the stale dev server as the cause of every button going dead at once
+- `composer.lock` is no longer in the dist archive
+
 ## [1.2.0] - 2026-09-18
 ### Added
 - Drag and drop and paste of image files now work. `createImageDropPastePlugin()` in `laravel-filemanager.js` is a ProseMirror plugin that the installer and `examples/app.js` add to the Image extension. Base64 by default; `drag_drop.method = upload` posts the file to Laravel Filemanager. Size and type limits come from `drag_drop`. If you installed 1.1.x, run `php artisan flux-filemanager:install` again or add `addProseMirrorPlugins()` to your `app.js` as in `examples/app.js`

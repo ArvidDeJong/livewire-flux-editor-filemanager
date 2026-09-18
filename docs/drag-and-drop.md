@@ -1,6 +1,6 @@
 ---
 title: Drag and drop
-nav_order: 6
+nav_order: 7
 description: Drop image files on the Flux editor or paste screenshots, embedded as base64 or uploaded to Laravel Filemanager, with size and type limits from the config.
 ---
 
@@ -26,20 +26,25 @@ Dropped and pasted images get the class `tiptap-image` and can be resized and ed
 The behaviour lives in `createImageDropPastePlugin()`, a ProseMirror plugin exported by the package's JavaScript. The setup block the installer writes to `app.js` adds it to the Image extension:
 
 ```javascript
-import { initLaravelFilemanager, createImageDropPastePlugin } from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'
+import * as fluxFilemanager from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'
 
 const FluxSafeImage = Image.extend({
     addProseMirrorPlugins() {
-        return [...(this.parent?.() ?? []), createImageDropPastePlugin()]
+        const dropPaste = fluxFilemanager.createImageDropPastePlugin?.()
+
+        return [...(this.parent?.() ?? []), ...(dropPaste ? [dropPaste] : [])]
     },
 })
 ```
+
+The namespace import and the optional call are deliberate: when the copy under `vendor/` is older than your setup block, the plugin is simply absent and the editor keeps working. A named import of an export that isn't there is a module error, and one of those stops all of `app.js`, so every toolbar button dies with it.
 
 The plugin reads the method, the limits and the upload URL from the data attributes the component renders on the editor, so the config applies without a rebuild.
 
 ## When it doesn't work
 
 - **Nothing happens on drop.** The setup block predates 1.2.0, when the plugin was added. Run `php artisan flux-filemanager:install` again or compare your `app.js` with `examples/app.js`, then `npm run build`.
+- **The console says the package JavaScript has no drop and paste plugin.** Your `app.js` is current but the copy under `vendor/` is not the one being served. Restart `npm run dev`: Vite does not watch `vendor/`.
 - **A message says the file is too large or not allowed.** Raise `max_file_size` or add the type to `allowed_types`.
 - **Upload method: the image doesn't appear.** Open the browser console. The upload endpoint must accept a POST with an `upload` file field and answer with JSON containing `url`, `link` or `path`. The `/filemanager` routes need to be reachable with the session of the logged-in editor.
 - **The saved content is huge.** That's base64. Switch to `upload`.

@@ -1,6 +1,6 @@
 ---
 title: Configuration
-nav_order: 3
+nav_order: 4
 description: Every option in config/flux-filemanager.php, the component attributes, and how to publish the views and translations.
 ---
 
@@ -76,6 +76,6 @@ Published views live in `resources/views/vendor/flux-filemanager` and no longer 
 `resources/js/laravel-filemanager.js` exports two functions:
 
 - `initLaravelFilemanager()`: wires the toolbar buttons, the resize menu, the edit modal and link editing for every Flux editor on the page, now and later. Call it once.
-- `createImageDropPastePlugin()`: the ProseMirror plugin that handles dropped and pasted image files. Add it to the Image extension in `addProseMirrorPlugins()`; `examples/app.js` shows where.
+- `createImageDropPastePlugin()`: the ProseMirror plugin that handles dropped and pasted image files. Add it to the Image extension in `addProseMirrorPlugins()`; `examples/app.js` shows where. Call it off the namespace import with `?.()` so a stale copy under `vendor/` can't break the rest of your `app.js`.
 
 The two stylesheets, `resources/css/tiptap-image.css` and `resources/css/file-link-modal.css`, style the images in the editor, the resize menu and the modals. Override the classes in your own CSS after importing them.

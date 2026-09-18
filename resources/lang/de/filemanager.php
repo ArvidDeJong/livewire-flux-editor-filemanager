@@ -65,6 +65,12 @@ return [
     'checklist_app_url_matches_host' => 'APP_URL-Host entspricht dem aktuellen Host',
     'checklist_status_ok' => 'OK',
     'checklist_status_missing' => 'FEHLT',
+    'checklist_protected' => 'Der Dateimanager ist durch Authentifizierung geschützt',
+    'checklist_storage_link' => 'public/storage ist verlinkt',
+    'checklist_npm_packages' => 'Die TipTap-Pakete sind installiert',
+    'checklist_build_current' => 'Die Assets sind gebaut und aktuell',
+    'checklist_app_url' => 'APP_URL ist gesetzt',
+    'checklist_cli_hint' => 'Dieselben Prüfungen im Terminal: php artisan flux-filemanager:check',
     'url' => 'URL',
 
     // Image resize UI

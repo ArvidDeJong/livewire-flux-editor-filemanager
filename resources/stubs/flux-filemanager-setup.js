@@ -1,6 +1,8 @@
 // flux-filemanager:start
 // Registers the Image and Link extensions on every Flux editor on the page.
 // Written by `php artisan flux-filemanager:install`; keep it in sync with examples/app.js.
+// Everything from the package is read off the `fluxFilemanager` namespace, so an outdated
+// copy under vendor/ only costs the feature it lacks instead of breaking this whole file.
 const FluxSafeImage = Image.extend({
     addNodeView() {
         return () => null
@@ -35,7 +37,13 @@ const FluxSafeImage = Image.extend({
         }
     },
     addProseMirrorPlugins() {
-        return [...(this.parent?.() ?? []), createImageDropPastePlugin()]
+        const dropPaste = fluxFilemanager.createImageDropPastePlugin?.()
+
+        if (!dropPaste) {
+            console.warn('flux-filemanager: the package JavaScript has no drop and paste plugin. Restart the Vite dev server after updating the package, because it does not watch vendor/.')
+        }
+
+        return [...(this.parent?.() ?? []), ...(dropPaste ? [dropPaste] : [])]
     },
 })
 

@@ -28,7 +28,7 @@ To try the editor in a browser, install the package in a Laravel app with Flux P
 ## Pull requests
 
 - Add or update tests for every change in behaviour.
-- Keep the public API compatible within 1.x: the `<x-flux-filemanager-editor>` component and its `id`, `rows` and `toolbar` attributes, the keys in `config/flux-filemanager.php`, the `flux-filemanager:install` command, `initLaravelFilemanager()` and the paths of `resources/js/laravel-filemanager.js` and the two stylesheets in `resources/css/`, which host apps import by path.
+- Keep the public API compatible within 1.x: the `<x-flux-filemanager-editor>` component and its `id`, `rows` and `toolbar` attributes, the keys in `config/flux-filemanager.php`, the `flux-filemanager:install` and `flux-filemanager:check` commands, `initLaravelFilemanager()` and `createImageDropPastePlugin()` and the paths of `resources/js/laravel-filemanager.js` and the two stylesheets in `resources/css/`, which host apps import by path.
 - Write code, comments and messages in English. New translation keys go into `resources/lang/en`, `nl` and `de`.
 - Update `docs/`, `CHANGELOG.md` (under `Unreleased`) and `resources/boost/` when users will notice the change.
 - The documentation in `docs/` is also the website. Don't write `{{ }}` or `{% %}` there; Jekyll would render it.

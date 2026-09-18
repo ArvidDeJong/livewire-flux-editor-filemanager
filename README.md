@@ -31,9 +31,12 @@ PHP 8.2+, Laravel 11, 12 or 13, Livewire 3 or 4, Flux Pro 2 and Laravel Filemana
 ```bash
 composer require darvis/livewire-flux-editor-filemanager
 php artisan flux-filemanager:install
+php artisan flux-filemanager:check
 ```
 
-The installer publishes the Laravel Filemanager config, enables its routes at `/filemanager`, creates the storage link, installs the TipTap packages, publishes `config/flux-filemanager.php`, adds the setup to `resources/js/app.js` and builds. Add `--no-interaction` to accept every step. Then protect the file manager in `config/lfm.php`:
+The installer publishes the Laravel Filemanager config, enables its routes at `/filemanager`, creates the storage link, installs the TipTap packages, publishes `config/flux-filemanager.php`, adds the setup to `resources/js/app.js` and builds. Add `--no-interaction` to accept every step. The check command goes through the result and says what to do about anything that isn't right; it exits non-zero, so a deploy script can use it too.
+
+Then protect the file manager in `config/lfm.php`, because its routes are its own:
 
 ```php
 'middlewares' => ['web', 'auth'],
@@ -59,13 +62,14 @@ Show the content like any editor HTML. The package does not sanitise it, so give
 </div>
 ```
 
-To try it before wiring it into your own views, set `FLUX_FILEMANAGER_DEMO_ROUTES=true` locally and open `/darvis/editor-demo`.
+To try it before wiring it into your own views, set `FLUX_FILEMANAGER_DEMO_ROUTES=true` locally and open `/darvis/editor-demo`. Building your first page with it: [Your first editor](docs/first-editor.md).
 
 ## Documentation
 
 Full documentation: **https://arviddejong.github.io/livewire-flux-editor-filemanager/**
 
 - [Installation](docs/installation.md): the installer, the manual steps, protecting the file manager, the demo pages, troubleshooting
+- [Your first editor](docs/first-editor.md): the whole path from migration to published page, and the three things that usually go wrong the first time
 - [Configuration](docs/configuration.md): every option, the component attributes, views and translations
 - [Image editing](docs/image-editing.md): the resize menu, the edit modal and the HTML they produce
 - [File links](docs/file-links.md): insert and edit links to files

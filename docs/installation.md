@@ -39,9 +39,17 @@ Add `--no-interaction` to accept every step, for example in a deploy script. The
 6. Adds the imports, the extension setup block and `initLaravelFilemanager()` to `resources/js/app.js`
 7. Runs `npm run build`
 
-Running it again is safe: it only adds what is missing. When you upgrade from 1.1.x, it widens the import line for the drop and paste plugin and warns if your setup block predates it.
+Running it again is safe: it only adds what is missing. Coming from 1.1.x or 1.2.0, it rewrites the import of the package's JavaScript and the calls in your setup block to the namespace form, and warns if your setup block predates drag and drop.
 
-## 3. Protect the file manager
+## 3. Check it
+
+```bash
+php artisan flux-filemanager:check
+```
+
+This goes through the installation - the config, the routes, whether the file manager is behind authentication, the storage link, the npm packages, your `app.js` and the build - and prints what to do about everything that isn't right. It needs no demo routes, so you can run it on any environment, and it exits non-zero when something is broken, which makes it usable in a deploy script.
+
+## 4. Protect the file manager
 
 The editor only opens `/filemanager`; who may use it is decided by Laravel Filemanager. Set the middleware in `config/lfm.php`:
 
@@ -51,7 +59,7 @@ The editor only opens `/filemanager`; who may use it is decided by Laravel Filem
 
 Use `auth:staff` or your own guard if the editors log in elsewhere. Upload limits and allowed file types are Laravel Filemanager settings too.
 
-## 4. Use the component
+## 5. Use the component
 
 ```blade
 <flux:field>
@@ -86,7 +94,7 @@ npm install @tiptap/core @tiptap/pm @tiptap/extension-image @tiptap/extension-li
 
 In `config/lfm.php` set `use_package_routes` to `true` and `url_prefix` to `filemanager`, or register the routes yourself and set `url` in `config/flux-filemanager.php` to match.
 
-Then copy [examples/app.js](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/blob/main/examples/app.js) from the repository into `resources/js/app.js`, or merge it with what you have, and run `npm run build`. It imports the package's JavaScript and CSS from `vendor/`, registers the Image and Link extensions on the `flux:editor` event, and calls `initLaravelFilemanager()`.
+Then copy [examples/app.js](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/blob/main/examples/app.js) from the repository into `resources/js/app.js`, or merge it with what you have, and run `npm run build`. It imports the package's JavaScript and CSS from `vendor/`, registers the Image and Link extensions on the `flux:editor` event, and calls `initLaravelFilemanager()`. It reads the package through one namespace import, `import * as fluxFilemanager`, so a vendor copy that is older than your setup block costs you only the feature it lacks; a named import of a missing export takes the whole file down.
 
 ## Demo pages
 
@@ -105,7 +113,11 @@ Leave that out of production.
 
 ## Troubleshooting
 
-**Nothing happens when I click the image or file link button.** The JavaScript isn't running. Check that `app.js` contains `initLaravelFilemanager()` and the setup block, run `npm run build`, and hard-refresh. The checklist page shows this too.
+Start with `php artisan flux-filemanager:check`: it knows about most of what follows.
+
+**Nothing happens when I click the image or file link button.** The JavaScript isn't running. Open the browser console: one failing import in `app.js` stops the whole file, so every button goes dead at once. Check that `app.js` contains `initLaravelFilemanager()` and the setup block, run `npm run build`, and hard-refresh. The checklist page shows this too.
+
+**The buttons stopped working right after I updated the package.** Restart `npm run dev`. Vite does not watch `vendor/` (Laravel's starter kits put `**/vendor/**` in `server.watch.ignored`), so the dev server keeps serving the package JavaScript it read at startup, and its pre-bundled dependencies are from before your `npm install`. A production build (`npm run build`) reads the current files and is not affected.
 
 **The popup is blocked.** Allow popups for your site. The package shows the `popup_blocked` message from the config.
 
@@ -113,4 +125,4 @@ Leave that out of production.
 
 **The image is inserted but doesn't load.** Laravel Filemanager builds URLs from `APP_URL`. When that host differs from the one in your browser, the image points to the wrong host. Set `APP_URL` to the host you actually use and run `php artisan config:clear`. The demo page warns about this.
 
-**Drag and drop or paste doesn't work.** Your setup block predates 1.2.0. Compare it with `examples/app.js`: the Image extension needs `addProseMirrorPlugins()` with `createImageDropPastePlugin()`. See [Drag and drop](drag-and-drop.md).
+**Drag and drop or paste doesn't work.** Your setup block predates 1.2.0. Compare it with `examples/app.js`: the Image extension needs `addProseMirrorPlugins()` with `createImageDropPastePlugin()`. Running the installer again rewrites the imports and the calls for you. When the console says the package JavaScript has no drop and paste plugin, the copy under `vendor/` is the older one: restart the dev server. See [Drag and drop](drag-and-drop.md).

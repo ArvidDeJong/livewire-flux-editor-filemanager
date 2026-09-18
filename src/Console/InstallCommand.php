@@ -21,10 +21,12 @@ class InstallCommand extends Command
 
     private const JS_MODULE = '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js';
 
+    private const NAMESPACE_IMPORT = "import * as fluxFilemanager from '".self::JS_MODULE."'";
+
     private const IMPORTS = [
         "import Link from '@tiptap/extension-link'",
         "import Image from '@tiptap/extension-image'",
-        "import { initLaravelFilemanager, createImageDropPastePlugin } from '".self::JS_MODULE."'",
+        self::NAMESPACE_IMPORT,
         "import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css'",
         "import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'",
     ];
@@ -193,12 +195,8 @@ class InstallCommand extends Command
 
             $content = File::get($path);
 
-            // 1.1.x imported initLaravelFilemanager alone; a second import of the same name would be a syntax error.
-            $content = str_replace(
-                "import { initLaravelFilemanager } from '".self::JS_MODULE."'",
-                "import { initLaravelFilemanager, createImageDropPastePlugin } from '".self::JS_MODULE."'",
-                $content
-            );
+            $content = $this->namespaceImport($content);
+            $content = $this->namespaceCalls($content);
 
             $missingImports = array_filter(self::IMPORTS, fn (string $line) => ! str_contains($content, $line));
 
@@ -214,13 +212,45 @@ class InstallCommand extends Command
             }
 
             if (! str_contains($content, 'initLaravelFilemanager()')) {
-                $content = rtrim($content).PHP_EOL.PHP_EOL.'initLaravelFilemanager()'.PHP_EOL;
+                $content = rtrim($content).PHP_EOL.PHP_EOL.'fluxFilemanager.initLaravelFilemanager()'.PHP_EOL;
             }
 
             File::put($path, $content);
 
             return true;
         });
+    }
+
+    /**
+     * Replace any named import from the package's JavaScript with the namespace import.
+     *
+     * 1.1.x and 1.2.0 wrote named imports, and a named import of an export the vendor copy doesn't
+     * have is a fatal module error that kills every editor button. The pattern matches whatever
+     * names and spacing are in there, because hand-edited files differ from what the installer wrote.
+     */
+    protected function namespaceImport(string $content): string
+    {
+        $pattern = '/import\s*\{[^}]*\}\s*from\s*([\'"])'.preg_quote(self::JS_MODULE, '/').'\1/';
+
+        return (string) preg_replace($pattern, self::NAMESPACE_IMPORT, $content);
+    }
+
+    /**
+     * Point the calls in an existing setup block at the namespace import, without prefixing twice.
+     */
+    protected function namespaceCalls(string $content): string
+    {
+        $content = (string) preg_replace(
+            '/(?<!fluxFilemanager\\.)\\bcreateImageDropPastePlugin\\(\\)/',
+            'fluxFilemanager.createImageDropPastePlugin?.()',
+            $content
+        );
+
+        return (string) preg_replace(
+            '/(?<!fluxFilemanager\\.)\\binitLaravelFilemanager\\(\\)/',
+            'fluxFilemanager.initLaravelFilemanager()',
+            $content
+        );
     }
 
     protected function displayNextSteps(): void
@@ -236,6 +266,10 @@ class InstallCommand extends Command
         $this->newLine();
 
         $this->line('3. To try it, set FLUX_FILEMANAGER_DEMO_ROUTES=true and open /darvis/editor-demo (local only, no auth).');
+        $this->newLine();
+
+        $this->line('4. Restart `npm run dev` if it is running: Vite does not watch vendor/, so it keeps');
+        $this->line('   serving the package JavaScript it read at startup.');
         $this->newLine();
 
         $this->info('Documentation: https://arviddejong.github.io/livewire-flux-editor-filemanager/');

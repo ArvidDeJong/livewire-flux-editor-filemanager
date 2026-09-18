@@ -24,7 +24,9 @@ All of it is event delegation on `document`, keyed on the closest `ui-editor` el
 
 ## The app.js contract
 
-`resources/js/app.js` must import the package's JavaScript and CSS from `vendor/`, register the Image and Link extensions on the `flux:editor` event with `e.detail.registerExtension()`, and call `initLaravelFilemanager()` once. The Image extension is extended with `class`, `style` and `data-align` attributes, `addNodeView()` returning null, `resize: false`, `inline: true`, `allowBase64: true`, and `addProseMirrorPlugins()` returning `createImageDropPastePlugin()`. The Link extension gets `target`, `class` and `style`, `openOnClick: false` and the `rel` attribute.
+`resources/js/app.js` must import the package's JavaScript and CSS from `vendor/`, register the Image and Link extensions on the `flux:editor` event with `e.detail.registerExtension()`, and call `initLaravelFilemanager()` once. The Image extension is extended with `class`, `style` and `data-align` attributes, `addNodeView()` returning null, `resize: false`, `inline: true`, `allowBase64: true`, and `addProseMirrorPlugins()` returning the drop and paste plugin. The Link extension gets `target`, `class` and `style`, `openOnClick: false` and the `rel` attribute.
+
+The package is read through one namespace import, `import * as fluxFilemanager from '…/laravel-filemanager.js'`, and the plugin factory is called as `fluxFilemanager.createImageDropPastePlugin?.()`. That is what keeps a `vendor/` copy that is older than the setup block from taking the whole file down: a named import of an absent export is a module error, and then no button works at all. Don't tidy it into named imports.
 
 `php artisan flux-filemanager:install` writes exactly this block between `// flux-filemanager:start` and `// flux-filemanager:end`, and `vendor/darvis/livewire-flux-editor-filemanager/examples/app.js` is the complete file. When something is missing, compare with that file rather than writing the registration from memory.
 
@@ -63,9 +65,14 @@ $this->blade('<x-flux-filemanager-editor wire:model="content" />')
 
 Flux's views read `$errors`, which only the web middleware shares. A Livewire component that uses the editor tests like any other: `Livewire::test(PageForm::class)->set('content', '<p>Hi</p>')->call('save')`. The editor's JavaScript is not exercised in PHP tests; use the demo page in a browser for that.
 
+## Diagnosing
+
+`php artisan flux-filemanager:check` is the first thing to run when anything is off. It reports, with a fix for each: Laravel Filemanager present, `config/lfm.php` published, the configured URL registered as a route, the file manager behind `auth`, `public/storage` linked, the four TipTap npm packages present, `app.js` calling `initLaravelFilemanager()` through the namespace import, and the build present and newer than the package's JavaScript. It exits non-zero on a failure, works without the demo routes, and the checklist page runs the same list through `Darvis\FluxFilemanager\Support\InstallationCheck`. Don't write a new check somewhere else; add it there.
+
 ## Pitfalls
 
 - Buttons do nothing: `app.js` lacks the setup block or `initLaravelFilemanager()`, or the build is stale. The checklist page at `/darvis/filemanager-checklist` (with `FLUX_FILEMANAGER_DEMO_ROUTES=true`) shows what's missing.
+- All buttons dead at once, right after updating the package: the running Vite dev server is serving the old package JavaScript, because `vendor/` is in `server.watch.ignored`. The console shows the failing import. Restart `npm run dev`; a `npm run build` is unaffected. Check the console before you change any code.
 - Images insert but don't load: `APP_URL` doesn't match the host in the browser. Laravel Filemanager builds absolute URLs from it.
 - The popup shows a login page or 404: `use_package_routes` and `middlewares` in `config/lfm.php`.
 - Drag and drop ignored: the setup block predates 1.2.0 and lacks `addProseMirrorPlugins()`.

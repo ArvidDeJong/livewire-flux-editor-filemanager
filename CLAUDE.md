@@ -36,6 +36,10 @@ CI (`.github/workflows/tests.yml`) runs PHP 8.2–8.4 × Laravel 11/12/13 × low
 - `Editor::$toolbar` is `string|bool`. It was `string`, and `:toolbar="false"` became `""`, so the custom toolbar slot never rendered.
 - The views use only components that exist in Flux 2.0.0, because `prefer-lowest` in CI installs that version. `flux:callout`, the `flux:sidebar.*` sub-components and `@blaze` came later; an unknown directive like `@blaze` is printed as text by Blade. Raise the lower bound in `composer.json` before using newer components.
 - The installer ([InstallCommand.php](src/Console/InstallCommand.php)) publishes only the config. Publishing views by default means users stop receiving view updates.
+- The host's `app.js` reads the package through one namespace import and calls the plugin factory with `?.()`. Never turn that into named imports: a named import of an export the copy under `vendor/` doesn't have is a fatal module error, and then nothing in `app.js` runs and every editor button is dead at once. That is what a stale Vite dev server produces, because starter kits put `**/vendor/**` in `server.watch.ignored`. The installer rewrites the named imports 1.1.x and 1.2.0 wrote, idempotently, guarded by `tests/Feature/AppJsUpgradeTest.php`.
+- Every installation check lives in [InstallationCheck.php](src/Support/InstallationCheck.php), and both `flux-filemanager:check` and the checklist page read it. Never add a check in only one of the two: the inline list the checklist page used to have is exactly how the page and the docs drifted apart. Its labels and hints are English, like all console output; the page translates a label when a `checklist_<key>` key exists, so a CLI-only check needs no translations.
+- `flux-filemanager:check` exists because the checklist page needs `demo_routes`, and the answer to a beginner's "nothing happens" cannot be "turn on two unauthenticated pages". It exits non-zero so it works in CI and deploys.
+- An unprotected file manager is a `FAILED` check, not a warning: `middlewares` without `auth` in `config/lfm.php` is a public upload endpoint.
 
 ## Testing
 

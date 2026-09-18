@@ -65,6 +65,12 @@ return [
     'checklist_app_url_matches_host' => 'APP_URL host komt overeen met huidige host',
     'checklist_status_ok' => 'OK',
     'checklist_status_missing' => 'MISSING',
+    'checklist_protected' => 'De bestandsmanager zit achter authenticatie',
+    'checklist_storage_link' => 'public/storage is gelinkt',
+    'checklist_npm_packages' => 'De TipTap-packages zijn geïnstalleerd',
+    'checklist_build_current' => 'De assets zijn gebouwd en actueel',
+    'checklist_app_url' => 'APP_URL is ingesteld',
+    'checklist_cli_hint' => 'Dezelfde checks in de terminal: php artisan flux-filemanager:check',
     'url' => 'URL',
 
     // Image resize UI

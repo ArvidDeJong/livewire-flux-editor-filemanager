@@ -1,6 +1,6 @@
 ---
 title: How it works
-nav_order: 8
+nav_order: 9
 description: The technical reference for darvis/livewire-flux-editor-filemanager, the DOM contract, the Laravel Filemanager callback, the extensions and the files in the package.
 ---
 

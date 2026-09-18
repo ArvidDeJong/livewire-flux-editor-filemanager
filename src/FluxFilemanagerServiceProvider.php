@@ -2,6 +2,7 @@
 
 namespace Darvis\FluxFilemanager;
 
+use Darvis\FluxFilemanager\Console\CheckCommand;
 use Darvis\FluxFilemanager\Console\InstallCommand;
 use Darvis\FluxFilemanager\View\Components\Editor;
 use Illuminate\Contracts\Config\Repository;
@@ -15,6 +16,7 @@ class FluxFilemanagerServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                CheckCommand::class,
                 InstallCommand::class,
             ]);
         }

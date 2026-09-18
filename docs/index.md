@@ -44,6 +44,7 @@ The component wraps `<flux:editor>` with a toolbar preset (`default`, `minimal`,
 ## Read next
 
 - [Installation](installation.md): the installer, what it does, and the manual steps
+- [Your first editor](first-editor.md): a complete example, from migration to published page, and the three things that usually go wrong
 - [Configuration](configuration.md): every option in `config/flux-filemanager.php`
 - [Image editing](image-editing.md): the resize menu, the edit modal and the HTML they produce
 - [File links](file-links.md): insert and edit links to files

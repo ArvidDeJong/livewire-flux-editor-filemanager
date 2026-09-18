@@ -1,6 +1,6 @@
 ---
 title: File links
-nav_order: 5
+nav_order: 6
 description: Insert links to PDFs and other files from Laravel Filemanager with the file link button, and edit any link in the editor by clicking it.
 ---
 

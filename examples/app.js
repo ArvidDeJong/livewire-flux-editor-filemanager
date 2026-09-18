@@ -1,12 +1,14 @@
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
-import { initLaravelFilemanager, createImageDropPastePlugin } from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'
+import * as fluxFilemanager from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'
 import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tiptap-image.css'
 import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'
 
 // flux-filemanager:start
 // Registers the Image and Link extensions on every Flux editor on the page.
 // Written by `php artisan flux-filemanager:install`; keep it in sync with examples/app.js.
+// Everything from the package is read off the `fluxFilemanager` namespace, so an outdated
+// copy under vendor/ only costs the feature it lacks instead of breaking this whole file.
 const FluxSafeImage = Image.extend({
     addNodeView() {
         return () => null
@@ -41,7 +43,13 @@ const FluxSafeImage = Image.extend({
         }
     },
     addProseMirrorPlugins() {
-        return [...(this.parent?.() ?? []), createImageDropPastePlugin()]
+        const dropPaste = fluxFilemanager.createImageDropPastePlugin?.()
+
+        if (!dropPaste) {
+            console.warn('flux-filemanager: the package JavaScript has no drop and paste plugin. Restart the Vite dev server after updating the package, because it does not watch vendor/.')
+        }
+
+        return [...(this.parent?.() ?? []), ...(dropPaste ? [dropPaste] : [])]
     },
 })
 
@@ -98,4 +106,4 @@ document.addEventListener('flux:editor', (e) => {
 })
 // flux-filemanager:end
 
-initLaravelFilemanager()
+fluxFilemanager.initLaravelFilemanager()
