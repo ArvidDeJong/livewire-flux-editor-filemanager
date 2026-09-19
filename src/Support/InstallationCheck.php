@@ -88,7 +88,7 @@ class InstallationCheck
      */
     protected function routes(): array
     {
-        $url = '/'.ltrim((string) config('flux-filemanager.url', '/filemanager'), '/');
+        $url = '/'.ltrim(FluxFilemanagerConfig::url(), '/');
 
         $registered = false;
 

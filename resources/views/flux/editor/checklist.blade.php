@@ -4,7 +4,7 @@
 
 <flux:tooltip content="{{ __('flux-filemanager::filemanager.open_checklist') }}" :$kbd class="contents">
     <flux:editor.button type="button"
-        data-filemanager-checklist="{{ config('flux-filemanager.checklist_url', '/darvis/filemanager-checklist') }}">
+        data-filemanager-checklist="{{ \Darvis\FluxFilemanager\Support\FluxFilemanagerConfig::checklistUrl() }}">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true">
             <path

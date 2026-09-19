@@ -4,18 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Laravel Filemanager URL
-    |--------------------------------------------------------------------------
-    |
-    | The URL where Laravel Filemanager is accessible. This should match
-    | the route prefix you configured in your routes file.
-    |
-    */
-
-    'url' => '/filemanager',
-
-    /*
-    |--------------------------------------------------------------------------
     | Installation Checklist URL
     |--------------------------------------------------------------------------
     |
@@ -25,6 +13,20 @@ return [
     */
 
     'checklist_url' => env('FLUX_FILEMANAGER_CHECKLIST_URL', '/darvis/filemanager-checklist'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Width Range
+    |--------------------------------------------------------------------------
+    |
+    | Set the minimum and maximum values for custom width input.
+    |
+    */
+
+    'custom_width' => [
+        'min' => 1,
+        'max' => 100,
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -39,6 +41,46 @@ return [
     */
 
     'demo_routes' => env('FLUX_FILEMANAGER_DEMO_ROUTES', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Drag & Drop Settings
+    |--------------------------------------------------------------------------
+    |
+    | Configure how drag & drop and paste images are handled.
+    |
+    */
+
+    'drag_drop' => [
+        // Upload method: 'base64' or 'upload'
+        // - base64: Images are embedded directly in the HTML (no server upload)
+        // - upload: Images are uploaded to server via Laravel Filemanager
+        'method' => 'base64',
+
+        // Upload endpoint (only used when method is 'upload')
+        'upload_url' => '/filemanager/upload',
+
+        // Maximum file size in bytes (default: 5MB)
+        'max_file_size' => 5242880,
+
+        // Allowed image types
+        'allowed_types' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Error Messages
+    |--------------------------------------------------------------------------
+    |
+    | Customize error messages shown to users.
+    |
+    */
+
+    'messages' => [
+        'popup_blocked' => 'Popup was blocked by your browser. Please allow popups for this site.',
+        'no_images_selected' => 'No images were selected.',
+        'filemanager_not_found' => 'Laravel Filemanager could not be loaded. Please check your installation.',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -73,56 +115,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Custom Width Range
+    | Laravel Filemanager URL
     |--------------------------------------------------------------------------
     |
-    | Set the minimum and maximum values for custom width input.
+    | The URL where Laravel Filemanager is accessible. This should match
+    | the route prefix you configured in your routes file.
     |
     */
 
-    'custom_width' => [
-        'min' => 1,
-        'max' => 100,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Error Messages
-    |--------------------------------------------------------------------------
-    |
-    | Customize error messages shown to users.
-    |
-    */
-
-    'messages' => [
-        'popup_blocked' => 'Popup was blocked by your browser. Please allow popups for this site.',
-        'no_images_selected' => 'No images were selected.',
-        'filemanager_not_found' => 'Laravel Filemanager could not be loaded. Please check your installation.',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Drag & Drop Settings
-    |--------------------------------------------------------------------------
-    |
-    | Configure how drag & drop and paste images are handled.
-    |
-    */
-
-    'drag_drop' => [
-        // Upload method: 'base64' or 'upload'
-        // - base64: Images are embedded directly in the HTML (no server upload)
-        // - upload: Images are uploaded to server via Laravel Filemanager
-        'method' => 'base64',
-
-        // Upload endpoint (only used when method is 'upload')
-        'upload_url' => '/filemanager/upload',
-
-        // Maximum file size in bytes (default: 5MB)
-        'max_file_size' => 5242880,
-
-        // Allowed image types
-        'allowed_types' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
-    ],
+    'url' => '/filemanager',
 
 ];
