@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The config keys are in alphabetical order. No key, default or behaviour changed
 
+### Fixed
+- The test for "the build is older than this package" compared the manifest against a fixed `time() - 86400`, so it only held while the package JavaScript had been touched that same day. It passed in CI, where a checkout stamps every file, and failed on any working copy older than a day. Both timestamps are now set relative to the package file
+
 ## [1.3.0] - 2026-09-18
 ### Added
 - `php artisan flux-filemanager:check` goes through the installation and prints what to do about every problem: Laravel Filemanager, `config/lfm.php`, the file manager routes, whether those routes are behind authentication, the storage link, the four TipTap npm packages, the setup in `resources/js/app.js` and the build. It needs no demo routes and exits non-zero when something is broken, so it also works in CI or a deploy script
