@@ -2,10 +2,10 @@
     'id' => null,
     'rows' => 12,
     'toolbar' => 'default', // 'default', 'minimal', 'full', or false for custom
-    'dragDropMethod' => config('flux-filemanager.drag_drop.method', 'base64'),
-    'uploadUrl' => config('flux-filemanager.drag_drop.upload_url'),
-    'maxFileSize' => config('flux-filemanager.drag_drop.max_file_size'),
-    'allowedTypes' => implode(',', config('flux-filemanager.drag_drop.allowed_types', [])),
+    'dragDropMethod' => \Darvis\FluxFilemanager\Support\FluxFilemanagerConfig::dragDropMethod(),
+    'uploadUrl' => \Darvis\FluxFilemanager\Support\FluxFilemanagerConfig::dragDropUploadUrl(),
+    'maxFileSize' => \Darvis\FluxFilemanager\Support\FluxFilemanagerConfig::dragDropMaxFileSize(),
+    'allowedTypes' => implode(',', \Darvis\FluxFilemanager\Support\FluxFilemanagerConfig::dragDropAllowedTypes()),
 ])
 
 {{-- Settings and translations for laravel-filemanager.js; a JSON script tag needs no CSP nonce. --}}

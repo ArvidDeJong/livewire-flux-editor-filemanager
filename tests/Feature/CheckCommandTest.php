@@ -81,11 +81,18 @@ it('fails when the build is older than the package javascript', function () {
     $manifest = public_path('build/manifest.json');
     File::ensureDirectoryExists(dirname($manifest));
     File::put($manifest, '{}');
-    touch($manifest, time() - 86400);
+
+    // Both sides are set relative to the package file, never to "now". A fixed offset like
+    // time() - 86400 only fails while the package JavaScript was touched today, so this test
+    // passed in CI, where a checkout stamps every file, and started failing on a working copy
+    // that was a day old.
+    $packageJs = filemtime(packagePath('resources/js/laravel-filemanager.js'));
+
+    touch($manifest, $packageJs - 60);
 
     expect(checkResults()['build_current']['status'])->toBe(InstallationCheck::FAILED);
 
-    touch($manifest);
+    touch($manifest, $packageJs + 60);
 
     expect(checkResults()['build_current']['status'])->toBe(InstallationCheck::OK);
 

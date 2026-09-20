@@ -11,7 +11,7 @@ description: Install darvis/livewire-flux-editor-filemanager with the installer 
 - PHP 8.2 or higher
 - Laravel 11, 12 or 13
 - Livewire 3 or 4
-- Flux Pro 2. The editor is a Pro component, so your application already has the Flux composer repository and a licence
+- Flux Pro 2.0.2 or newer. The editor is a Pro component, so your application already has the Flux composer repository and a licence
 - Laravel Filemanager 2 (`unisharp/laravel-filemanager`), installed as a dependency of this package
 - Vite with `resources/js/app.js`, the usual Laravel setup
 

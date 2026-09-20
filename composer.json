@@ -54,8 +54,8 @@
         "php": "^8.2",
         "laravel/framework": "^11.0|^12.0|^13.0",
         "livewire/livewire": "^3.0|^4.0",
-        "livewire/flux": "^2.0",
-        "livewire/flux-pro": "^2.0",
+        "livewire/flux": "^2.0.2",
+        "livewire/flux-pro": "^2.0.2",
         "unisharp/laravel-filemanager": "^2.0"
     },
     "require-dev": {

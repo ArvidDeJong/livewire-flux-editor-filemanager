@@ -4,8 +4,8 @@ namespace Darvis\FluxFilemanager;
 
 use Darvis\FluxFilemanager\Console\CheckCommand;
 use Darvis\FluxFilemanager\Console\InstallCommand;
+use Darvis\FluxFilemanager\Support\FluxFilemanagerConfig;
 use Darvis\FluxFilemanager\View\Components\Editor;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
 
 class FluxFilemanagerServiceProvider extends ServiceProvider
@@ -32,7 +32,7 @@ class FluxFilemanagerServiceProvider extends ServiceProvider
         ]);
 
         // The demo and checklist pages are unauthenticated, so they are opt-in.
-        if ($this->app->make(Repository::class)->get('flux-filemanager.demo_routes', false)) {
+        if (FluxFilemanagerConfig::demoRoutes()) {
             $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         }
 
