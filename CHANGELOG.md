@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The config keys are in alphabetical order. No key, default or behaviour changed
 
 ### Fixed
+- `livewire/flux` and `livewire/flux-pro` now require `^2.0.2` instead of `^2.0`. Flux 2.0.0 and 2.0.1 cannot resolve their own anonymous component views on Laravel 12, so the editor rendered a 500 with `Flux component [icon.loading] does not exist`. Flux 2.0.2 fixed that; nothing else changed
 - The test for "the build is older than this package" compared the manifest against a fixed `time() - 86400`, so it only held while the package JavaScript had been touched that same day. It passed in CI, where a checkout stamps every file, and failed on any working copy older than a day. Both timestamps are now set relative to the package file
 
 ## [1.3.0] - 2026-09-18
