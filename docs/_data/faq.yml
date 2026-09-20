@@ -28,10 +28,12 @@
   a: It does not upload or crop images itself, that is Laravel Filemanager's job. It does not protect the `/filemanager` routes, set `middlewares` in `config/lfm.php` for that. And it does not sanitise the HTML your editors produce.
 
 - q: Nothing happens when I click the image button in the Flux editor. What now?
-  a: Run `php artisan flux-filemanager:check`, which goes through the whole installation and says what to fix. Nine times out of ten the JavaScript isn't running at all: one failing import stops all of `app.js`, so every toolbar button dies at the same time. The browser console names it. Right after updating the package, restart `npm run dev` first, because Vite does not watch `vendor/` and keeps serving the copy it read at startup.
+  a: >-
+    Run `php artisan flux-filemanager:check`, which goes through the whole installation and says what to fix. Nine times out of ten the JavaScript isn't running at all: one failing import stops all of `app.js`, so every toolbar button dies at the same time. The browser console names it. Right after updating the package, restart `npm run dev` first, because Vite does not watch `vendor/` and keeps serving the copy it read at startup.
 
 - q: How do I show the saved editor content on my site?
-  a: Render it unescaped in a `prose` container, and style `.tiptap-image` and `.align-left`, `.align-center` and `.align-right` in your own CSS: the package's stylesheet only covers the editor. Store the content in a `longText` column, because a pasted image is base64 and outgrows a `text` column. The full example is in the Your first editor page.
+  a: >-
+    Render it unescaped in a `prose` container, and style `.tiptap-image` and `.align-left`, `.align-center` and `.align-right` in your own CSS: the package's stylesheet only covers the editor. Store the content in a `longText` column, because a pasted image is base64 and outgrows a `text` column. The full example is in the Your first editor page.
 
 - q: Is there a command to check the installation?
   a: Yes, `php artisan flux-filemanager:check`. It checks Laravel Filemanager, `config/lfm.php`, the file manager routes, whether they are behind authentication, the storage link, the TipTap npm packages, your `app.js` and the build, prints a fix for each problem, and exits non-zero so it can run in CI or a deploy.
