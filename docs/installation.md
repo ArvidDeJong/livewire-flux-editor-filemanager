@@ -1,7 +1,7 @@
 ---
-title: Installation
+title: "Installation"
 nav_order: 2
-description: Install darvis/livewire-flux-editor-filemanager with the installer or by hand, protect the file manager routes and try the demo page.
+description: "Install darvis/livewire-flux-editor-filemanager step by step: the paid Flux Pro licence, the installer, protecting the file manager, checking it works."
 ---
 
 # Installation
@@ -11,55 +11,83 @@ description: Install darvis/livewire-flux-editor-filemanager with the installer 
 - PHP 8.2 or higher
 - Laravel 11, 12 or 13
 - Livewire 3 or 4
-- Flux Pro 2.0.2 or newer. The editor is a Pro component, so your application already has the Flux composer repository and a licence
-- Laravel Filemanager 2 (`unisharp/laravel-filemanager`), installed as a dependency of this package
-- Vite with `resources/js/app.js`, the usual Laravel setup
+- Flux 2.0.2 or newer **and** Flux Pro 2.0.2 or newer (`livewire/flux` and `livewire/flux-pro`)
+- Laravel Filemanager 2 (`unisharp/laravel-filemanager`), installed automatically as a dependency of this package
+- Node with npm, and Vite with `resources/js/app.js`, the standard Laravel front-end setup
 
-## 1. Install the package
+## Flux Pro is required, and it is paid
+
+This package does not contain an editor. It extends `<flux:editor>`, and the Flux documentation says about that component: "The rich text editor component is only available in the Pro version of Flux." Flux Pro is a commercial product of the Flux team; you buy a licence at [fluxui.dev](https://fluxui.dev). This package itself is free (MIT).
+
+`livewire/flux-pro` is not on Packagist. Composer downloads it from the private repository `https://composer.fluxui.dev`, with your Flux account email as username and your licence key as password. Composer only reads repositories from your application's own `composer.json`, so your application must know that repository **before** you require this package.
+
+If Flux Pro is not in your application yet, install it first, as the [Flux installation guide](https://fluxui.dev/docs/installation) describes:
+
+```bash
+composer require livewire/flux
+php artisan flux:activate
+```
+
+`flux:activate` asks for your email and licence key. It stores them in `auth.json`, adds the `composer.fluxui.dev` repository to your `composer.json`, and runs `composer require livewire/flux-pro`. Do not commit `auth.json`.
+
+On a server or in CI, where nobody can answer a prompt, run this before `composer install`:
+
+```bash
+composer config http-basic.composer.fluxui.dev your-email your-license-key
+```
+
+## Step 1: Install the package
 
 ```bash
 composer require darvis/livewire-flux-editor-filemanager
 ```
 
-The service provider is discovered automatically.
+Laravel discovers the service provider by itself. Composer installs Laravel Filemanager along with it.
 
-## 2. Run the installer
+## Step 2: Run the installer
 
 ```bash
 php artisan flux-filemanager:install
 ```
 
-Add `--no-interaction` to accept every step, for example in a deploy script. The installer:
+The installer asks a yes or no question before each step. Press Enter to accept a step. Add `--no-interaction` to accept all of them, for example in a script.
 
-1. Publishes the Laravel Filemanager config and assets (`lfm_config`, `lfm_public`)
-2. Sets `use_package_routes` to `true` and `url_prefix` to `filemanager` in `config/lfm.php`
-3. Runs `storage:link` and creates `public/storage/photos` and `public/storage/files`
-4. Installs `@tiptap/core`, `@tiptap/pm`, `@tiptap/extension-image` and `@tiptap/extension-link` with npm
-5. Publishes `config/flux-filemanager.php` (`--force` overwrites an existing file)
-6. Adds the imports, the extension setup block and `initLaravelFilemanager()` to `resources/js/app.js`
-7. Runs `npm run build`
+| Question | What the step does |
+| --- | --- |
+| Publish the Laravel Filemanager configuration and assets? | Runs `vendor:publish` with the tags `lfm_config` and `lfm_public`. You get `config/lfm.php` |
+| Enable the Laravel Filemanager routes at /filemanager? | Rewrites two lines in `config/lfm.php`: `use_package_routes` becomes `true` and `url_prefix` becomes `filemanager` |
+| Create the storage link and upload directories? | Runs `storage:link` and creates `public/storage/photos` and `public/storage/files` |
+| Install the npm packages (TipTap)? | Runs `npm install @tiptap/core @tiptap/pm @tiptap/extension-image @tiptap/extension-link`. TipTap is the editor library that the Flux editor is built on |
+| Publish config/flux-filemanager.php? | Runs `vendor:publish --tag=flux-filemanager-config`. With `--force` it overwrites an existing file |
+| Add the editor setup to resources/js/app.js? | Adds five import lines at the top, the setup block between `// flux-filemanager:start` and `// flux-filemanager:end`, and the call `fluxFilemanager.initLaravelFilemanager()` |
+| Build the assets with npm? | Runs `npm run build` |
 
-Running it again is safe: it only adds what is missing. Coming from 1.1.x or 1.2.0, it rewrites the import of the package's JavaScript and the calls in your setup block to the namespace form, and warns if your setup block predates drag and drop.
+It ends with `Installation complete.` and a list of next steps.
 
-## 3. Check it
+You can run the installer again after an update. The `app.js` step adds only what is missing, and rewrites the named imports that versions 1.1.x and 1.2.0 wrote into the namespace import. Two steps are not neutral when you run them again: the routes step sets `url_prefix` back to `filemanager`, and `--force` replaces your `config/flux-filemanager.php`. Answer `no` to a step you do not want.
 
-```bash
-php artisan flux-filemanager:check
-```
+## Step 3: Protect the file manager
 
-This goes through the installation - the config, the routes, whether the file manager is behind authentication, the storage link, the npm packages, your `app.js` and the build - and prints what to do about everything that isn't right. It needs no demo routes, so you can run it on any environment, and it exits non-zero when something is broken, which makes it usable in a deploy script.
+This package adds no authentication. The file manager has its own routes, and `middlewares` in `config/lfm.php` decides who reaches them. Middleware is the code Laravel runs before a request reaches a route; `auth` is the one that requires a logged-in user.
 
-## 4. Protect the file manager
-
-The editor only opens `/filemanager`; who may use it is decided by Laravel Filemanager. Set the middleware in `config/lfm.php`:
+Open `config/lfm.php` and make sure `auth` is in the list:
 
 ```php
 'middlewares' => ['web', 'auth'],
 ```
 
-Use `auth:staff` or your own guard if the editors log in elsewhere. Upload limits and allowed file types are Laravel Filemanager settings too.
+Laravel Filemanager 2.15 ships with this value, but check your file: without `auth`, anyone on the internet can browse and upload files.
 
-## 5. Use the component
+Two things to know:
+
+- `auth` lets in **every** logged-in user. If visitors can register on your site, add a middleware of your own that only lets editors through, for example `can:edit-pages` with a gate that you define.
+- If your editors log in through another guard (a guard is a named way of logging in, such as `web` or `admin`), use `auth:admin`.
+
+Read [Uploads and security](uploads-and-security.md) before you go live.
+
+## Step 4: Use the component
+
+In the Blade view of a Livewire component, use the package's component where you would use `<flux:editor>`:
 
 ```blade
 <flux:field>
@@ -69,60 +97,71 @@ Use `auth:staff` or your own guard if the editors log in elsewhere. Upload limit
 </flux:field>
 ```
 
-Attributes: `toolbar` (`default`, `minimal`, `full`, or `false` for your own toolbar in the slot), `rows` and `id`. Everything else, such as `wire:model`, goes to `<flux:editor>`. See [Configuration](configuration.md#the-component).
+The layout of that page must load `resources/js/app.js` with `@vite` and contain `@fluxScripts`, as any page with Flux components does. [Your first editor](first-editor.md) has the complete example.
 
-Display the content as you would any editor HTML:
+## Check that it works
 
-```blade
-<div class="prose max-w-none">
-    {!! $page->content !!}
-</div>
+Run:
+
+```bash
+php artisan flux-filemanager:check
 ```
 
-The package does not sanitise this HTML. Editors can add classes, inline styles and base64 images, so give the editor to trusted users only, or sanitise before rendering.
+When everything is right you see nine check marks and this at the end:
 
-## Manual installation
+```text
+  ✓ Laravel Filemanager is installed
+  ✓ config/lfm.php is published
+  ✓ The file manager answers at /filemanager
+  ✓ The file manager is behind authentication
+  ✓ public/storage is linked
+  ✓ The TipTap packages are installed
+  ✓ resources/js/app.js calls initLaravelFilemanager()
+  ✓ The assets are built
+  ✓ APP_URL is set
 
-If you prefer to do the installer's work by hand:
+The installation is complete.
+```
+
+Then log in to your application, open the page with the editor and click the image button. Laravel Filemanager opens in a popup window. Pick an image and confirm: the image appears in the editor.
+
+When you see something else:
+
+- A red `✗` line has the fix printed under it, and the command ends with `problem(s) to fix` and exit code 1. Do what the line says and run the check again.
+- A yellow `!` line is a warning. `The Vite dev server is running` means `npm run dev` is active; restart it after every update of this package.
+- The check passes but the buttons do nothing, the popup shows a login page, or the image does not load: see [Troubleshooting](troubleshooting.md).
+
+The command changes nothing and needs no demo pages, so you can also run it on a server or in a deploy script.
+
+## Try the demo pages first (optional)
+
+The package has two pages to try the editor without writing a view. They have **no authentication**, so they are off by default. Turn them on in your local `.env` only:
+
+```env
+FLUX_FILEMANAGER_DEMO_ROUTES=true
+```
+
+| URL | What it shows |
+| --- | --- |
+| `/darvis/editor-demo` | An editor with the `full` toolbar, a preview of the HTML, and a warning when `APP_URL` does not match the host in your browser |
+| `/darvis/filemanager-checklist` | The same checks as `flux-filemanager:check`, plus a check that the `APP_URL` host matches the current host |
+
+If the pages return a 404 after you changed `.env`, run `php artisan config:clear`. The file manager popup on the demo page still needs you to be logged in.
+
+## Install by hand instead
+
+Each installer step can be done by hand:
 
 ```bash
 php artisan vendor:publish --tag=lfm_config
 php artisan vendor:publish --tag=lfm_public
 php artisan storage:link
 npm install @tiptap/core @tiptap/pm @tiptap/extension-image @tiptap/extension-link
+php artisan vendor:publish --tag=flux-filemanager-config
 ```
 
-In `config/lfm.php` set `use_package_routes` to `true` and `url_prefix` to `filemanager`, or register the routes yourself and set `url` in `config/flux-filemanager.php` to match.
+In `config/lfm.php`, set `use_package_routes` to `true` and `url_prefix` to `filemanager`. If you register the file manager routes yourself under another URL, set `url` in `config/flux-filemanager.php` to that URL.
 
-Then copy [examples/app.js](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/blob/main/examples/app.js) from the repository into `resources/js/app.js`, or merge it with what you have, and run `npm run build`. It imports the package's JavaScript and CSS from `vendor/`, registers the Image and Link extensions on the `flux:editor` event, and calls `initLaravelFilemanager()`. It reads the package through one namespace import, `import * as fluxFilemanager`, so a vendor copy that is older than your setup block costs you only the feature it lacks; a named import of a missing export takes the whole file down.
+Then copy [examples/app.js](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/blob/main/examples/app.js) into `resources/js/app.js`, or merge it with what you have, and run `npm run build`. The file imports the package's JavaScript and CSS from `vendor/`, registers the Image and Link extensions on the `flux:editor` event, and calls `initLaravelFilemanager()`.
 
-## Demo pages
-
-The package ships two pages to try the integration and check the setup:
-
-- `/darvis/editor-demo`: a full editor with a preview, and a warning when `APP_URL` doesn't match the host you are using
-- `/darvis/filemanager-checklist`: checks the config, the routes and `app.js`
-
-They have no authentication, so they are off by default. Enable them locally:
-
-```env
-FLUX_FILEMANAGER_DEMO_ROUTES=true
-```
-
-Leave that out of production.
-
-## Troubleshooting
-
-Start with `php artisan flux-filemanager:check`: it knows about most of what follows.
-
-**Nothing happens when I click the image or file link button.** The JavaScript isn't running. Open the browser console: one failing import in `app.js` stops the whole file, so every button goes dead at once. Check that `app.js` contains `initLaravelFilemanager()` and the setup block, run `npm run build`, and hard-refresh. The checklist page shows this too.
-
-**The buttons stopped working right after I updated the package.** Restart `npm run dev`. Vite does not watch `vendor/` (Laravel's starter kits put `**/vendor/**` in `server.watch.ignored`), so the dev server keeps serving the package JavaScript it read at startup, and its pre-bundled dependencies are from before your `npm install`. A production build (`npm run build`) reads the current files and is not affected.
-
-**The popup is blocked.** Allow popups for your site. The package shows the `popup_blocked` message from the config.
-
-**The popup opens but shows an error or a login page.** The `/filemanager` routes are missing or protected by a middleware you don't pass. Check `use_package_routes` and `middlewares` in `config/lfm.php`, and `url` in `config/flux-filemanager.php` if you changed the prefix.
-
-**The image is inserted but doesn't load.** Laravel Filemanager builds URLs from `APP_URL`. When that host differs from the one in your browser, the image points to the wrong host. Set `APP_URL` to the host you actually use and run `php artisan config:clear`. The demo page warns about this.
-
-**Drag and drop or paste doesn't work.** Your setup block predates 1.2.0. Compare it with `examples/app.js`: the Image extension needs `addProseMirrorPlugins()` with `createImageDropPastePlugin()`. Running the installer again rewrites the imports and the calls for you. When the console says the package JavaScript has no drop and paste plugin, the copy under `vendor/` is the older one: restart the dev server. See [Drag and drop](drag-and-drop.md).
+Keep the import as it is: `import * as fluxFilemanager from '…/laravel-filemanager.js'`. With a named import, one export that is missing in an older copy under `vendor/` is a module error, and then nothing in `app.js` runs.

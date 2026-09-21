@@ -5,6 +5,31 @@ All notable changes to **darvis/livewire-flux-editor-filemanager** are documente
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Fixed
+Documentation only; nothing in the package changes. Every page, the README, the FAQ and the Boost files were checked against the code.
+- `rows` was documented as the height of the editor. It is printed as a plain `rows` attribute, and Flux's editor has no such prop, so it changes nothing. The docs now show the class Flux documents for the height
+- `drag_drop.max_file_size` and `drag_drop.allowed_types` were described as limits without saying where they are checked. They are checked in the browser only; on the server only `config/lfm.php` and PHP count. Laravel Filemanager's default image types have no WebP or SVG, so with `drag_drop.method = upload` such a file passes the package's check, is refused by Laravel Filemanager, and nothing is inserted without a message
+- "Running the installer again is safe: it only adds what is missing" is true for `app.js` only. The routes step sets `url_prefix` in `config/lfm.php` back to `filemanager`, and `--force` replaces `config/flux-filemanager.php`
+- "The image is inserted but doesn't load" blamed `APP_URL` alone. For images picked with the image button the package already drops a foreign host from a `/storage/` URL; a missing storage link is the other cause, and only images uploaded by drag and drop keep the wrong host
+- The HTML examples showed relative `src` and `href` values. The package stores the absolute URL Laravel Filemanager returns, and only makes it relative when the host differs from the page
+- `messages.no_images_selected` was described as reserved for host apps that build on the JavaScript. It is not passed to the JavaScript at all
+- The two alert texts come from `messages.*` in the config and win over the language files, so they stay English in every locale; the alerts for a refused dropped image are fixed English strings. The localization page said all texts follow the locale
+- "English, Dutch and German": the Dutch file has every key, but most of its values are still English
+- The default and `full` toolbars have a checklist button that opens a 404 while `demo_routes` is off. That was not mentioned
+- The first-editor page said MySQL truncates a `text` column silently; with Laravel's strict mode it fails instead. Its component had no `render()` method and no file names, and `make:livewire` creates a different file layout in Livewire 4
+- The requirements differed between pages ("Flux Pro 2" and "Flux Pro 2.0.2"). They now follow `composer.json` everywhere, and say that Flux Pro is a paid licence and that the application needs the Flux composer repository before this package can be required
+- Unverifiable wording removed ("nine times out of ten", what Laravel's starter kits put in the Vite config, what search engines do with `nofollow`)
+- The FAQ went from 12 questions to 10, with the questions on what the package is, what it costs and whether it is safe added
+
+### Added
+- Documentation pages: [Troubleshooting](https://arviddejong.github.io/livewire-flux-editor-filemanager/troubleshooting.html) (symptom, cause, fix, with the literal messages from the code), [Testing](https://arviddejong.github.io/livewire-flux-editor-filemanager/testing.html) (a complete test for a Livewire form with the editor) and [Uploads and security](https://arviddejong.github.io/livewire-flux-editor-filemanager/uploads-and-security.html) (what the package checks, what Laravel Filemanager checks, and what nobody checks)
+- The installation page explains the Flux Pro requirement and has a "Check that it works" section with the expected output of `flux-filemanager:check`
+- `tests/DocsSiteTest.php` checks that every relative link between the pages resolves, that the home page links every page, and that the messages quoted on the troubleshooting page exist in the code
+
+### Changed
+- The README follows the order shared by all darvis packages, and gained the Laravel Boost, Changelog and Security sections. The troubleshooting section moved from the installation page to its own page
+
 ## [1.4.0] - 2026-09-20
 ### Added
 - `FluxFilemanagerConfig` with named accessors is the one place that reads the package config. Every default is written down once, so a caller cannot quietly disagree with the config file about what it is. Two Blade views read `drag_drop.upload_url` and `drag_drop.max_file_size` without a fallback at all

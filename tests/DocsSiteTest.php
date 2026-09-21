@@ -159,3 +159,62 @@ test('the footer credits ARVID.NL without a personal name', function () {
 
     expect(file_get_contents(docsPath('_includes/head_custom.html')))->not->toContain('"Person"');
 });
+
+test('the beginner pages exist and installation says how to check the result', function () {
+    foreach (['installation.md', 'first-editor.md', 'troubleshooting.md', 'testing.md', 'uploads-and-security.md'] as $page) {
+        expect(is_file(docsPath($page)))->toBeTrue($page);
+    }
+
+    expect(file_get_contents(docsPath('installation.md')))->toContain('## Check that it works');
+});
+
+test('every relative link resolves and every page is linked from the home page', function () {
+    $index = (string) file_get_contents(docsPath('index.md'));
+
+    foreach (glob(docsPath('*.md')) as $page) {
+        preg_match_all('/\]\((?!https?:|#|mailto:)([^)#]+)(?:#[^)]*)?\)/', (string) file_get_contents($page), $links);
+
+        foreach ($links[1] as $target) {
+            expect(is_file(docsPath($target)))->toBeTrue(basename($page).' links to '.$target);
+        }
+
+        if (basename($page) !== 'index.md') {
+            expect($index)->toContain('('.basename($page).')');
+        }
+    }
+});
+
+test('the messages quoted on the troubleshooting page exist in the code', function () {
+    $page = (string) file_get_contents(docsPath('troubleshooting.md'));
+
+    $sources = [
+        'src/Support/InstallationCheck.php' => [
+            'The file manager is behind authentication',
+            'public/storage is linked',
+            'The TipTap packages are installed',
+            'The Vite dev server is running',
+            'The build is older than this package',
+            'resources/js/app.js still uses a named import',
+        ],
+        'config/flux-filemanager.php' => [
+            'Popup was blocked by your browser. Please allow popups for this site.',
+        ],
+        'resources/js/drag-drop-config.js' => [
+            'Image too large. Maximum size is',
+            'is not allowed',
+            'Upload failed:',
+        ],
+        'resources/stubs/flux-filemanager-setup.js' => [
+            'the package JavaScript has no drop and paste plugin',
+        ],
+    ];
+
+    foreach ($sources as $file => $messages) {
+        $code = (string) file_get_contents(packagePath($file));
+
+        foreach ($messages as $message) {
+            expect($code)->toContain($message);
+            expect($page)->toContain($message);
+        }
+    }
+});

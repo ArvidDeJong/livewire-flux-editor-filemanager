@@ -1,7 +1,7 @@
 ---
-title: FAQ
-nav_order: 10
-description: Short answers about darvis/livewire-flux-editor-filemanager, Laravel Filemanager in the Flux Pro editor.
+title: "FAQ"
+nav_order: 13
+description: "Short answers about darvis/livewire-flux-editor-filemanager: what it is, what it needs, which versions it supports, whether it is safe, dead buttons."
 faq: true
 ---
 

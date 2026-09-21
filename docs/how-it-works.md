@@ -1,14 +1,14 @@
 ---
-title: How it works
-nav_order: 9
-description: The technical reference for darvis/livewire-flux-editor-filemanager, the DOM contract, the Laravel Filemanager callback, the extensions and the files in the package.
+title: "How it works"
+nav_order: 12
+description: "Technical reference for debugging and extending: which file does what, the DOM contract, the Laravel Filemanager popup callback and the TipTap extensions."
 ---
 
 # How it works
 
-A reference for debugging and extending. Nothing here is needed to use the package.
+A reference for debugging and extending. You do not need this page to use the package.
 
-## The pieces
+## Which file does what
 
 | Piece | File | Role |
 | --- | --- | --- |
@@ -18,12 +18,14 @@ A reference for debugging and extending. Nothing here is needed to use the packa
 | Drag and drop helpers | `resources/js/drag-drop-config.js` | Reads the data attributes, validates a file, converts to base64 or uploads |
 | Setup block | `resources/stubs/flux-filemanager-setup.js`, `examples/app.js` | Registers the Image and Link extensions on the `flux:editor` event |
 | Styles | `resources/css/tiptap-image.css`, `file-link-modal.css` | Images in the editor, the resize menu, the modals |
-| Installer | `src/Console/InstallCommand.php` | Laravel Filemanager config and routes, storage, npm, config, `app.js` |
+| Config reader | `src/Support/FluxFilemanagerConfig.php` | The only class that reads `config/flux-filemanager.php`, with one method per key |
+| Installer | `src/Console/InstallCommand.php` | `flux-filemanager:install`: Laravel Filemanager config and routes, storage, npm, config, `app.js` |
+| Installation check | `src/Console/CheckCommand.php`, `src/Support/InstallationCheck.php` | `flux-filemanager:check` and the checklist page read the same list of nine checks |
 | Demo | `routes/web.php`, `src/Livewire/EditorDemo.php`, `resources/views/examples/` | Opt-in demo and checklist pages |
 
-## The DOM contract
+## The DOM contract: which clicks the JavaScript listens to
 
-Everything is event delegation on `document`, so it works for editors rendered later by Livewire:
+Everything is event delegation on `document`: one listener on the page instead of one per button. That is why it works for editors that Livewire renders later:
 
 - A click on an element with `data-editor="image"` or `data-editor="file-link"` finds the closest `ui-editor` element. Flux puts the TipTap instance on it as `editor`. Without that property the click is ignored.
 - A click on `.ProseMirror img` shows the resize menu, a double click opens the image modal.
@@ -32,13 +34,15 @@ Everything is event delegation on `document`, so it works for editors rendered l
 
 Settings come from a `<script type="application/json" data-flux-filemanager-config>` tag the component renders once per page, or from `window.fluxFilemanagerConfig` if the host app sets it first. The JSON holds the file manager URL, the popup size, the resize presets, the custom width limits, the two messages and the translations. The drag and drop settings are data attributes on the `ui-editor` element, because the plugin reads them per editor.
 
-## The Laravel Filemanager popup
+## How the Laravel Filemanager popup hands back a file
 
-`window.open()` with `?type=Images` or `?type=Files`. Laravel Filemanager calls `window.SetUrl(items)` in the opener when the user confirms; the package sets that function before opening the popup, reads `url` (or `path`, or `thumb_url`) from each item, and removes the function again. URLs that point to `/storage` or the file manager on another origin are made relative, which is what you want when `APP_URL` doesn't match the host in use.
+The package calls `window.open()` with `?type=Images` or `?type=Files`. Laravel Filemanager calls `window.SetUrl(items)` in the opener when the user confirms. The package defines that function right after opening the popup, reads `url` (or `path`, or `thumb_url`) from each item, removes the function again and closes the popup.
+
+A URL on another origin than the page is made relative when its path starts with `/storage/`, `/filemanager`, `/laravel-filemanager`, `/cms/filemanager` or `/cms/laravel-filemanager`. That keeps images working when `APP_URL` does not match the host in use. Every other URL is stored as an absolute URL.
 
 Images are inserted with the `setImage` command, with a fallback to raw HTML and then to a link if the extension refuses. Files open the link modal.
 
-## Changing images and links
+## How images and links are changed
 
 The resize menu and the modal call `updateAttributes('image', ...)` on the selected node, so attributes they don't touch stay. The generated part of `class` and `style` is recomputed every time: `tiptap-image`, `align-*`, `width`, the alignment margins and `display: block` for center. Anything else in those attributes is treated as the editor's own and kept.
 
@@ -46,7 +50,7 @@ Editing a link extends the selection to the whole link mark and replaces it with
 
 After a change through commands, the package dispatches `input` and `blur` on the `ui-editor` element, because Flux syncs `wire:model` on those events.
 
-## The extensions
+## The two TipTap extensions in the setup block
 
 The setup block registers two extensions on every editor through Flux's `flux:editor` event and `e.detail.registerExtension()`:
 
@@ -55,6 +59,6 @@ The setup block registers two extensions on every editor through Flux's `flux:ed
 
 A flag on `e.detail` stops the block from registering twice when the event fires more than once.
 
-## Drop and paste
+## How drop and paste are handled
 
-`createImageDropPastePlugin()` is a ProseMirror plugin with `handleDrop` and `handlePaste`. It takes over only when the event carries image files and the editor belongs to a `ui-editor`; everything else goes to the editor's defaults. Files are processed one at a time through `processImageFile()`: size and type check, then base64 or an upload, then `insertContentAt()` at the drop position or the cursor. A refused file shows a message and the rest continue.
+`createImageDropPastePlugin()` is a ProseMirror plugin with `handleDrop` and `handlePaste`. It takes over only when the event carries image files and the editor belongs to a `ui-editor`; everything else goes to the editor's defaults. Files are processed one at a time through `processImageFile()`: size and type check, then base64 or an upload, then `insertContentAt()` at the drop position or the cursor. A file that fails the size or type check, or an upload that returns an error status, shows an alert and the rest continue. An upload that returns no URL is skipped without a message.

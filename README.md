@@ -2,29 +2,32 @@
 
 [![Latest version](https://img.shields.io/packagist/v/darvis/livewire-flux-editor-filemanager.svg)](https://packagist.org/packages/darvis/livewire-flux-editor-filemanager)
 [![Tests](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/actions/workflows/tests.yml/badge.svg)](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/actions/workflows/tests.yml)
-[![Total downloads](https://img.shields.io/packagist/dt/darvis/livewire-flux-editor-filemanager.svg)](https://packagist.org/packages/darvis/livewire-flux-editor-filemanager)
 [![PHP version](https://img.shields.io/packagist/dependency-v/darvis/livewire-flux-editor-filemanager/php.svg)](https://packagist.org/packages/darvis/livewire-flux-editor-filemanager)
 [![License](https://img.shields.io/packagist/l/darvis/livewire-flux-editor-filemanager.svg)](LICENSE)
 
-**Laravel Filemanager** inside the **Flux Pro editor**. Two toolbar buttons open the file manager to insert images and file links, images get a resize and align menu and an edit modal, and image files can be dropped on the editor or pasted from the clipboard.
+A Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. Two toolbar buttons open the file manager in a popup to insert images and file links, images get a resize and align menu and an edit modal, and image files can be dropped on the editor or pasted from the clipboard.
 
 ![The Flux editor with the image button, a selected image with its resize menu, and a file link](https://arviddejong.github.io/livewire-flux-editor-filemanager/assets/images/social-preview.png)
 
 ## Features
 
-- 🖼️ Image button and file link button that open Laravel Filemanager in a popup, for every Flux editor on the page
-- 📐 Single click on an image: resize presets, a custom percentage, and left, center and right alignment
-- ✏️ Double click on an image: alt text, title, width, alignment, extra CSS classes and inline styles
-- 🔗 File links with text, target, classes and styles; click any link to edit it
-- 📋 Drag and drop and paste of image files, embedded as base64 or uploaded to Laravel Filemanager, with size and type limits
-- 🧱 Clean HTML output: `<img>` and `<a>` tags with attributes, no shortcodes
-- 🌍 English, Dutch and German, in the Blade tooltips and the JavaScript modals
-- ⚙️ An installer that sets up Laravel Filemanager, the npm packages and your `app.js`
-- 🤖 Laravel Boost guideline and skill included
+- An image button and a file link button that open Laravel Filemanager in a popup, for every Flux editor on the page
+- Single click on an image: preset widths, a custom percentage, and left, center and right alignment
+- Double click on an image: alt text, title, width, alignment, extra CSS classes and inline styles
+- File links with text, target, classes and styles; click a link in the editor to edit it
+- Drop and paste of image files, embedded as base64 or uploaded to Laravel Filemanager
+- Plain HTML output: `<img>` and `<a>` tags with attributes, no shortcodes
+- `flux-filemanager:install` sets up Laravel Filemanager, the npm packages and your `app.js`; `flux-filemanager:check` verifies the result
+- Language files for English, Dutch and German, also used by the JavaScript menus and modals
 
 ## Requirements
 
-PHP 8.2+, Laravel 11, 12 or 13, Livewire 3 or 4, Flux Pro 2 and Laravel Filemanager 2. The editor is a Flux Pro component, so your application needs the Flux composer repository and a licence.
+- PHP 8.2+, Laravel 11, 12 or 13, Livewire 3 or 4
+- Flux and Flux Pro 2.0.2 or newer. The editor is a Flux Pro component, and Flux Pro needs a **paid licence** from [fluxui.dev](https://fluxui.dev). Set up Flux Pro in your application first (`php artisan flux:activate`), so that Composer can reach the private Flux repository
+- Laravel Filemanager 2, installed as a dependency
+- Node with npm and Vite
+
+The package adds no authentication and does not sanitise the HTML from the editor. Read [Uploads and security](https://arviddejong.github.io/livewire-flux-editor-filemanager/uploads-and-security.html) before you give the editor to users.
 
 ## Installation
 
@@ -34,15 +37,15 @@ php artisan flux-filemanager:install
 php artisan flux-filemanager:check
 ```
 
-The installer publishes the Laravel Filemanager config, enables its routes at `/filemanager`, creates the storage link, installs the TipTap packages, publishes `config/flux-filemanager.php`, adds the setup to `resources/js/app.js` and builds. Add `--no-interaction` to accept every step. The check command goes through the result and says what to do about anything that isn't right; it exits non-zero, so a deploy script can use it too.
-
-Then protect the file manager in `config/lfm.php`, because its routes are its own:
+Then make sure the file manager is behind a login. In `config/lfm.php`:
 
 ```php
 'middlewares' => ['web', 'auth'],
 ```
 
 ## Quick start
+
+In the Blade view of a Livewire component with a `public string $content = '';` property:
 
 ```blade
 <flux:field>
@@ -52,46 +55,52 @@ Then protect the file manager in `config/lfm.php`, because its routes are its ow
 </flux:field>
 ```
 
-Toolbar presets: `toolbar="minimal"`, `toolbar="full"`, or `:toolbar="false"` with your own `<flux:editor.toolbar>` in the slot. Every other attribute goes to `<flux:editor>`.
-
-Show the content like any editor HTML. The package does not sanitise it, so give the editor to trusted users only:
-
-```blade
-<div class="prose max-w-none">
-    {!! $page->content !!}
-</div>
-```
-
-To try it before wiring it into your own views, set `FLUX_FILEMANAGER_DEMO_ROUTES=true` locally and open `/darvis/editor-demo`. Building your first page with it: [Your first editor](docs/first-editor.md).
+The component renders `<flux:editor>` with the image and file link buttons. `$content` receives the HTML. [Your first editor](https://arviddejong.github.io/livewire-flux-editor-filemanager/first-editor.html) has the complete example, from migration to public page.
 
 ## Documentation
 
 Full documentation: **https://arviddejong.github.io/livewire-flux-editor-filemanager/**
 
-- [Installation](docs/installation.md): the installer, the manual steps, protecting the file manager, the demo pages, troubleshooting
-- [Your first editor](docs/first-editor.md): the whole path from migration to published page, and the three things that usually go wrong the first time
-- [Configuration](docs/configuration.md): every option, the component attributes, views and translations
-- [Image editing](docs/image-editing.md): the resize menu, the edit modal and the HTML they produce
+- [Installation](docs/installation.md): the Flux Pro requirement, the installer step by step, and how to check that it works
+- [Your first editor](docs/first-editor.md): one complete example, from migration to the public page
+- [Configuration](docs/configuration.md): every config key and the component attributes
+- [Image editing](docs/image-editing.md): the resize menu, the edit modal and the HTML they write
 - [File links](docs/file-links.md): insert and edit links to files
-- [Drag and drop](docs/drag-and-drop.md): base64 or upload, limits, and what to check when it doesn't work
-- [Localization](docs/localization.md)
-- [How it works](docs/how-it-works.md): the JavaScript contract, for debugging and extending
-- [FAQ](https://arviddejong.github.io/livewire-flux-editor-filemanager/faq.html)
+- [Drag and drop](docs/drag-and-drop.md): base64 or upload, and where the limits are checked
+- [Uploads and security](docs/uploads-and-security.md): what the package checks and what it leaves to Laravel Filemanager and your application
+- [Localization](docs/localization.md): the language files, changing a text, adding a language
+- [Testing](docs/testing.md): test a Livewire form that uses the editor
+- [Troubleshooting](docs/troubleshooting.md): symptoms, causes and fixes, with the literal messages
+- [How it works](docs/how-it-works.md): the JavaScript and DOM contract
+- [FAQ](https://arviddejong.github.io/livewire-flux-editor-filemanager/faq.html): short answers to common questions
 
-## Contributing and security
+## Laravel Boost
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Found a security problem? Please report it privately, see [SECURITY.md](SECURITY.md).
+The package ships a guideline and a skill for [Laravel Boost](https://github.com/laravel/boost). Run `php artisan boost:install`, or `php artisan boost:update --discover` in a project that already uses Boost.
 
-## Development
+## Testing
 
 ```bash
 composer test      # Pest
-composer lint      # Pint
+composer lint      # Pint, check only
+composer format    # Pint, fixes
 composer analyse   # Larastan
 ```
 
-Installing the dependencies needs a Flux Pro licence: `composer config http-basic.composer.fluxui.dev your-email your-license-key`.
+Installing the development dependencies needs a Flux Pro licence: `composer config http-basic.composer.fluxui.dev your-email your-license-key`.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Security
+
+Found a security problem? Report it privately, see [SECURITY.md](SECURITY.md).
 
 ## License
 
-MIT © Arvid de Jong (info@arvid.nl)
+MIT. See [LICENSE](LICENSE).

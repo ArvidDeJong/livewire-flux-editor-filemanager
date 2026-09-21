@@ -43,7 +43,7 @@ The package is read through one namespace import, `import * as fluxFilemanager f
 | `custom_width.min`, `.max` | 1, 100 | |
 | `messages.popup_blocked`, `.filemanager_not_found` | English | |
 | `drag_drop.method` | `base64` | Or `upload` to `drag_drop.upload_url` |
-| `drag_drop.max_file_size`, `.allowed_types` | 5 MB, jpeg/png/gif/webp/svg | Refused with a message |
+| `drag_drop.max_file_size`, `.allowed_types` | 5 MB, jpeg/png/gif/webp/svg | Checked in the browser only; refused with an alert. Server-side limits are in `config/lfm.php` |
 
 Translations: group `flux-filemanager::filemanager`, languages `en`, `nl`, `de`, publish with `--tag=flux-filemanager-lang`. They reach the JavaScript through the same JSON.
 
@@ -76,5 +76,7 @@ Flux's views read `$errors`, which only the web middleware shares. A Livewire co
 - Images insert but don't load: `APP_URL` doesn't match the host in the browser. Laravel Filemanager builds absolute URLs from it.
 - The popup shows a login page or 404: `use_package_routes` and `middlewares` in `config/lfm.php`.
 - Drag and drop ignored: the setup block predates 1.2.0 and lacks `addProseMirrorPlugins()`.
+- Drag and drop with `drag_drop.method = upload` inserts nothing and shows no message: Laravel Filemanager refused the file (it answers 200 with an error in the JSON). Its default `valid_mime` for images has no WebP or SVG. Read the response in the Network tab or `storage/logs/laravel.log`.
+- `rows` on the component does not change the height: Flux's editor has no `rows` prop. Use a class such as `**:data-[slot=content]:min-h-[300px]!`.
 - Never add a second Image extension or a node view for images; Flux already has one.
 - Never enable `demo_routes` in production.

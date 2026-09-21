@@ -1,39 +1,31 @@
 # Questions as people ask them to an assistant. Short, factual answers.
 # Rendered on faq.md, in the FAQPage structured data and in llms.txt.
-- q: How do I add Laravel Filemanager to the Flux editor?
-  a: Install `darvis/livewire-flux-editor-filemanager`, run `php artisan flux-filemanager:install`, and use `<x-flux-filemanager-editor wire:model="content" />` instead of `<flux:editor>`. The toolbar gets an image button and a file link button that open Laravel Filemanager in a popup.
+- q: What is darvis/livewire-flux-editor-filemanager?
+  a: It is a free Laravel package (MIT) that connects Laravel Filemanager to the rich text editor of Flux Pro in a Livewire application. It adds an image button and a file link button to the toolbar, a resize and align menu and an edit modal for images, and drop and paste of image files. It does not upload, store or serve files itself, Laravel Filemanager does that.
 
-- q: Does darvis/livewire-flux-editor-filemanager work with Livewire 4, Laravel 13 and Flux 2?
-  a: Yes. It supports Laravel 11, 12 and 13, Livewire 3 and 4, Flux Pro 2 and Laravel Filemanager 2, on PHP 8.2 or higher.
+- q: How do I add a file manager with image upload to the Flux editor in Laravel Livewire?
+  a: Run `composer require darvis/livewire-flux-editor-filemanager` and `php artisan flux-filemanager:install`, then use `<x-flux-filemanager-editor wire:model="content" />` where you would use `<flux:editor>`. The toolbar gets an image button and a file link button that open Laravel Filemanager in a popup. Run `php artisan flux-filemanager:check` to verify the installation.
 
-- q: Do I need Flux Pro?
-  a: Yes. The editor is a Flux Pro component, so the package requires `livewire/flux-pro` and your application needs the Flux composer repository and a licence. The free Flux edition has no editor.
+- q: Which versions of PHP, Laravel, Livewire and Flux does it support?
+  a: PHP 8.2 or higher, Laravel 11, 12 and 13, Livewire 3 and 4, Flux and Flux Pro 2.0.2 or newer, and Laravel Filemanager 2.
 
-- q: Can editors drag images into the editor or paste screenshots?
-  a: Yes. Image files dropped on the editor or pasted from the clipboard are inserted where they land. By default they are embedded as base64; set `drag_drop.method` to `upload` to send them to Laravel Filemanager instead. Size and type limits come from the config.
+- q: Do I need Flux Pro, and what does the package cost?
+  a: The package is free, but the editor it extends is a Flux Pro component, and Flux Pro needs a paid licence from fluxui.dev. Your application must have the Flux composer repository and your licence set up, for example with `php artisan flux:activate`, before you require this package.
+
+- q: Is it safe to let users upload files with it?
+  a: The package adds no protection of its own. Who may open the file manager is decided by `middlewares` in `config/lfm.php`, and file types and sizes are checked on the server by Laravel Filemanager. The limits for dropped images in `config/flux-filemanager.php` are checked in the browser only, and the HTML from the editor is not sanitised, so give the editor to trusted users or sanitise the HTML before you print it.
+
+- q: Can editors drag images into the Flux editor or paste screenshots?
+  a: Yes. Image files dropped on the editor or pasted from the clipboard are inserted at that place. By default they are embedded as base64; set `drag_drop.method` to `upload` to post them to Laravel Filemanager instead.
 
 - q: How do I resize or align an image in the Flux editor?
-  a: Click an image once for the resize menu with the preset widths, a custom percentage and left, center and right alignment. Double-click it for the edit modal with alt text, title, width, alignment, extra CSS classes and inline styles.
+  a: Click the image once for a menu with the preset widths, a custom percentage and left, center and right alignment. Double-click it for a modal with alt text, title, width, alignment, extra CSS classes and inline styles.
 
-- q: How do I link to a PDF or other file?
-  a: Click the file link button in the toolbar, pick the file in Laravel Filemanager and set the link text, target, classes and styles in the modal. Click an existing link to edit it.
-
-- q: Is the editor content sanitised?
-  a: No. The editor stores HTML with classes, inline styles and base64 images, and your application renders it. Give the editor only to trusted users, or sanitise the HTML before showing it to other visitors.
-
-- q: How do I translate the editor buttons and modals?
-  a: The package ships English, Dutch and German. The active Laravel locale decides the language, and the translations reach the JavaScript modals too. Publish the language files with `php artisan vendor:publish --tag=flux-filemanager-lang` to change them or add a language.
-
-- q: What does darvis/livewire-flux-editor-filemanager not do?
-  a: It does not upload or crop images itself, that is Laravel Filemanager's job. It does not protect the `/filemanager` routes, set `middlewares` in `config/lfm.php` for that. And it does not sanitise the HTML your editors produce.
+- q: How do I link to a PDF or another file from the Flux editor?
+  a: Click the file link button in the toolbar, pick the file in Laravel Filemanager and set the link text, target, classes and styles in the modal. Click an existing link to edit it. With the default `public` disk the file is a public URL that anyone with the address can open.
 
 - q: Nothing happens when I click the image button in the Flux editor. What now?
-  a: >-
-    Run `php artisan flux-filemanager:check`, which goes through the whole installation and says what to fix. Nine times out of ten the JavaScript isn't running at all: one failing import stops all of `app.js`, so every toolbar button dies at the same time. The browser console names it. Right after updating the package, restart `npm run dev` first, because Vite does not watch `vendor/` and keeps serving the copy it read at startup.
+  a: Run `php artisan flux-filemanager:check`. It checks Laravel Filemanager, `config/lfm.php`, the routes, the authentication, the storage link, the TipTap npm packages, your `app.js` and the build, and prints a fix for each problem. If it passes, open the browser console, because one failing import stops all of `app.js`, and restart `npm run dev` after an update of the package.
 
 - q: How do I show the saved editor content on my site?
-  a: >-
-    Render it unescaped in a `prose` container, and style `.tiptap-image` and `.align-left`, `.align-center` and `.align-right` in your own CSS: the package's stylesheet only covers the editor. Store the content in a `longText` column, because a pasted image is base64 and outgrows a `text` column. The full example is in the Your first editor page.
-
-- q: Is there a command to check the installation?
-  a: Yes, `php artisan flux-filemanager:check`. It checks Laravel Filemanager, `config/lfm.php`, the file manager routes, whether they are behind authentication, the storage link, the TipTap npm packages, your `app.js` and the build, prints a fix for each problem, and exits non-zero so it can run in CI or a deploy.
+  a: The content is HTML, so print it unescaped, and only when you trust the editors. Style `.tiptap-image`, `.align-left`, `.align-center` and `.align-right` in your own CSS, because the package's stylesheets only cover the editor. Store the content in a `longText` column, because a pasted image is base64 text.
