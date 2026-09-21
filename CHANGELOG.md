@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.4.1] - 2026-09-21
 ### Fixed
 Documentation only; nothing in the package changes. Every page, the README, the FAQ and the Boost files were checked against the code.
 - `rows` was documented as the height of the editor. It is printed as a plain `rows` attribute, and Flux's editor has no such prop, so it changes nothing. The docs now show the class Flux documents for the height
