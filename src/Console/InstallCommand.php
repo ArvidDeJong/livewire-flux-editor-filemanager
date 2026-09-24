@@ -4,6 +4,7 @@ namespace Darvis\FluxFilemanager\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 
 class InstallCommand extends Command
 {
@@ -69,8 +70,37 @@ class InstallCommand extends Command
         $this->newLine();
 
         $this->displayNextSteps();
+        $this->askForStar();
 
         return self::SUCCESS;
+    }
+
+    /**
+     * One question at the end of the installer: a star helps other developers
+     * find the package. Yes opens the repository in the browser; the URL is
+     * printed as well for a server without one. Skipped with --no-interaction.
+     */
+    protected function askForStar(): void
+    {
+        $url = 'https://github.com/ArvidDeJong/livewire-flux-editor-filemanager';
+
+        if (! $this->input->isInteractive() || ! $this->confirm('Star darvis/livewire-flux-editor-filemanager on GitHub? A star helps other developers find the package.', true)) {
+            return;
+        }
+
+        $this->openInBrowser($url);
+        $this->info("Thank you! {$url}");
+    }
+
+    protected function openInBrowser(string $url): void
+    {
+        $command = match (PHP_OS_FAMILY) {
+            'Darwin' => ['open', $url],
+            'Windows' => ['cmd', '/c', 'start', '', $url],
+            default => ['xdg-open', $url],
+        };
+
+        Process::run($command);
     }
 
     protected function runTask(string $description, callable $callback): void

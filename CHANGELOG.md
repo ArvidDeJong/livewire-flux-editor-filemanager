@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-09-24
+### Added
+- The installer ends with one question: star the repository on GitHub. Yes opens the repository in the browser and prints the URL. With `--no-interaction` the question is skipped
+
 ## [1.4.1] - 2026-09-21
 ### Fixed
 Documentation only; nothing in the package changes. Every page, the README, the FAQ and the Boost files were checked against the code.

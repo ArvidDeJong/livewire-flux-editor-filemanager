@@ -93,6 +93,10 @@ Installing the development dependencies needs a Flux Pro licence: `composer conf
 
 See [CHANGELOG.md](CHANGELOG.md).
 
+## Support the package
+
+If darvis/livewire-flux-editor-filemanager saves you time, a star on [GitHub](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager) or a favourite on [Packagist](https://packagist.org/packages/darvis/livewire-flux-editor-filemanager) helps other developers find it.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).

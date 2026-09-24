@@ -50,7 +50,7 @@ Laravel discovers the service provider by itself. Composer installs Laravel File
 php artisan flux-filemanager:install
 ```
 
-The installer asks a yes or no question before each step. Press Enter to accept a step. Add `--no-interaction` to accept all of them, for example in a script.
+The installer asks a yes or no question before each step. Press Enter to accept a step. Add `--no-interaction` to accept all of them, for example in a script. At the end it asks whether you want to star the repository on GitHub; yes opens the repository in your browser. With `--no-interaction` that question is skipped.
 
 | Question | What the step does |
 | --- | --- |
