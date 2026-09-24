@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.5.0] - 2026-09-24
+## [1.5.1] - 2026-09-24
+Replaces 1.5.0, which was tagged on the 1.4.1 code by mistake and withdrawn.
 ### Added
 - The installer ends with one question: star the repository on GitHub. Yes opens the repository in the browser and prints the URL. With `--no-interaction` the question is skipped
 
