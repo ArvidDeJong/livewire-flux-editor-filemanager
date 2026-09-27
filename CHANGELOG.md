@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.2] - 2026-09-27
+### Changed
+Documentation only; nothing in the package changes.
+- A live demo at https://livewire-flux-editor-filemanager.darvis.nl/, linked at the top of the README, on the docs home page and in the header of every docs page
+
 ## [1.5.1] - 2026-09-24
 Replaces 1.5.0, which was tagged on the 1.4.1 code by mistake and withdrawn.
 ### Added
