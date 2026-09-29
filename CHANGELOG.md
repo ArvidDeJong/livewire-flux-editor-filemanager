@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.4] - 2026-09-29
+
 ### Changed
 Documentation and metadata only; nothing in the package changes.
 - The `homepage` on Packagist is now https://fluxui-filemanager.com/; the documentation moved to `support.docs`
