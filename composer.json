@@ -16,7 +16,7 @@
     ],
     "type": "library",
     "license": "MIT",
-    "homepage": "https://arviddejong.github.io/livewire-flux-editor-filemanager/",
+    "homepage": "https://fluxui-filemanager.com/",
     "authors": [
         {
             "name": "Arvid de Jong",
@@ -24,6 +24,7 @@
         }
     ],
     "support": {
+        "docs": "https://arviddejong.github.io/livewire-flux-editor-filemanager/",
         "issues": "https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/issues",
         "source": "https://github.com/ArvidDeJong/livewire-flux-editor-filemanager"
     },

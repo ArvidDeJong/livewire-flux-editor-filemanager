@@ -8,9 +8,12 @@
   "@graph": [
     {
       "@type": "SoftwareSourceCode",
+      "@id": {{ site.package.website | append: "#package" | jsonify }},
       "name": {{ site.package.name | jsonify }},
       "description": {{ site.description | jsonify }},
-      "url": {{ "/" | absolute_url | jsonify }},
+      "url": {{ site.package.website | jsonify }},
+      "sameAs": [{{ site.package.packagist | jsonify }}, {{ site.package.repository | jsonify }}],
+      "subjectOf": { "@type": "TechArticle", "name": {{ site.title | jsonify }}, "url": {{ "/" | absolute_url | jsonify }} },
       "codeRepository": {{ site.package.repository | jsonify }},
       "programmingLanguage": "PHP",
       "runtimePlatform": {{ site.package.platforms | jsonify }},

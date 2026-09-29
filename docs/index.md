@@ -1,5 +1,5 @@
 ---
-title: "Home"
+title: "Documentation"
 nav_order: 1
 description: "Laravel package that puts Laravel Filemanager in the Flux Pro editor for Livewire: insert images and file links, resize and align images, drop or paste images."
 permalink: /
@@ -9,7 +9,7 @@ permalink: /
 
 `darvis/livewire-flux-editor-filemanager` is a Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) (a file browser and uploader, `unisharp/laravel-filemanager`) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. It adds an image button and a file link button to the editor toolbar, a resize and align menu and an edit modal for images, and drop and paste of image files.
 
-> **[Try the live demo](https://fluxui-filemanager.com/)** and use the editor, the file manager, the image menu and drag and drop in your browser before you install anything.
+> **[Try the live demo](https://fluxui-filemanager.com/demo)** on [fluxui-filemanager.com](https://fluxui-filemanager.com/) and use the editor, the file manager, the image menu and drag and drop in your browser before you install anything.
 
 [![The Flux editor with the image button, a selected image with its resize menu, and a file link](assets/images/social-preview.png)](https://fluxui-filemanager.com/)
 
