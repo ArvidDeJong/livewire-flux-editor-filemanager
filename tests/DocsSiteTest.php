@@ -218,3 +218,11 @@ test('the messages quoted on the troubleshooting page exist in the code', functi
         }
     }
 });
+
+test('the Google Search Console verification file stays, served as is and outside the sitemap', function () {
+    $file = (string) file_get_contents(docsPath('googled7bb80897da6bbe3.html'));
+
+    expect($file)->toContain("layout: null\n")
+        ->toContain("sitemap: false\n")
+        ->toEndWith("---\ngoogle-site-verification: googled7bb80897da6bbe3.html\n");
+});
