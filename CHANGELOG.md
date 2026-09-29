@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.3] - 2026-09-29
+
+### Changed
+- The live demo moved to https://fluxui-filemanager.com/. The README, the docs home page and the docs header link there; the old address redirects. Documentation only; nothing in the package changes.
+
 ## [1.5.2] - 2026-09-27
 ### Changed
 Documentation only; nothing in the package changes.
