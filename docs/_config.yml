@@ -1,4 +1,4 @@
-title: Flux Editor Filemanager
+title: Flux Editor Filemanager Docs
 description: Laravel package that puts Laravel Filemanager in the Flux Pro editor for Livewire. Insert images and file links, resize and align images, drop or paste images.
 url: https://arviddejong.github.io
 baseurl: /livewire-flux-editor-filemanager
@@ -15,7 +15,8 @@ package:
   name: darvis/livewire-flux-editor-filemanager
   repository: https://github.com/ArvidDeJong/livewire-flux-editor-filemanager
   packagist: https://packagist.org/packages/darvis/livewire-flux-editor-filemanager
-  demo: https://fluxui-filemanager.com/
+  website: https://fluxui-filemanager.com/
+  demo: https://fluxui-filemanager.com/demo
   license_url: https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/blob/main/LICENSE
   requires: PHP 8.2+, Laravel 11, 12 or 13, Livewire 3 or 4, Flux Pro 2.0.2+ (paid licence) and Laravel Filemanager 2
   platforms: [Laravel, Livewire, Flux]
@@ -31,7 +32,8 @@ search_enabled: true
 heading_anchors: true
 
 aux_links:
-  Live demo: https://fluxui-filemanager.com/
+  Website: https://fluxui-filemanager.com/
+  Live demo: https://fluxui-filemanager.com/demo
   GitHub: https://github.com/ArvidDeJong/livewire-flux-editor-filemanager
   Packagist: https://packagist.org/packages/darvis/livewire-flux-editor-filemanager
 aux_links_new_tab: true

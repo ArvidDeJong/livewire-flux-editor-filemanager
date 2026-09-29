@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+Documentation and metadata only; nothing in the package changes.
+- The `homepage` on Packagist is now https://fluxui-filemanager.com/; the documentation moved to `support.docs`
+- The README, the docs and the docs llms.txt name fluxui-filemanager.com as the website, and "Live demo" opens the demo page itself
+- The docs are titled "Flux Editor Filemanager Docs" and their structured data points at the same package as the website, so search engines see one package instead of two
+
 ## [1.5.3] - 2026-09-29
 
 ### Changed

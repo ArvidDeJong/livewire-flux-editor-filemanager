@@ -12,7 +12,9 @@ sitemap: false
 - License: MIT
 - Source: {{ site.package.repository }}
 - Packagist: {{ site.package.packagist }}
+- Website: {{ site.package.website }}
 - Live demo: {{ site.package.demo }}
+- Documentation: {{ "/" | absolute_url }}
 
 ## Documentation
 {% assign pages = site.pages | where_exp: "p", "p.nav_order" | sort: "nav_order" %}
