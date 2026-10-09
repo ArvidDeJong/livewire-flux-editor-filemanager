@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-10-09
+
 ### Changed
 Documentation and metadata only; nothing in the package changes.
 - The HTML source button has its own section in the README and on the docs home page
