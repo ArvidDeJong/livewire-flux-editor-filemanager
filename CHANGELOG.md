@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- The question at the end of the installer asks to sponsor the package on GitHub ("Buy me a beer? 🍺") instead of a star. Yes opens https://github.com/sponsors/ArvidDeJong
+
 ## [1.5.4] - 2026-09-29
 
 ### Changed

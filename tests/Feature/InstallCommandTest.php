@@ -30,7 +30,7 @@ it('install command can run help without interaction', function () {
         ->assertSuccessful();
 });
 
-const STAR_QUESTION = 'Star darvis/livewire-flux-editor-filemanager on GitHub? A star helps other developers find the package.';
+const SPONSOR_QUESTION = 'Buy me a beer? 🍺 Sponsoring on GitHub keeps darvis/livewire-flux-editor-filemanager maintained.';
 
 /**
  * Decline every install step, so the run touches nothing in the Testbench app.
@@ -52,22 +52,22 @@ function declineEveryStep(PendingCommand $command): PendingCommand
     return $command;
 }
 
-it('opens the repository in the browser when the user wants to star it', function () {
+it('opens the sponsor page in the browser when the user wants to sponsor', function () {
     Process::fake();
 
     declineEveryStep($this->artisan('flux-filemanager:install'))
-        ->expectsConfirmation(STAR_QUESTION, 'yes')
-        ->expectsOutputToContain('https://github.com/ArvidDeJong/livewire-flux-editor-filemanager')
+        ->expectsConfirmation(SPONSOR_QUESTION, 'yes')
+        ->expectsOutputToContain('https://github.com/sponsors/ArvidDeJong')
         ->assertSuccessful();
 
-    Process::assertRan(fn (PendingProcess $process): bool => in_array('https://github.com/ArvidDeJong/livewire-flux-editor-filemanager', (array) $process->command, true));
+    Process::assertRan(fn (PendingProcess $process): bool => in_array('https://github.com/sponsors/ArvidDeJong', (array) $process->command, true));
 });
 
-it('does not open a browser when the user declines the star', function () {
+it('does not open a browser when the user declines to sponsor', function () {
     Process::fake();
 
     declineEveryStep($this->artisan('flux-filemanager:install'))
-        ->expectsConfirmation(STAR_QUESTION, 'no')
+        ->expectsConfirmation(SPONSOR_QUESTION, 'no')
         ->assertSuccessful();
 
     Process::assertNothingRan();
