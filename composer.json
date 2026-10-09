@@ -1,6 +1,6 @@
 {
     "name": "darvis/livewire-flux-editor-filemanager",
-    "description": "Laravel Filemanager integration for the Flux Pro editor: insert images and file links from Laravel Filemanager, resize and align images, drag and drop or paste images.",
+    "description": "Laravel Filemanager integration for the Flux Pro editor: insert images and file links from Laravel Filemanager, resize and align images, view and edit the HTML source, drag and drop or paste images.",
     "keywords": [
         "laravel",
         "livewire",
@@ -12,6 +12,8 @@
         "filemanager",
         "laravel-filemanager",
         "images",
+        "html-source",
+        "source-code",
         "laravel-boost"
     ],
     "type": "library",

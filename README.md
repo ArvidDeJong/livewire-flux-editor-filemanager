@@ -11,6 +11,16 @@ A Laravel package that connects [Laravel Filemanager](https://github.com/UniShar
 
 [![The Flux editor with the image button, a selected image with its resize menu, and a file link](https://arviddejong.github.io/livewire-flux-editor-filemanager/assets/images/social-preview.png)](https://fluxui-filemanager.com/)
 
+## View and edit the HTML source
+
+New in 1.7. The Flux editor has no way to see the HTML it writes. This package adds it: an HTML button opens the source of the content in a modal, where an editor reads it, changes it and applies the result with Apply or Cmd/Ctrl + Enter. A disabled editor shows the source read-only.
+
+```blade
+<x-flux-filemanager-editor wire:model="content" toolbar="full" />
+```
+
+The `full` toolbar has the button; a custom toolbar includes it with `@include('flux-filemanager::flux.editor.html-source')`. See [HTML source](https://arviddejong.github.io/livewire-flux-editor-filemanager/html-source.html).
+
 ## Features
 
 - An image button and a file link button that open Laravel Filemanager in a popup, for every Flux editor on the page
