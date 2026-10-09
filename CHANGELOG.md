@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+Documentation and metadata only; nothing in the package changes.
+- The HTML source button has its own section in the README and on the docs home page
+- The description on Packagist and the description of the docs name the HTML source button; the Packagist keywords gain `html-source` and `source-code`
+
 ## [1.7.0] - 2026-10-09
 
 ### Added

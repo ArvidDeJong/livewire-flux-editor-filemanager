@@ -1,7 +1,7 @@
 ---
 title: "Documentation"
 nav_order: 1
-description: "Laravel package that puts Laravel Filemanager in the Flux Pro editor for Livewire: insert images and file links, resize and align images, drop or paste images."
+description: "Laravel package that puts Laravel Filemanager in the Flux Pro editor for Livewire: insert images and file links, resize and align images, view and edit the HTML source, drop or paste images."
 permalink: /
 ---
 
@@ -12,6 +12,16 @@ permalink: /
 > **[Try the live demo](https://fluxui-filemanager.com/demo)** on [fluxui-filemanager.com](https://fluxui-filemanager.com/) and use the editor, the file manager, the image menu and drag and drop in your browser before you install anything.
 
 [![The Flux editor with the image button, a selected image with its resize menu, and a file link](assets/images/social-preview.png)](https://fluxui-filemanager.com/)
+
+## View and edit the HTML source
+
+The Flux editor has no way to see the HTML it writes. This package adds it: an HTML button opens the source of the content in a modal, where an editor reads it, changes it and applies the result with Apply or Cmd/Ctrl + Enter. A disabled editor shows the source read-only.
+
+```blade
+<x-flux-filemanager-editor wire:model="content" toolbar="full" />
+```
+
+The `full` toolbar has the button; a custom toolbar includes it with one line. [HTML source](html-source.md) has the details.
 
 ## Who it is for
 
