@@ -45,6 +45,7 @@
                 <flux:editor.align />
                 <flux:editor.separator />
                 <flux:editor.code />
+                @include('flux-filemanager::flux.editor.html-source')
             @else
                 {{-- Default toolbar: most commonly used options --}}
                 <flux:editor.heading />

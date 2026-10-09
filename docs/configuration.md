@@ -58,7 +58,7 @@ If your application defines `window.fluxFilemanagerConfig` before the first butt
 
 | Attribute | Default | What it does |
 | --- | --- | --- |
-| `toolbar` | `default` | `default`: heading, bold, italic, strike, bullet list, ordered list, blockquote, image, link, file link, checklist, align. `minimal`: bold, italic, link. `full`: the default plus underline and code. `:toolbar="false"`: you render your own toolbar in the slot |
+| `toolbar` | `default` | `default`: heading, bold, italic, strike, bullet list, ordered list, blockquote, image, link, file link, checklist, align. `minimal`: bold, italic, link. `full`: the default plus underline, code and the HTML source button. `:toolbar="false"`: you render your own toolbar in the slot |
 | `id` | none | Passed to `<flux:editor>` |
 | `rows` | `12` | Rendered as a `rows` attribute on the editor element. Flux's editor has no `rows` prop (checked against Flux Pro 2.20), so it does not change the height |
 

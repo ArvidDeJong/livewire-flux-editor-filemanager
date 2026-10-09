@@ -1,6 +1,6 @@
 ---
 title: "Testing"
-nav_order: 10
+nav_order: 11
 description: "Test a Livewire form that uses the Flux editor with Laravel Filemanager in your own application: saving the HTML, validation, the guest redirect and CI."
 ---
 

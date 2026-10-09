@@ -1,6 +1,6 @@
 ---
 title: "How it works"
-nav_order: 12
+nav_order: 13
 description: "Technical reference for debugging and extending: which file does what, the DOM contract, the Laravel Filemanager popup callback and the TipTap extensions."
 ---
 
@@ -13,7 +13,7 @@ A reference for debugging and extending. You do not need this page to use the pa
 | Piece | File | Role |
 | --- | --- | --- |
 | Blade component | `resources/views/components/editor.blade.php`, `src/View/Components/Editor.php` | Wraps `<flux:editor>`, renders the toolbar preset, the JSON config and the drag and drop data attributes |
-| Toolbar buttons | `resources/views/flux/editor/image.blade.php`, `file-link.blade.php`, `checklist.blade.php` | `<flux:editor.button>` elements with a `data-editor` or `data-filemanager-checklist` attribute |
+| Toolbar buttons | `resources/views/flux/editor/image.blade.php`, `file-link.blade.php`, `html-source.blade.php`, `checklist.blade.php` | `<flux:editor.button>` elements with a `data-editor` or `data-filemanager-checklist` attribute |
 | JavaScript | `resources/js/laravel-filemanager.js` | Button handling, the popup, the resize menu, the modals and the drop and paste plugin |
 | Drag and drop helpers | `resources/js/drag-drop-config.js` | Reads the data attributes, validates a file, converts to base64 or uploads |
 | Setup block | `resources/stubs/flux-filemanager-setup.js`, `examples/app.js` | Registers the Image and Link extensions on the `flux:editor` event |
@@ -27,7 +27,7 @@ A reference for debugging and extending. You do not need this page to use the pa
 
 Everything is event delegation on `document`: one listener on the page instead of one per button. That is why it works for editors that Livewire renders later:
 
-- A click on an element with `data-editor="image"` or `data-editor="file-link"` finds the closest `ui-editor` element. Flux puts the TipTap instance on it as `editor`. Without that property the click is ignored.
+- A click on an element with `data-editor="image"`, `data-editor="file-link"` or `data-editor="html-source"` finds the closest `ui-editor` element. Flux puts the TipTap instance on it as `editor`. Without that property the click is ignored.
 - A click on `.ProseMirror img` shows the resize menu, a double click opens the image modal.
 - A click on `.ProseMirror a` opens the link modal in edit mode, with `preventDefault()` so the link doesn't navigate.
 - A click on `[data-filemanager-checklist]` opens the checklist URL in a new tab.
@@ -47,6 +47,8 @@ Images are inserted with the `setImage` command, with a fallback to raw HTML and
 The resize menu and the modal call `updateAttributes('image', ...)` on the selected node, so attributes they don't touch stay. The generated part of `class` and `style` is recomputed every time: `tiptap-image`, `align-*`, `width`, the alignment margins and `display: block` for center. Anything else in those attributes is treated as the editor's own and kept.
 
 Editing a link extends the selection to the whole link mark and replaces it with new text carrying a new link mark, so text and attributes change together.
+
+The HTML source modal fills its text area from `editor.getHTML()`, with a newline after every closing block tag outside `<pre>`. Apply calls `setContent()` with the edited HTML, which parses it through the editor's schema, so tags and attributes without an extension are dropped. In a disabled editor (`editor.isEditable` false) the text area is read-only and there is no Apply button.
 
 After a change through commands, the package dispatches `input` and `blur` on the `ui-editor` element, because Flux syncs `wire:model` on those events.
 

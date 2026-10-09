@@ -1,6 +1,6 @@
 ---
 title: "FAQ"
-nav_order: 13
+nav_order: 14
 description: "Short answers about darvis/livewire-flux-editor-filemanager: what it is, what it needs, which versions it supports, whether it is safe, dead buttons."
 faq: true
 ---

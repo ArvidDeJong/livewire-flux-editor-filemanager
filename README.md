@@ -5,7 +5,7 @@
 [![PHP version](https://img.shields.io/packagist/dependency-v/darvis/livewire-flux-editor-filemanager/php.svg)](https://packagist.org/packages/darvis/livewire-flux-editor-filemanager)
 [![License](https://img.shields.io/packagist/l/darvis/livewire-flux-editor-filemanager.svg)](LICENSE)
 
-A Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. Two toolbar buttons open the file manager in a popup to insert images and file links, images get a resize and align menu and an edit modal, and image files can be dropped on the editor or pasted from the clipboard.
+A Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. Two toolbar buttons open the file manager in a popup to insert images and file links, images get a resize and align menu and an edit modal, an HTML button shows the source of the content to read or edit it, and image files can be dropped on the editor or pasted from the clipboard.
 
 > **[Try the live demo](https://fluxui-filemanager.com/demo)** on [fluxui-filemanager.com](https://fluxui-filemanager.com/) and use the editor, the file manager, the image menu and drag and drop in your browser before you install anything.
 
@@ -17,6 +17,7 @@ A Laravel package that connects [Laravel Filemanager](https://github.com/UniShar
 - Single click on an image: preset widths, a custom percentage, and left, center and right alignment
 - Double click on an image: alt text, title, width, alignment, extra CSS classes and inline styles
 - File links with text, target, classes and styles; click a link in the editor to edit it
+- An HTML button that opens the source of the content in a modal, to read it or to edit it and apply the result
 - Drop and paste of image files, embedded as base64 or uploaded to Laravel Filemanager
 - Plain HTML output: `<img>` and `<a>` tags with attributes, no shortcodes
 - `flux-filemanager:install` sets up Laravel Filemanager, the npm packages and your `app.js`; `flux-filemanager:check` verifies the result
@@ -68,6 +69,7 @@ Full documentation: **https://arviddejong.github.io/livewire-flux-editor-fileman
 - [Configuration](docs/configuration.md): every config key and the component attributes
 - [Image editing](docs/image-editing.md): the resize menu, the edit modal and the HTML they write
 - [File links](docs/file-links.md): insert and edit links to files
+- [HTML source](docs/html-source.md): open, read and edit the HTML of the content
 - [Drag and drop](docs/drag-and-drop.md): base64 or upload, and where the limits are checked
 - [Uploads and security](docs/uploads-and-security.md): what the package checks and what it leaves to Laravel Filemanager and your application
 - [Localization](docs/localization.md): the language files, changing a text, adding a language

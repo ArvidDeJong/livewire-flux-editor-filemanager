@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting"
-nav_order: 11
+nav_order: 12
 description: "Symptoms, causes and fixes for the Flux editor with Laravel Filemanager: dead toolbar buttons, popup problems, broken images and failed drops."
 ---
 
