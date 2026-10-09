@@ -7,6 +7,13 @@ return [
     // File link button
     'insert_file_link' => 'Insert File Link',
 
+    // HTML source button and modal
+    'view_html' => 'View HTML',
+    'edit_html' => 'Edit HTML',
+    'html_source' => 'HTML',
+    'html_source_hint' => 'Apply replaces the content with this HTML. Tags and attributes the editor does not know are dropped.',
+    'close' => 'Close',
+
     // Image edit modal
     'edit_image' => 'Edit Image',
     'image' => 'Image',

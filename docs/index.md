@@ -7,7 +7,7 @@ permalink: /
 
 # Flux Editor Filemanager
 
-`darvis/livewire-flux-editor-filemanager` is a Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) (a file browser and uploader, `unisharp/laravel-filemanager`) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. It adds an image button and a file link button to the editor toolbar, a resize and align menu and an edit modal for images, and drop and paste of image files.
+`darvis/livewire-flux-editor-filemanager` is a Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) (a file browser and uploader, `unisharp/laravel-filemanager`) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. It adds an image button and a file link button to the editor toolbar, a resize and align menu and an edit modal for images, an HTML button that shows the source of the content to read or edit it, and drop and paste of image files.
 
 > **[Try the live demo](https://fluxui-filemanager.com/demo)** on [fluxui-filemanager.com](https://fluxui-filemanager.com/) and use the editor, the file manager, the image menu and drag and drop in your browser before you install anything.
 
@@ -57,6 +57,7 @@ Then use the component where you would use `<flux:editor>`:
 - [Configuration](configuration.md): every key in `config/flux-filemanager.php` and the component attributes
 - [Image editing](image-editing.md): the image button, the resize menu, the edit modal and the HTML they write
 - [File links](file-links.md): insert a link to a PDF or another file, and edit a link
+- [HTML source](html-source.md): open the HTML of the content in a modal, edit it and apply it
 - [Drag and drop](drag-and-drop.md): drop or paste images, as base64 or uploaded to Laravel Filemanager
 - [Uploads and security](uploads-and-security.md): what the package checks, what Laravel Filemanager checks, and what nobody checks
 - [Localization](localization.md): the language files, changing a text, adding a language

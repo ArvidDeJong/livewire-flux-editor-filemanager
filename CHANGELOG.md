@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- An HTML source button (`data-editor="html-source"`, view `flux-filemanager::flux.editor.html-source`) that opens the HTML of the content in a modal, to read it or to edit it and apply it. Apply replaces the content through `setContent()`, so tags and attributes without an extension are dropped; a disabled editor gets a read-only modal. The `full` toolbar preset has the button after Flux's code button; a custom toolbar includes the view. New translation keys `view_html`, `edit_html`, `html_source`, `html_source_hint` and `close`
+
+### Fixed
+- The Dutch language file is translated. It held the English texts, so Dutch sites showed English tooltips, menus and modals
+
 ## [1.6.0] - 2026-10-09
 
 ### Changed

@@ -1,6 +1,6 @@
 ---
 title: "Uploads and security"
-nav_order: 8
+nav_order: 9
 description: "What darvis/livewire-flux-editor-filemanager checks and what it leaves to Laravel Filemanager and your app: access, file types, sizes, disks, HTML."
 ---
 

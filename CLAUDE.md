@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Package overview
 
-`darvis/livewire-flux-editor-filemanager` is a Laravel package (PHP 8.2+, Laravel 11/12/13, Livewire 3/4, Flux Pro 2) that puts Laravel Filemanager inside the Flux Pro editor: toolbar buttons that open the file manager for images and file links, a resize/align menu and an edit modal for images, link editing, and drag and drop or paste of image files. Host apps consume it via Composer; this repo only contains the library.
+`darvis/livewire-flux-editor-filemanager` is a Laravel package (PHP 8.2+, Laravel 11/12/13, Livewire 3/4, Flux Pro 2) that puts Laravel Filemanager inside the Flux Pro editor: toolbar buttons that open the file manager for images and file links, a resize/align menu and an edit modal for images, link editing, an HTML source modal, and drag and drop or paste of image files. Host apps consume it via Composer; this repo only contains the library.
 
 - Namespace: `Darvis\FluxFilemanager\` → `src/`
 - Service provider auto-registered via `extra.laravel.providers` in [composer.json](composer.json)
@@ -25,7 +25,7 @@ CI calls the shared workflow with `flux-pro: true`, so it authenticates against 
 
 ## Architecture
 
-- Most of the behaviour is in [resources/js/laravel-filemanager.js](resources/js/laravel-filemanager.js), not in PHP. It is event delegation on `document`: `[data-editor="image"]` and `[data-editor="file-link"]` buttons, `.ProseMirror img` (click: resize menu, dblclick: modal) and `.ProseMirror a` (click: link modal in edit mode). It finds the TipTap instance as `editor` on the closest `ui-editor` element, which Flux sets. Nothing in the JS may assume a single editor on the page.
+- Most of the behaviour is in [resources/js/laravel-filemanager.js](resources/js/laravel-filemanager.js), not in PHP. It is event delegation on `document`: `[data-editor="image"]`, `[data-editor="file-link"]` and `[data-editor="html-source"]` buttons, `.ProseMirror img` (click: resize menu, dblclick: modal) and `.ProseMirror a` (click: link modal in edit mode). It finds the TipTap instance as `editor` on the closest `ui-editor` element, which Flux sets. Nothing in the JS may assume a single editor on the page.
 - The JS reads settings from the `<script type="application/json" data-flux-filemanager-config>` tag that [Editor.php](src/View/Components/Editor.php) renders through `jsConfig()`, falling back to `window.fluxFilemanagerConfig` when the host app sets it. The translations travel in that JSON as `i18n`; `t(key, fallback)` reads them. Drag and drop settings are data attributes on the `ui-editor` element, read per editor by [drag-drop-config.js](resources/js/drag-drop-config.js). Don't add a second way to pass config to the JS.
 - Images are changed with `updateAttributes('image', …)` through `updateImage()`, never by deleting and re-inserting the node, which loses alt, title and extra classes. `imageAttributes()` recomputes the generated part of `class` and `style` (`tiptap-image`, `align-*`, `width`, margins, `display: block`) and `extraClasses()`/`extraStyles()` keep the rest. After a command the JS dispatches `input` and `blur` on the `ui-editor`, because Flux syncs `wire:model` on those.
 - Editing a link is `extendMarkRange('link')` + `insertContent()` with a new link mark; inserting is the same without the extend. `showFileLinkModal(editor, url, existing)` does both.

@@ -61,3 +61,25 @@ it('renders the drag and drop settings as data attributes', function () {
     $view->assertSee('data-drag-drop-method="base64"', false)
         ->assertSee('data-max-file-size="5242880"', false);
 });
+
+it('renders the HTML source button in the full toolbar only', function () {
+    $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="full" />')
+        ->assertSee('data-editor="html-source"', false)
+        ->assertSee('View HTML', false);
+
+    $this->blade('<x-flux-filemanager-editor wire:model="content" />')
+        ->assertDontSee('data-editor="html-source"', false);
+
+    $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="minimal" />')
+        ->assertDontSee('data-editor="html-source"', false);
+});
+
+it('renders the HTML source button on its own in a custom toolbar', function () {
+    $this->blade(
+        '<x-flux-filemanager-editor wire:model="content" :toolbar="false">
+            <flux:editor.toolbar>
+                @include(\'flux-filemanager::flux.editor.html-source\')
+            </flux:editor.toolbar>
+        </x-flux-filemanager-editor>'
+    )->assertSee('data-editor="html-source"', false);
+});

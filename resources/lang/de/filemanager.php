@@ -7,6 +7,13 @@ return [
     // File link button
     'insert_file_link' => 'Dateilink einfügen',
 
+    // HTML source button and modal
+    'view_html' => 'HTML anzeigen',
+    'edit_html' => 'HTML bearbeiten',
+    'html_source' => 'HTML',
+    'html_source_hint' => 'Anwenden ersetzt den Inhalt durch dieses HTML. Tags und Attribute, die der Editor nicht kennt, werden entfernt.',
+    'close' => 'Schließen',
+
     // Image edit modal
     'edit_image' => 'Bild Bearbeiten',
     'image' => 'Bild',

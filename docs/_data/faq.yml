@@ -24,6 +24,9 @@
 - q: How do I link to a PDF or another file from the Flux editor?
   a: Click the file link button in the toolbar, pick the file in Laravel Filemanager and set the link text, target, classes and styles in the modal. Click an existing link to edit it. With the default `public` disk the file is a public URL that anyone with the address can open.
 
+- q: Can I see or edit the HTML of the Flux editor content?
+  a: Yes. The HTML button in the toolbar opens a modal with the HTML of the content. Change it and click Apply to replace the content; tags and attributes the editor does not know are dropped. The `full` toolbar preset has the button, a custom toolbar includes `flux-filemanager::flux.editor.html-source`. Flux's own `</>` button is different, it marks selected text as inline code and shows nothing without a selection.
+
 - q: Nothing happens when I click the image button in the Flux editor. What now?
   a: Run `php artisan flux-filemanager:check`. It checks Laravel Filemanager, `config/lfm.php`, the routes, the authentication, the storage link, the TipTap npm packages, your `app.js` and the build, and prints a fix for each problem. If it passes, open the browser console, because one failing import stops all of `app.js`, and restart `npm run dev` after an update of the package.
 

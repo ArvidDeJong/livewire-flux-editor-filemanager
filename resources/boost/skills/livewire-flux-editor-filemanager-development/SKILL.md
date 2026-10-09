@@ -1,6 +1,6 @@
 ---
 name: livewire-flux-editor-filemanager-development
-description: Work with darvis/livewire-flux-editor-filemanager. Use it to put a Flux editor with Laravel Filemanager images and file links in a Livewire form, configure or extend the editor, test views that render it, and debug buttons that do nothing.
+description: Work with darvis/livewire-flux-editor-filemanager. Use it to put a Flux editor with Laravel Filemanager images, file links and an HTML source modal in a Livewire form, configure or extend the editor, test views that render it, and debug buttons that do nothing.
 ---
 
 # darvis/livewire-flux-editor-filemanager development
@@ -18,6 +18,7 @@ Use this skill when you add a rich text editor with images or file links to a fo
 | Single click on an image | Resize menu: presets from `resize_presets`, custom `%`, align | `width`, `style` (width, margins, `display: block` for center), `class` (`align-*`), `data-align` |
 | Double click on an image | Edit modal: alt, title, width, alignment, extra classes, extra styles | Same, plus `alt` and `title`; extra classes and styles are kept |
 | Click on a link | Link modal in edit mode, `extendMarkRange('link')` | The whole link replaced with new text and attributes |
+| HTML button (`data-editor="html-source"`) | Modal with the HTML from `editor.getHTML()`; Apply calls `setContent()` | The whole content replaced with the edited HTML; tags and attributes without an extension dropped |
 | Drop or paste image files | `createImageDropPastePlugin()` on the Image extension | Base64 `<img>` or, with `drag_drop.method = upload`, the uploaded URL |
 
 All of it is event delegation on `document`, keyed on the closest `ui-editor` element and its `editor` property, so editors rendered later by Livewire work too.
@@ -71,6 +72,7 @@ Flux's views read `$errors`, which only the web middleware shares. A Livewire co
 
 ## Pitfalls
 
+- "View code" does nothing: Flux's `</>` button is the inline `code` mark and needs a selection. The package's HTML button opens the source; it is in the `full` preset, a custom toolbar includes `flux-filemanager::flux.editor.html-source`.
 - Buttons do nothing: `app.js` lacks the setup block or `initLaravelFilemanager()`, or the build is stale. The checklist page at `/darvis/filemanager-checklist` (with `FLUX_FILEMANAGER_DEMO_ROUTES=true`) shows what's missing.
 - All buttons dead at once, right after updating the package: the running Vite dev server is serving the old package JavaScript, because `vendor/` is in `server.watch.ignored`. The console shows the failing import. Restart `npm run dev`; a `npm run build` is unaffected. Check the console before you change any code.
 - Images insert but don't load: `APP_URL` doesn't match the host in the browser. Laravel Filemanager builds absolute URLs from it.

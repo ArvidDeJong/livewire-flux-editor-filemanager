@@ -1,6 +1,6 @@
 ---
 title: "Localization"
-nav_order: 9
+nav_order: 10
 description: "The language files of the editor buttons, menus and modals (en, nl, de), which texts they do not cover, how to change a text and how to add a language."
 ---
 
@@ -8,7 +8,7 @@ description: "The language files of the editor buttons, menus and modals (en, nl
 
 ## Which languages ship with the package
 
-The package has language files for English (`en`), Dutch (`nl`) and German (`de`), each with the same keys. German is translated. In version 1.4.0 most values in the Dutch file are still the English text; publish the language files and translate them if you need Dutch.
+The package has language files for English (`en`), Dutch (`nl`) and German (`de`), each with the same keys. All three are translated. Up to version 1.6.0 most values in the Dutch file were the English text; if you published the language files in that time, compare your copy with the package's `nl` file.
 
 The active Laravel locale (`app.locale`, or what you set with `App::setLocale()`) decides which file is used. That goes for the Blade tooltips on the toolbar buttons and for the JavaScript resize menu and modals: the component renders the translations as JSON and the JavaScript reads them from there.
 

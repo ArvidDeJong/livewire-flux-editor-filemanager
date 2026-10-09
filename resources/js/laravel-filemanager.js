@@ -520,6 +520,86 @@ function showImageEditModal(editor, img) {
     })
 }
 
+const BLOCK_CLOSING_TAGS = /<\/(p|h[1-6]|ul|ol|li|blockquote|table|thead|tbody|tr|figure|div)>/g
+
+/**
+ * Put every block on its own line, so the HTML is readable in the textarea.
+ * The inside of <pre> is left alone, because a newline there is content.
+ */
+function formatHtml(html) {
+    return html
+        .split(/(<pre[\s\S]*?<\/pre>)/)
+        .map((part, index) => (index % 2 === 1 ? `${part}\n` : part.replace(BLOCK_CLOSING_TAGS, '</$1>\n')))
+        .join('')
+        .trim()
+}
+
+/**
+ * Show the HTML of the editor in a modal, to read it or to replace the content with edited HTML.
+ * In a disabled editor the textarea is read-only and there is no Apply button.
+ * @param {HTMLElement} editorElement - The ui-editor element with its TipTap instance
+ */
+function showHtmlSourceModal(editorElement) {
+    const editor = editorElement.editor
+    const editable = editor.isEditable
+
+    const modal = document.createElement('div')
+    modal.className = 'file-link-modal-overlay'
+
+    modal.innerHTML = `
+        <div class="file-link-modal html-source-modal">
+            <div class="file-link-modal-header">
+                <h3>${editable ? t('edit_html', 'Edit HTML') : t('view_html', 'View HTML')}</h3>
+                <button class="file-link-modal-close" type="button">&times;</button>
+            </div>
+            <div class="file-link-modal-body">
+                <div class="form-group">
+                    <label>${t('html_source', 'HTML')}:</label>
+                    <textarea class="html-source" rows="16" spellcheck="false"${editable ? '' : ' readonly'}></textarea>
+                    ${editable ? `<p class="form-hint">${t('html_source_hint', 'Apply replaces the content with this HTML. Tags and attributes the editor does not know are dropped.')}</p>` : ''}
+                </div>
+            </div>
+            <div class="file-link-modal-footer">
+                <button class="btn-cancel" type="button">${editable ? t('cancel', 'Cancel') : t('close', 'Close')}</button>
+                ${editable ? `<button class="btn-insert" type="button">${t('apply', 'Apply')}</button>` : ''}
+            </div>
+        </div>
+    `
+
+    // Assigned as a value, never interpolated: a </textarea> or an entity in the content would break the markup.
+    const textarea = modal.querySelector('.html-source')
+    textarea.value = formatHtml(editor.getHTML())
+
+    document.body.appendChild(modal)
+    textarea.focus()
+    textarea.setSelectionRange(0, 0)
+    textarea.scrollTop = 0
+
+    const close = () => modal.remove()
+    const apply = () => {
+        if (!editable) return
+
+        editor.commands.setContent(textarea.value)
+        editor.commands.focus('start')
+        syncLivewire(editorElement)
+        close()
+    }
+
+    modal.querySelector('.file-link-modal-close').addEventListener('click', close)
+    modal.querySelector('.btn-cancel').addEventListener('click', close)
+    modal.querySelector('.btn-insert')?.addEventListener('click', apply)
+
+    // Enter is a newline in the textarea; Cmd or Ctrl + Enter applies.
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') close()
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) apply()
+    })
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) close()
+    })
+}
+
 /**
  * Enable link editing functionality
  * Opens modal when clicking on links in the editor
@@ -796,6 +876,21 @@ function setupImageButtonListener() {
             }
 
             insertFileLinkFromFilemanager(editorElement.editor)
+            return
+        }
+
+        // Event listener for the HTML source button
+        const htmlSourceButton = e.target.closest('[data-editor="html-source"]')
+        if (htmlSourceButton) {
+            e.preventDefault()
+            e.stopPropagation()
+
+            const editorElement = htmlSourceButton.closest('ui-editor')
+            if (!editorElement?.editor) {
+                return
+            }
+
+            showHtmlSourceModal(editorElement)
             return
         }
 
