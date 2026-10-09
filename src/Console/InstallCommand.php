@@ -70,21 +70,21 @@ class InstallCommand extends Command
         $this->newLine();
 
         $this->displayNextSteps();
-        $this->askForStar();
+        $this->askForSponsor();
 
         return self::SUCCESS;
     }
 
     /**
-     * One question at the end of the installer: a star helps other developers
-     * find the package. Yes opens the repository in the browser; the URL is
+     * One question at the end of the installer: sponsoring keeps the package
+     * maintained. Yes opens the GitHub Sponsors page in the browser; the URL is
      * printed as well for a server without one. Skipped with --no-interaction.
      */
-    protected function askForStar(): void
+    protected function askForSponsor(): void
     {
-        $url = 'https://github.com/ArvidDeJong/livewire-flux-editor-filemanager';
+        $url = 'https://github.com/sponsors/ArvidDeJong';
 
-        if (! $this->input->isInteractive() || ! $this->confirm('Star darvis/livewire-flux-editor-filemanager on GitHub? A star helps other developers find the package.', true)) {
+        if (! $this->input->isInteractive() || ! $this->confirm('Buy me a beer? 🍺 Sponsoring on GitHub keeps darvis/livewire-flux-editor-filemanager maintained.', true)) {
             return;
         }
 
