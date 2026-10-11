@@ -3,6 +3,9 @@
  * Click on image to show resize menu
  */
 
+/* Every host imports this file, so the table styles reach existing installations without a change to app.js */
+@import './tiptap-table.css';
+
 /* Image styling */
 .ProseMirror img {
     max-width: 100%;

@@ -78,3 +78,15 @@ it('renders the HTML source button on its own in a custom toolbar', function () 
         </x-flux-filemanager-editor>'
     )->assertSee('data-editor="html-source"', false);
 });
+
+it('renders the table button in the full preset only', function () {
+    $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="full" />')
+        ->assertSee('data-editor="table-menu"', false)
+        ->assertSee('Insert table', false);
+
+    $this->blade('<x-flux-filemanager-editor wire:model="content" />')
+        ->assertDontSee('data-editor="table-menu"', false);
+
+    $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="minimal" />')
+        ->assertDontSee('data-editor="table-menu"', false);
+});

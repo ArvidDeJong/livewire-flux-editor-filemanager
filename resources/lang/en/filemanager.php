@@ -20,6 +20,20 @@ return [
     'code_block' => 'Code block',
     'clear_formatting' => 'Clear formatting',
 
+    // Table menu
+    'table' => 'Table',
+    'insert_table' => 'Insert table',
+    'add_row_before' => 'Add row above',
+    'add_row_after' => 'Add row below',
+    'delete_row' => 'Delete row',
+    'add_column_before' => 'Add column left',
+    'add_column_after' => 'Add column right',
+    'delete_column' => 'Delete column',
+    'toggle_header_row' => 'Header row on or off',
+    'toggle_header_column' => 'Header column on or off',
+    'merge_or_split_cells' => 'Merge or split cells',
+    'delete_table' => 'Delete table',
+
     // Image edit modal
     'edit_image' => 'Edit Image',
     'image' => 'Image',
@@ -81,6 +95,7 @@ return [
     'checklist_protected' => 'The file manager is behind authentication',
     'checklist_storage_link' => 'public/storage is linked',
     'checklist_npm_packages' => 'The TipTap packages are installed',
+    'checklist_js_tables_enabled' => "resources/js/app.js enables Flux's table extensions",
     'checklist_build_current' => 'The assets are built and up to date',
     'checklist_app_url' => 'APP_URL is set',
     'checklist_cli_hint' => 'The same checks run in the terminal: php artisan flux-filemanager:check',

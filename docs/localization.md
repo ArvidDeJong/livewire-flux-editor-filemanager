@@ -1,6 +1,6 @@
 ---
 title: "Localization"
-nav_order: 11
+nav_order: 12
 description: "The language files of the editor buttons, menus and modals (en, nl, de), which texts they do not cover, how to change a text and how to add a language."
 ---
 
@@ -31,7 +31,7 @@ They land in `lang/vendor/flux-filemanager/{locale}/filemanager.php`. Change wha
 
 ## Add a language
 
-Copy `lang/vendor/flux-filemanager/en/filemanager.php` to a new locale directory, for example `lang/vendor/flux-filemanager/fr/filemanager.php`, and translate the values. The file has a comment per group: the toolbar tooltips, the image modal, the link modal, the buttons, the checklist page and the demo page.
+Copy `lang/vendor/flux-filemanager/en/filemanager.php` to a new locale directory, for example `lang/vendor/flux-filemanager/fr/filemanager.php`, and translate the values. The file has a comment per group: the toolbar tooltips, the table menu, the image modal, the link modal, the buttons, the checklist page and the demo page.
 
 Translate every key. For a key that is missing in your language, Blade falls back to your `fallback_locale` and the JavaScript falls back to its built-in English text.
 

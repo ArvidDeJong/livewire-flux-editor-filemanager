@@ -37,6 +37,7 @@ class InstallationCheck
             $this->storageLink(),
             $this->npmPackages(),
             $this->appJs(),
+            $this->tablesEnabled(),
             $this->build(),
             $this->appUrl(),
         ];
@@ -193,6 +194,22 @@ class InstallationCheck
             'js_init_available',
             self::OK,
             'resources/js/app.js calls initLaravelFilemanager()',
+        );
+    }
+
+    /**
+     * Flux Pro bundles the table extensions since 2.15.1, but a setup block from before 1.10 leaves
+     * them off, and then the table button inserts nothing. The rest of the editor works, so a warning.
+     *
+     * @return array{key: string, status: string, label: string, hint: string}
+     */
+    protected function tablesEnabled(): array
+    {
+        return $this->result(
+            'js_tables_enabled',
+            Str::contains($this->appJsContent(), 'enableExtension') ? self::OK : self::WARNING,
+            "resources/js/app.js enables Flux's table extensions",
+            "Run php artisan flux-filemanager:install again; it adds the lines that enable Flux's bundled table extensions. Without them the table button inserts nothing.",
         );
     }
 

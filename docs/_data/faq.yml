@@ -7,7 +7,7 @@
   a: Run `composer require darvis/livewire-flux-editor-filemanager` and `php artisan flux-filemanager:install`, then use `<x-flux-filemanager-editor wire:model="content" />` where you would use `<flux:editor>`. The toolbar gets an image button and a file link button that open Laravel Filemanager in a popup. Run `php artisan flux-filemanager:check` to verify the installation.
 
 - q: Which versions of PHP, Laravel, Livewire and Flux does it support?
-  a: PHP 8.2 or higher, Laravel 11, 12 and 13, Livewire 3 and 4, Flux and Flux Pro 2.0.2 or newer, and Laravel Filemanager 2.
+  a: PHP 8.2 or higher, Laravel 11, 12 and 13, Livewire 3 and 4, Flux and Flux Pro 2.15.1 or newer, and Laravel Filemanager 2.
 
 - q: Do I need Flux Pro, and what does the package cost?
   a: The package is free, but the editor it extends is a Flux Pro component, and Flux Pro needs a paid licence from fluxui.dev. Your application must have the Flux composer repository and your licence set up, for example with `php artisan flux:activate`, before you require this package.
@@ -26,6 +26,9 @@
 
 - q: Can I see or edit the HTML of the Flux editor content?
   a: Yes. The HTML button in the toolbar opens a modal with the HTML of the content. Change it and click Apply to replace the content; tags and attributes the editor does not know are dropped, and the hint under the text area names them before you apply. The `full` toolbar preset has the button, and `toolbar="default | html-source"` adds it to the default preset. Flux's own `</>` button is different, it marks selected text as inline code and shows nothing without a selection.
+
+- q: Can the editor make tables?
+  a: Yes, since 1.10. The table button in the toolbar inserts a 3×3 table with a header row, and its menu adds and deletes rows and columns, turns the header row and column on or off, merges or splits cells and deletes the table. Flux Pro 2.15.1 or newer bundles the table extensions and the setup block in `app.js` turns them on; an installation from before 1.10 gets those lines by running `php artisan flux-filemanager:install` again. The `full` toolbar preset has the button, and `toolbar="default | table"` adds it to the default preset.
 
 - q: How do I add or remove toolbar buttons?
   a: Set the `toolbar` attribute of `<x-flux-filemanager-editor>` to one string with the button names in order, `|` for a separator and `~` for a spacer, for example `toolbar="heading | bold italic | image link file-link"`. A preset name inside the string expands to its buttons, so `toolbar="default | html-source"` is the default toolbar plus the HTML source button. The presets are `minimal`, `default` and `full`, and the Toolbar buttons page of the documentation lists every button name.

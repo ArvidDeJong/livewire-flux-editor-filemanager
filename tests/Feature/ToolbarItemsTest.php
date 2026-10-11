@@ -61,6 +61,40 @@ it('renders every button of the full preset', function () {
     }
 });
 
+it('renders the table menu in the full preset', function () {
+    $view = $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="full" />');
+
+    $view->assertSee('data-editor="table"', false)
+        ->assertSee('data-editor="table-delete"', false);
+});
+
+it('renders the table menu with every table command', function () {
+    $view = $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="table" />');
+
+    $commands = [
+        'table-menu',
+        'table',
+        'table-add-row-before',
+        'table-add-row-after',
+        'table-delete-row',
+        'table-add-column-before',
+        'table-add-column-after',
+        'table-delete-column',
+        'table-toggle-header-row',
+        'table-toggle-header-column',
+        'table-merge-or-split',
+        'table-delete',
+    ];
+
+    preg_match_all('/data-editor="(table[^"]*)"/', (string) $view, $matches);
+
+    expect(array_values(array_unique($matches[1])))->toEqualCanonicalizing($commands);
+
+    foreach ($commands as $command) {
+        $view->assertSee('data-editor="'.$command.'"', false);
+    }
+});
+
 it('leaves the checklist button out of every preset', function () {
     foreach (array_keys(Editor::PRESETS) as $preset) {
         $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="'.$preset.'" />')
@@ -99,4 +133,5 @@ it('renders the tooltip of each new button', function (string $name, string $too
     ['hr', 'Horizontal rule'],
     ['code-block', 'Code block'],
     ['clear-format', 'Clear formatting'],
+    ['table', 'Table'],
 ]);

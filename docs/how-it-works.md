@@ -1,6 +1,6 @@
 ---
 title: "How it works"
-nav_order: 14
+nav_order: 15
 description: "Technical reference for debugging and extending: which file does what, the DOM contract, the Laravel Filemanager popup callback and the TipTap extensions."
 ---
 
@@ -13,21 +13,22 @@ A reference for debugging and extending. You do not need this page to use the pa
 | Piece | File | Role |
 | --- | --- | --- |
 | Blade component | `resources/views/components/editor.blade.php`, `src/View/Components/Editor.php` | Wraps `<flux:editor>`, renders the toolbar from the `toolbar` string, the JSON config and the drag and drop data attributes |
-| Toolbar buttons | `resources/views/flux/editor/image.blade.php`, `file-link.blade.php`, `html-source.blade.php`, `hr.blade.php`, `code-block.blade.php`, `clear-format.blade.php`, `checklist.blade.php` | `<flux:editor.button>` elements with a `data-editor` or `data-filemanager-checklist` attribute, registered as Flux toolbar items so that they work by name in the toolbar string |
+| Toolbar buttons | `resources/views/flux/editor/image.blade.php`, `file-link.blade.php`, `html-source.blade.php`, `hr.blade.php`, `code-block.blade.php`, `clear-format.blade.php`, `table.blade.php`, `checklist.blade.php` | `<flux:editor.button>` elements with a `data-editor` or `data-filemanager-checklist` attribute, registered as Flux toolbar items so that they work by name in the toolbar string. The table button is a `<flux:dropdown>` whose menu items carry the `data-editor` values of Flux's table commands |
 | JavaScript | `resources/js/laravel-filemanager.js` | Button handling, the popup, the resize menu, the modals and the drop and paste plugin |
 | Drag and drop helpers | `resources/js/drag-drop-config.js` | Reads the data attributes, validates a file, converts to base64 or uploads |
-| Setup block | `resources/stubs/flux-filemanager-setup.js`, `examples/app.js` | Registers the Image and Link extensions on the `flux:editor` event |
-| Styles | `resources/css/tiptap-image.css`, `file-link-modal.css` | Images in the editor, the resize menu, the modals |
+| Setup block | `resources/stubs/flux-filemanager-setup.js`, `examples/app.js` | Registers the Image and Link extensions and enables Flux's bundled table extensions on the `flux:editor` event |
+| Styles | `resources/css/tiptap-image.css`, `tiptap-table.css` (imported by `tiptap-image.css`), `file-link-modal.css` | Images in the editor, the resize menu, the modals, and the two table rules Flux's own editor stylesheet lacks |
 | Config reader | `src/Support/FluxFilemanagerConfig.php` | The only class that reads `config/flux-filemanager.php`, with one method per key |
 | Installer | `src/Console/InstallCommand.php` | `flux-filemanager:install`: Laravel Filemanager config and routes, storage, npm, config, `app.js` |
-| Installation check | `src/Console/CheckCommand.php`, `src/Support/InstallationCheck.php` | `flux-filemanager:check` and the checklist page read the same list of nine checks |
+| Installation check | `src/Console/CheckCommand.php`, `src/Support/InstallationCheck.php` | `flux-filemanager:check` and the checklist page read the same list of ten checks |
 | Demo | `routes/web.php`, `src/Livewire/EditorDemo.php`, `resources/views/examples/` | Opt-in demo and checklist pages |
 
 ## The DOM contract: which clicks the JavaScript listens to
 
 Everything is event delegation on `document`: one listener on the page instead of one per button. That is why it works for editors that Livewire renders later:
 
-- A click on an element with `data-editor="image"`, `data-editor="file-link"`, `data-editor="html-source"` or `data-editor="clear-format"` finds the closest `ui-editor` element. Flux puts the TipTap instance on it as `editor`. Without that property the click is ignored. The `hr` and `code-block` buttons are not in this list: Flux's own toolbar handler runs those commands, and the package must not handle them too, or the command runs twice.
+- A click on an element with `data-editor="image"`, `data-editor="file-link"`, `data-editor="html-source"` or `data-editor="clear-format"` finds the closest `ui-editor` element. Flux puts the TipTap instance on it as `editor`. Without that property the click is ignored. The `hr` and `code-block` buttons and the entries of the table menu (`data-editor="table"`, `table-add-row-after`, `table-delete` and so on) are not in this list: Flux's own toolbar handler runs those commands, and the package must not handle them too, or the command runs twice.
+- On the `flux:editor` event the package registers an `init` callback. When the editor is created without a `table` node in its schema, the table menu button in that editor (`data-editor="table-menu"`, a value Flux ignores) is disabled and a console warning says that the setup block lacks the lines that enable the extensions.
 - A click on `.ProseMirror img` shows the resize menu, a double click opens the image modal.
 - A click on `.ProseMirror a` opens the link modal in edit mode, with `preventDefault()` so the link doesn't navigate.
 - A click on `[data-filemanager-checklist]` opens the checklist URL in a new tab.
@@ -60,6 +61,8 @@ The setup block registers two extensions on every editor through Flux's `flux:ed
 - **Link**: TipTap's Link extension with `target`, `class` and `style` attributes, `openOnClick: false` so clicks open the modal instead of navigating, and `rel="noopener noreferrer nofollow"`.
 
 A flag on `e.detail` stops the block from registering twice when the event fires more than once.
+
+The block also enables four extensions Flux bundles since 2.15.1 but keeps off by default: Table, TableRow, TableHeader and TableCell, with `e.detail.enableExtension('table')` and the three others. Flux enables Table with `resizable: true`, which gives the column resize handles. These are not installed through npm and not passed to `registerExtension()`: a second copy of ProseMirror next to Flux's breaks the editor. See [Tables](tables.md).
 
 ## How drop and paste are handled
 

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- A `table` toolbar button with a menu: insert a 3×3 table with a header row, add or delete rows and columns, toggle the header row and column, merge or split cells, delete the table. Flux's editor runs the commands and its own stylesheet draws the tables; the package adds the button, the menu, the lines in the setup block that enable Flux's bundled table extensions, and `tiptap-table.css` (imported by `tiptap-image.css`) with the two rules Flux lacks: no margin on the paragraph in a cell and left-aligned header cells. The `full` preset has it. New translation keys `table`, `insert_table`, `add_row_before`, `add_row_after`, `delete_row`, `add_column_before`, `add_column_after`, `delete_column`, `toggle_header_row`, `toggle_header_column`, `merge_or_split_cells` and `delete_table`
+- `php artisan flux-filemanager:install` adds the table lines to an existing setup block, and `flux-filemanager:check` warns when they are missing; the checklist page shows the same check (new translation key `checklist_js_tables_enabled`). In an editor without the extensions the table button is disabled and the console says why
+- Docs page "Tables"
+
+### Changed
+- Requires Flux Pro 2.15.1 or newer, the first version that bundles the table extensions
+- The HTML source modal keeps `<table>` now that the extensions are on; its docs use `<iframe>` as the example of a dropped tag
+
 ## [1.9.0] - 2026-10-11
 
 ### Added

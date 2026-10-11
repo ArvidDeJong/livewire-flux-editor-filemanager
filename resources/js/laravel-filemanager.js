@@ -905,6 +905,10 @@ async function insertImageFiles(view, files, position) {
  * Sets up the image button click handler and enables resize functionality
  */
 export function initLaravelFilemanager() {
+    // Flux dispatches flux:editor while an editor element initialises, which can happen before
+    // DOMContentLoaded, so this listener goes on the document right away.
+    disableTableMenuWithoutExtensions()
+
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
@@ -920,12 +924,36 @@ export function initLaravelFilemanager() {
 }
 
 /**
+ * Disable the table menu of every editor whose schema has no table node. Flux Pro bundles the
+ * table extensions, but only the setup block in the host's app.js enables them; without them
+ * Flux's toolbar handler throws on every table-* command. The table-* clicks themselves are
+ * run by Flux's command map, never here.
+ */
+function disableTableMenuWithoutExtensions() {
+    document.addEventListener('flux:editor', (e) => {
+        if (!e.detail?.init || e.detail.__fluxFilemanagerTableMenuGuarded) return
+
+        e.detail.__fluxFilemanagerTableMenuGuarded = true
+
+        e.detail.init(({ editor }) => {
+            editor.on('create', () => {
+                if (editor.schema.nodes.table) return
+
+                const editorElement = editor.view.dom.closest('ui-editor')
+                editorElement?.querySelectorAll('[data-editor="table-menu"]').forEach((button) => { button.disabled = true })
+                console.warn('Flux Filemanager: the table extensions are not enabled, so the table button is disabled. Run php artisan flux-filemanager:install again; it adds the lines to resources/js/app.js.')
+            })
+        })
+    })
+}
+
+/**
  * Setup image and file link button listeners
  */
 function setupImageButtonListener() {
 
-    // The hr and code-block buttons are run by Flux's own toolbar click handler through its
-    // data-editor command map. Don't handle them here as well, or the command runs twice.
+    // The hr, code-block and table-* buttons are run by Flux's own toolbar click handler through
+    // its data-editor command map. Don't handle them here as well, or the command runs twice.
 
     // Event listener for image button (works for all Flux editors)
     document.addEventListener('click', (e) => {

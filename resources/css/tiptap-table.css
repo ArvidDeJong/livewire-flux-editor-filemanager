@@ -1,0 +1,20 @@
+/**
+ * TipTap Table Styles
+ * Flux Pro's own editor stylesheet (dist/editor.css, linked by every editor through <flux:editor.styles />)
+ * draws the tables of its bundled table extensions: the borders, the header cells, the tint on selected
+ * cells, the column resize handle and their dark mode variants. Its selectors start with
+ * [data-flux-editor] [data-slot="content"], two attribute selectors that outrank a .ProseMirror rule
+ * whatever the load order, so a rule here for one of those properties never applies. This file only
+ * holds what Flux has no rule for. It styles the editor only; the public site needs its own table CSS.
+ */
+
+/* A browser centres the text of a header cell; Flux leaves that alone */
+.ProseMirror th {
+    text-align: left;
+}
+
+/* Every cell holds a paragraph; Flux only sets the margin of the paragraphs directly under the content root */
+.ProseMirror td p,
+.ProseMirror th p {
+    margin: 0;
+}

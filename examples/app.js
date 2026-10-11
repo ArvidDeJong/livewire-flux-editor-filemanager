@@ -5,7 +5,8 @@ import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/tipta
 import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'
 
 // flux-filemanager:start
-// Registers the Image and Link extensions on every Flux editor on the page.
+// Registers the Image and Link extensions on every Flux editor on the page and enables the
+// table extensions that Flux Pro bundles.
 // Written by `php artisan flux-filemanager:install`; keep it in sync with examples/app.js.
 // Everything from the package is read off the `fluxFilemanager` namespace, so an outdated
 // copy under vendor/ only costs the feature it lacks instead of breaking this whole file.
@@ -57,6 +58,11 @@ document.addEventListener('flux:editor', (e) => {
     if (!e.detail?.registerExtension || e.detail.__fluxFilemanagerExtensionsRegistered) return
 
     e.detail.__fluxFilemanagerExtensionsRegistered = true
+
+    // Tables are bundled with Flux Pro 2.15.1+ but off by default. Enable them here and never install the
+    // table extensions through npm: a second copy of ProseMirror breaks the editor.
+    const tableExtensions = ['table', 'tableRow', 'tableHeader', 'tableCell']
+    tableExtensions.forEach((name) => e.detail.enableExtension?.(name))
 
     e.detail.registerExtension(Link.configure({
         openOnClick: false,

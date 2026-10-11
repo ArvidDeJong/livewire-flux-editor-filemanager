@@ -2,6 +2,7 @@
 
 use Darvis\FluxFilemanager\Support\InstallationCheck;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -11,6 +12,8 @@ function checkResults(): array
 {
     return collect(app(InstallationCheck::class)->results())->keyBy('key')->all();
 }
+
+afterEach(fn () => File::delete(resource_path('js/app.js')));
 
 it('registers the check command', function () {
     expect(Artisan::all())->toHaveKey('flux-filemanager:check');
@@ -61,8 +64,22 @@ it('warns about a named import in app.js, because one missing export kills every
     File::put($appJs, "import * as fluxFilemanager from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'\nfluxFilemanager.initLaravelFilemanager()\n");
 
     expect(checkResults()['js_init_available']['status'])->toBe(InstallationCheck::OK);
+});
 
-    File::delete($appJs);
+it('warns when app.js does not enable the table extensions, because the table button inserts nothing then', function () {
+    $appJs = resource_path('js/app.js');
+    File::ensureDirectoryExists(dirname($appJs));
+    File::put($appJs, "import * as fluxFilemanager from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'\nfluxFilemanager.initLaravelFilemanager()\n");
+
+    $result = checkResults()['js_tables_enabled'];
+
+    expect($result['status'])->toBe(InstallationCheck::WARNING)
+        ->and($result['label'])->toBe("resources/js/app.js enables Flux's table extensions")
+        ->and($result['hint'])->toContain('flux-filemanager:install');
+
+    File::put($appJs, "import * as fluxFilemanager from '../../vendor/darvis/livewire-flux-editor-filemanager/resources/js/laravel-filemanager.js'\ndocument.addEventListener('flux:editor', (e) => {\n    ['table', 'tableRow', 'tableHeader', 'tableCell'].forEach((name) => e.detail.enableExtension?.(name))\n})\nfluxFilemanager.initLaravelFilemanager()\n");
+
+    expect(checkResults()['js_tables_enabled']['status'])->toBe(InstallationCheck::OK);
 });
 
 it('warns that a running dev server does not watch vendor', function () {

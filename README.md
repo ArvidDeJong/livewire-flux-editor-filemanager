@@ -5,7 +5,7 @@
 [![PHP version](https://img.shields.io/packagist/dependency-v/darvis/livewire-flux-editor-filemanager/php.svg)](https://packagist.org/packages/darvis/livewire-flux-editor-filemanager)
 [![License](https://img.shields.io/packagist/l/darvis/livewire-flux-editor-filemanager.svg)](LICENSE)
 
-A Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. Two toolbar buttons open the file manager in a popup to insert images and file links, images get a resize and align menu and an edit modal, an HTML button shows the source of the content to read or edit it, and image files can be dropped on the editor or pasted from the clipboard.
+A Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. Two toolbar buttons open the file manager in a popup to insert images and file links, images get a resize and align menu and an edit modal, an HTML button shows the source of the content to read or edit it, a table button with a menu inserts and edits tables, and image files can be dropped on the editor or pasted from the clipboard.
 
 > **[Try the live demo](https://fluxui-filemanager.com/demo)** on [fluxui-filemanager.com](https://fluxui-filemanager.com/) and use the editor, the file manager, the image menu and drag and drop in your browser before you install anything.
 
@@ -29,16 +29,17 @@ The `full` toolbar has the button, and `toolbar="default | html-source"` adds it
 - File links with text, target, classes and styles; click a link in the editor to edit it
 - An HTML button that opens the source of the content in a modal, to read it or to edit it and apply the result
 - Toolbar on one line: `toolbar="heading | bold italic | image link file-link"`, three presets, and preset names expand inside the string
+- A table button with a menu: insert a 3×3 table with a header row, add or delete rows and columns, header row and column on or off, merge or split cells, delete the table. Flux's editor runs the commands and styles the tables; the package adds the button, the menu and the setup lines that enable Flux's bundled table extensions
 - Horizontal rule, code block and clear formatting buttons
 - Drop and paste of image files, embedded as base64 or uploaded to Laravel Filemanager
-- Plain HTML output: `<img>` and `<a>` tags with attributes, no shortcodes
+- Plain HTML output: `<img>`, `<a>` and `<table>` tags with attributes, no shortcodes
 - `flux-filemanager:install` sets up Laravel Filemanager, the npm packages and your `app.js`; `flux-filemanager:check` verifies the result
 - Language files for English, Dutch and German, also used by the JavaScript menus and modals
 
 ## Requirements
 
 - PHP 8.2+, Laravel 11, 12 or 13, Livewire 3 or 4
-- Flux and Flux Pro 2.0.2 or newer. The editor is a Flux Pro component, and Flux Pro needs a **paid licence** from [fluxui.dev](https://fluxui.dev). Set up Flux Pro in your application first (`php artisan flux:activate`), so that Composer can reach the private Flux repository
+- Flux and Flux Pro 2.15.1 or newer, the first version that bundles the table extensions. The editor is a Flux Pro component, and Flux Pro needs a **paid licence** from [fluxui.dev](https://fluxui.dev). Set up Flux Pro in your application first (`php artisan flux:activate`), so that Composer can reach the private Flux repository
 - Laravel Filemanager 2, installed as a dependency
 - Node with npm and Vite
 
@@ -83,6 +84,7 @@ Full documentation: **https://arviddejong.github.io/livewire-flux-editor-fileman
 - [Image editing](docs/image-editing.md): the resize menu, the edit modal and the HTML they write
 - [File links](docs/file-links.md): insert and edit links to files
 - [HTML source](docs/html-source.md): open, read and edit the HTML of the content
+- [Tables](docs/tables.md): insert and edit tables, the setup lines they need, and styling them on your site
 - [Drag and drop](docs/drag-and-drop.md): base64 or upload, and where the limits are checked
 - [Uploads and security](docs/uploads-and-security.md): what the package checks and what it leaves to Laravel Filemanager and your application
 - [Localization](docs/localization.md): the language files, changing a text, adding a language

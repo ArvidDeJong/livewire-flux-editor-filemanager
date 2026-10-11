@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting"
-nav_order: 13
+nav_order: 14
 description: "Symptoms, causes and fixes for the Flux editor with Laravel Filemanager: dead toolbar buttons, popup problems, broken images and failed drops."
 ---
 
@@ -41,6 +41,16 @@ After every change to `.env` or a config file, run `php artisan config:clear`. A
 **Cause.** Versions 1.1.x and 1.2.0 wrote `import { … } from '…/laravel-filemanager.js'` into your `app.js`. When the copy under `vendor/` lacks one of those names, the whole file fails.
 
 **Fix.** Run `php artisan flux-filemanager:install` again and accept the `app.js` step. It rewrites the line to `import * as fluxFilemanager from '…'`.
+
+## The table button does nothing
+
+**Cause 1.** The setup block in `app.js` predates 1.10 and lacks the four lines that enable Flux's bundled table extensions. The editor then has no table node, so the package disables the table button and the console says: "Flux Filemanager: the table extensions are not enabled, so the table button is disabled. Run php artisan flux-filemanager:install again; it adds the lines to resources/js/app.js." The check reports it as a warning, `resources/js/app.js enables Flux's table extensions`, with the hint "Run php artisan flux-filemanager:install again; it adds the lines that enable Flux's bundled table extensions. Without them the table button inserts nothing."
+
+**Fix.** Run `php artisan flux-filemanager:install` again and accept the `app.js` step. It adds the four lines after `e.detail.__fluxFilemanagerExtensionsRegistered = true` and changes nothing else in the block. Or copy them from [examples/app.js](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/blob/main/examples/app.js) yourself. Then run `npm run build`, or restart `npm run dev`. [Tables](tables.md) shows the lines.
+
+**Cause 2.** The installer said: "app.js has a setup block without the table extensions. Compare it with examples/app.js in the package." Your block was changed by hand and has no `e.detail.__fluxFilemanagerExtensionsRegistered = true` line, so the installer does not know where to put the four lines.
+
+**Fix.** Replace the block between `// flux-filemanager:start` and `// flux-filemanager:end` with the one in [examples/app.js](https://github.com/ArvidDeJong/livewire-flux-editor-filemanager/blob/main/examples/app.js), or add the four lines yourself inside the `flux:editor` listener, then run `npm run build`.
 
 ## The browser says the popup was blocked
 

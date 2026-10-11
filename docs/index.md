@@ -1,13 +1,13 @@
 ---
 title: "Documentation"
 nav_order: 1
-description: "Laravel package that puts Laravel Filemanager in the Flux Pro editor for Livewire: insert images and file links, resize and align images, view and edit the HTML source, drop or paste images."
+description: "Laravel package that puts Laravel Filemanager in the Flux Pro editor for Livewire: insert images and file links, resize and align images, view and edit the HTML source, insert tables, drop or paste images."
 permalink: /
 ---
 
 # Flux Editor Filemanager
 
-`darvis/livewire-flux-editor-filemanager` is a Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) (a file browser and uploader, `unisharp/laravel-filemanager`) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. It adds an image button and a file link button to the editor toolbar, a resize and align menu and an edit modal for images, an HTML button that shows the source of the content to read or edit it, and drop and paste of image files.
+`darvis/livewire-flux-editor-filemanager` is a Laravel package that connects [Laravel Filemanager](https://github.com/UniSharp/laravel-filemanager) (a file browser and uploader, `unisharp/laravel-filemanager`) to the rich text editor of [Flux Pro](https://fluxui.dev/components/editor) in a Livewire application. It adds an image button and a file link button to the editor toolbar, a resize and align menu and an edit modal for images, an HTML button that shows the source of the content to read or edit it, a table button with a menu to insert and edit tables, and drop and paste of image files.
 
 > **[Try the live demo](https://fluxui-filemanager.com/demo)** on [fluxui-filemanager.com](https://fluxui-filemanager.com/) and use the editor, the file manager, the image menu and drag and drop in your browser before you install anything.
 
@@ -42,7 +42,7 @@ Laravel developers who already use the Flux Pro editor, or plan to, and want the
 - PHP 8.2 or higher
 - Laravel 11, 12 or 13
 - Livewire 3 or 4
-- Flux Pro 2.0.2 or newer, which needs a paid licence from [fluxui.dev](https://fluxui.dev)
+- Flux Pro 2.15.1 or newer, which needs a paid licence from [fluxui.dev](https://fluxui.dev)
 - Laravel Filemanager 2, installed automatically as a dependency
 - Node and Vite with `resources/js/app.js`, the standard Laravel front-end setup
 
@@ -69,6 +69,7 @@ Then use the component where you would use `<flux:editor>`:
 - [Image editing](image-editing.md): the image button, the resize menu, the edit modal and the HTML they write
 - [File links](file-links.md): insert a link to a PDF or another file, and edit a link
 - [HTML source](html-source.md): open the HTML of the content in a modal, edit it and apply it
+- [Tables](tables.md): insert a table, add rows and columns, header row and column, merge cells, the setup lines it needs, and styling tables on your site
 - [Drag and drop](drag-and-drop.md): drop or paste images, as base64 or uploaded to Laravel Filemanager
 - [Uploads and security](uploads-and-security.md): what the package checks, what Laravel Filemanager checks, and what nobody checks
 - [Localization](localization.md): the language files, changing a text, adding a language

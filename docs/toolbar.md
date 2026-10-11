@@ -24,7 +24,7 @@ A name that does not exist throws an exception when the page renders, and the me
 
 - `minimal`: `bold italic | link`
 - `default`: `heading | bold italic strike | bullet ordered blockquote | image link file-link | align`
-- `full`: `heading | bold italic strike underline highlight subscript superscript | bullet ordered blockquote | image link file-link | align | code code-block hr clear-format | html-source ~ undo redo`
+- `full`: `heading | bold italic strike underline highlight subscript superscript | bullet ordered blockquote | image link file-link table | align | code code-block hr clear-format | html-source ~ undo redo`
 
 Without the attribute you get `default`. A preset name inside a string expands to its buttons: `toolbar="default | html-source"` is the default toolbar plus the HTML source button, and `toolbar="full | checklist"` is the full toolbar plus the checklist button. The three strings are the constant `Editor::PRESETS` in `src/View/Components/Editor.php`.
 
@@ -68,6 +68,7 @@ When the new button may go at the end, the preset name is shorter: `toolbar="def
 | `~` | A spacer, pushes the buttons after it to the right | Flux | full |
 | `image` | Opens Laravel Filemanager in a popup and inserts the picked image, see [Image editing](image-editing.md) | Package | default, full |
 | `file-link` | Opens Laravel Filemanager in a popup and inserts a link to the picked file, see [File links](file-links.md) | Package | default, full |
+| `table` | A menu: insert a 3×3 table with a header row, add or delete rows and columns, header row and column on or off, merge or split cells, delete the table. Flux's editor runs the commands. Needs Flux Pro 2.15.1+ and the setup lines of 1.10, see [Tables](tables.md) | Package | full |
 | `html-source` | Opens the HTML of the content in a modal, to read it or to edit it and apply it, see [HTML source](html-source.md) | Package | full |
 | `hr` | Inserts a horizontal rule, `<hr>`. Flux's editor runs the command | Package | full |
 | `code-block` | Turns the paragraph into a code block, `<pre><code>`, and back. Flux's editor runs the command, also for ⌘⌥C | Package | full |
@@ -86,7 +87,7 @@ A file in your application's `resources/views/flux/editor/` directory is a toolb
 </flux:tooltip>
 ```
 
-Then `toolbar="default ~ copy"` puts it at the right edge of the default toolbar. The package buttons are built the same way: a `<flux:editor.button>` with a data attribute that a click handler reacts to (`data-editor`, or `data-filemanager-checklist` on the checklist button), Flux's own handler for `hr` and `code-block` and the package's JavaScript for the rest.
+Then `toolbar="default ~ copy"` puts it at the right edge of the default toolbar. The package buttons are built the same way: a `<flux:editor.button>` with a data attribute that a click handler reacts to (`data-editor`, or `data-filemanager-checklist` on the checklist button), Flux's own handler for `hr`, `code-block` and the entries of the table menu, and the package's JavaScript for the rest.
 
 ## A toolbar in Blade
 
@@ -109,7 +110,7 @@ With `:toolbar="false"` the component prints the slot instead of a preset, and y
 </x-flux-filemanager-editor>
 ```
 
-Every name in the table is a component: `<flux:editor.image />` is the image button, `<flux:editor.separator />` the `|` and `<flux:editor.spacer />` the `~`. `@include('flux-filemanager::flux.editor.image')`, the form from before 1.9, renders the same button. A copy you published with `php artisan vendor:publish --tag=flux-filemanager-views` is used by all three forms: the string, the component tag and the include.
+Every name in the table is a component: `<flux:editor.image />` is the image button, `<flux:editor.table />` the table menu, `<flux:editor.separator />` the `|` and `<flux:editor.spacer />` the `~`. `@include('flux-filemanager::flux.editor.image')`, the form from before 1.9, renders the same button. A copy you published with `php artisan vendor:publish --tag=flux-filemanager-views` is used by all three forms: the string, the component tag and the include.
 
 You need this form for a dropdown of your own, or for a button that needs something from the view, such as `wire:click` with an argument. For a plain button, a file in `resources/views/flux/editor/` and its name in the string is less code.
 

@@ -32,6 +32,17 @@ class InstallCommand extends Command
         "import '../../vendor/darvis/livewire-flux-editor-filemanager/resources/css/file-link-modal.css'",
     ];
 
+    /**
+     * The lines of the setup stub that enable the table extensions Flux Pro bundles, without their
+     * indentation. The installer adds them to a setup block written before 1.10.
+     */
+    private const TABLE_EXTENSION_LINES = [
+        '// Tables are bundled with Flux Pro 2.15.1+ but off by default. Enable them here and never install the',
+        '// table extensions through npm: a second copy of ProseMirror breaks the editor.',
+        "const tableExtensions = ['table', 'tableRow', 'tableHeader', 'tableCell']",
+        'tableExtensions.forEach((name) => e.detail.enableExtension?.(name))',
+    ];
+
     public function handle(): int
     {
         $this->info('Installing Flux Filemanager...');
@@ -210,7 +221,8 @@ class InstallCommand extends Command
 
     /**
      * Adds the imports, the extension setup block from resources/stubs and the init call.
-     * Runs again without duplicating anything, and upgrades the import line from 1.1.x.
+     * Runs again without duplicating anything, upgrades the import line from 1.1.x and adds
+     * the table lines to a setup block from before 1.10.
      */
     protected function configureAppJs(): void
     {
@@ -227,6 +239,7 @@ class InstallCommand extends Command
 
             $content = $this->namespaceImport($content);
             $content = $this->namespaceCalls($content);
+            $content = $this->enableTableExtensions($content);
 
             $missingImports = array_filter(self::IMPORTS, fn (string $line) => ! str_contains($content, $line));
 
@@ -239,6 +252,11 @@ class InstallCommand extends Command
                 $content = rtrim($content).PHP_EOL.PHP_EOL.rtrim($stub).PHP_EOL;
             } elseif (! str_contains($content, 'addProseMirrorPlugins')) {
                 $this->warn('  ⚠ app.js has a setup block from an older version without drag and drop. Compare it with examples/app.js in the package.');
+            }
+
+            // A freshly appended stub has the lines, so this is a block enableTableExtensions() found no place in.
+            if (! str_contains($content, 'enableExtension')) {
+                $this->warn('  ⚠ app.js has a setup block without the table extensions. Compare it with examples/app.js in the package.');
             }
 
             if (! str_contains($content, 'initLaravelFilemanager()')) {
@@ -280,6 +298,32 @@ class InstallCommand extends Command
             '/(?<!fluxFilemanager\\.)\\binitLaravelFilemanager\\(\\)/',
             'fluxFilemanager.initLaravelFilemanager()',
             $content
+        );
+    }
+
+    /**
+     * Add the lines that enable Flux's bundled table extensions to a setup block from before 1.10.
+     *
+     * They go where the stub has them: under the `__fluxFilemanagerExtensionsRegistered = true` line,
+     * with its indentation. A block that already has an `enableExtension` call is left alone, and so
+     * is one without that line, because there is no safe place for them; configureAppJs() warns then.
+     */
+    protected function enableTableExtensions(string $content): string
+    {
+        if (! str_contains($content, '// flux-filemanager:start') || str_contains($content, 'enableExtension')) {
+            return $content;
+        }
+
+        return (string) preg_replace_callback(
+            '/^([ \t]*)e\.detail\.__fluxFilemanagerExtensionsRegistered = true\R/m',
+            /** @param array<int, string> $matches */
+            function (array $matches): string {
+                $lines = array_map(fn (string $line): string => $matches[1].$line, self::TABLE_EXTENSION_LINES);
+
+                return $matches[0].PHP_EOL.implode(PHP_EOL, $lines).PHP_EOL;
+            },
+            $content,
+            1,
         );
     }
 

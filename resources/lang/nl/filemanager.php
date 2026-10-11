@@ -20,6 +20,20 @@ return [
     'code_block' => 'Codeblok',
     'clear_formatting' => 'Opmaak wissen',
 
+    // Table menu
+    'table' => 'Tabel',
+    'insert_table' => 'Tabel invoegen',
+    'add_row_before' => 'Rij erboven invoegen',
+    'add_row_after' => 'Rij eronder invoegen',
+    'delete_row' => 'Rij verwijderen',
+    'add_column_before' => 'Kolom links invoegen',
+    'add_column_after' => 'Kolom rechts invoegen',
+    'delete_column' => 'Kolom verwijderen',
+    'toggle_header_row' => 'Koprij aan of uit',
+    'toggle_header_column' => 'Kopkolom aan of uit',
+    'merge_or_split_cells' => 'Cellen samenvoegen of splitsen',
+    'delete_table' => 'Tabel verwijderen',
+
     // Image edit modal
     'edit_image' => 'Afbeelding bewerken',
     'image' => 'Afbeelding',
@@ -81,6 +95,7 @@ return [
     'checklist_protected' => 'De bestandsmanager zit achter authenticatie',
     'checklist_storage_link' => 'public/storage is gelinkt',
     'checklist_npm_packages' => 'De TipTap-packages zijn geïnstalleerd',
+    'checklist_js_tables_enabled' => 'resources/js/app.js schakelt de tabelextensies van Flux in',
     'checklist_build_current' => 'De assets zijn gebouwd en actueel',
     'checklist_app_url' => 'APP_URL is ingesteld',
     'checklist_cli_hint' => 'Dezelfde checks in de terminal: php artisan flux-filemanager:check',

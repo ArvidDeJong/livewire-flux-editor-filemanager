@@ -1,6 +1,6 @@
 ---
 title: "Drag and drop"
-nav_order: 9
+nav_order: 10
 description: "Drop image files on the Flux editor or paste a screenshot: embedded as base64 or uploaded to Laravel Filemanager, and where each limit is checked."
 ---
 

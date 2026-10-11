@@ -20,6 +20,20 @@ return [
     'code_block' => 'Codeblock',
     'clear_formatting' => 'Formatierung entfernen',
 
+    // Table menu
+    'table' => 'Tabelle',
+    'insert_table' => 'Tabelle einfügen',
+    'add_row_before' => 'Zeile oberhalb einfügen',
+    'add_row_after' => 'Zeile unterhalb einfügen',
+    'delete_row' => 'Zeile löschen',
+    'add_column_before' => 'Spalte links einfügen',
+    'add_column_after' => 'Spalte rechts einfügen',
+    'delete_column' => 'Spalte löschen',
+    'toggle_header_row' => 'Kopfzeile ein oder aus',
+    'toggle_header_column' => 'Kopfspalte ein oder aus',
+    'merge_or_split_cells' => 'Zellen verbinden oder teilen',
+    'delete_table' => 'Tabelle löschen',
+
     // Image edit modal
     'edit_image' => 'Bild Bearbeiten',
     'image' => 'Bild',
@@ -81,6 +95,7 @@ return [
     'checklist_protected' => 'Der Dateimanager ist durch Authentifizierung geschützt',
     'checklist_storage_link' => 'public/storage ist verlinkt',
     'checklist_npm_packages' => 'Die TipTap-Pakete sind installiert',
+    'checklist_js_tables_enabled' => 'resources/js/app.js aktiviert die Tabellenerweiterungen von Flux',
     'checklist_build_current' => 'Die Assets sind gebaut und aktuell',
     'checklist_app_url' => 'APP_URL ist gesetzt',
     'checklist_cli_hint' => 'Dieselben Prüfungen im Terminal: php artisan flux-filemanager:check',

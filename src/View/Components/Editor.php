@@ -17,7 +17,7 @@ class Editor extends Component
     public const PRESETS = [
         'minimal' => 'bold italic | link',
         'default' => 'heading | bold italic strike | bullet ordered blockquote | image link file-link | align',
-        'full' => 'heading | bold italic strike underline highlight subscript superscript | bullet ordered blockquote | image link file-link | align | code code-block hr clear-format | html-source ~ undo redo',
+        'full' => 'heading | bold italic strike underline highlight subscript superscript | bullet ordered blockquote | image link file-link table | align | code code-block hr clear-format | html-source ~ undo redo',
     ];
 
     public function __construct(

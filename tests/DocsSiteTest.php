@@ -198,6 +198,7 @@ test('the messages quoted on the troubleshooting page exist in the code', functi
             'The Vite dev server is running',
             'The build is older than this package',
             'resources/js/app.js still uses a named import',
+            'resources/js/app.js enables Flux\'s table extensions',
         ],
         'config/flux-filemanager.php' => [
             'Popup was blocked by your browser. Please allow popups for this site.',
@@ -209,6 +210,9 @@ test('the messages quoted on the troubleshooting page exist in the code', functi
         ],
         'resources/stubs/flux-filemanager-setup.js' => [
             'the package JavaScript has no drop and paste plugin',
+        ],
+        'resources/js/laravel-filemanager.js' => [
+            'the table extensions are not enabled, so the table button is disabled',
         ],
     ];
 

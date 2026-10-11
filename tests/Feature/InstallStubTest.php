@@ -25,3 +25,12 @@ test('the setup block reads the package through the namespace, so a stale vendor
         ->not->toContain('import {')
         ->toContain('console.warn');
 });
+
+test('the setup block enables the table extensions Flux Pro bundles instead of installing them', function () {
+    // A second copy of ProseMirror from an npm table extension breaks the editor, so the block
+    // turns on the bundled ones and the installer adds no table package.
+    expect(file_get_contents(packagePath('resources/stubs/flux-filemanager-setup.js')))
+        ->toContain('enableExtension')
+        ->toContain("['table', 'tableRow', 'tableHeader', 'tableCell']")
+        ->not->toContain('@tiptap/extension-table');
+});

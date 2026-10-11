@@ -87,9 +87,9 @@ Published views live in `resources/views/vendor/flux-filemanager`. They no longe
 
 `resources/js/laravel-filemanager.js` exports two functions:
 
-- `initLaravelFilemanager()`: connects the toolbar buttons, the resize menu, the edit modal and link editing for every Flux editor on the page, including editors that Livewire renders later. Call it once.
+- `initLaravelFilemanager()`: connects the toolbar buttons, the resize menu, the edit modal and link editing for every Flux editor on the page, including editors that Livewire renders later, and disables the table menu in an editor whose table extensions are off. Call it once.
 - `createImageDropPastePlugin()`: the ProseMirror plugin that handles dropped and pasted image files. The setup block adds it to the Image extension in `addProseMirrorPlugins()`.
 
 `initLaravelFilemanagerForAllEditors()` still exists as a deprecated alias of `initLaravelFilemanager()`.
 
-The two stylesheets, `resources/css/tiptap-image.css` and `resources/css/file-link-modal.css`, style the images in the editor, the resize menu and the modals. Override the classes in your own CSS after importing them.
+The stylesheets `resources/css/tiptap-image.css` and `resources/css/file-link-modal.css` style the images in the editor, the resize menu and the modals. `tiptap-image.css` imports `resources/css/tiptap-table.css`, which holds the two table rules Flux's own editor stylesheet lacks (no margin on the paragraph in a cell, left-aligned header cells), so that file needs no import line of its own; [Tables](tables.md#styling) says what Flux styles itself. Override the classes in your own CSS after importing them.

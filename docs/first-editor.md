@@ -184,6 +184,8 @@ Two things about this step:
 .align-right { float: right; margin-inline-start: 1rem; }
 ```
 
+Tables need rules of their own as well; `prose` has them, and [Tables](tables.md#styling) has a plain CSS example for a page without it.
+
 Open `/pages/1`: the page shows the text, the image at the width you chose, and the file link.
 
 ## When something does not work
