@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-10-11
+
 ### Added
 - `toolbar` on `<x-flux-filemanager-editor>` accepts Flux's toolbar string (`toolbar="heading | bold italic | image link file-link"`, `|` is a separator, `~` a spacer), and a preset name inside it expands to its items (`toolbar="default | html-source"`). The package buttons are Flux toolbar items: `image`, `file-link`, `html-source` and `checklist` work by name in that string and as `<flux:editor.image />` in a Blade toolbar; `@include('flux-filemanager::flux.editor.image')` keeps working, and a published copy of a button view is used by every form
 - Three toolbar buttons: `hr` inserts a horizontal rule, `code-block` toggles a code block (Flux's editor runs both), `clear-format` removes the formatting of the selection. New translation keys `horizontal_rule`, `code_block` and `clear_formatting`
