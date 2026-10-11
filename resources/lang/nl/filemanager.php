@@ -12,6 +12,7 @@ return [
     'edit_html' => 'HTML bewerken',
     'html_source' => 'HTML',
     'html_source_hint' => 'Toepassen vervangt de inhoud door deze HTML. Tags en attributen die de editor niet kent, vervallen.',
+    'html_source_dropped' => 'Toepassen laat :list vervallen, want de editor kent ze niet.',
     'close' => 'Sluiten',
 
     // Image edit modal

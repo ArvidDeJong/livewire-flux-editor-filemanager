@@ -12,6 +12,7 @@ return [
     'edit_html' => 'Edit HTML',
     'html_source' => 'HTML',
     'html_source_hint' => 'Apply replaces the content with this HTML. Tags and attributes the editor does not know are dropped.',
+    'html_source_dropped' => 'Apply drops :list, because the editor does not know them.',
     'close' => 'Close',
 
     // Image edit modal

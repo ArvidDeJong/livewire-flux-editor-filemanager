@@ -192,3 +192,7 @@
     line-height: 1.4;
     color: #6b7280;
 }
+
+.form-hint.form-hint-warning {
+    color: #b45309;
+}

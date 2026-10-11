@@ -18,6 +18,8 @@ Change the HTML and click Apply, or press Cmd/Ctrl + Enter. The content of the e
 
 What the editor does not know is dropped on Apply: a tag without an extension (for example `<table>` without the Table extension, `<iframe>`, `<script>`) and an attribute no extension declares. Images keep `src`, `alt`, `title`, `width`, `class`, `style` and `data-align`; links keep `href`, `target`, `class` and `style`. That is TipTap's schema at work, not a sanitiser; do not rely on it to clean untrusted HTML, see [Uploads and security](uploads-and-security.md).
 
+The modal tells you beforehand. While you type, the hint under the text area runs the HTML through the schema of the editor and names what does not survive: tags as `<table>`, attributes as `p[style]`. A `<div>` is listed too, because the tag goes even though its text stays. Tags the schema only renames, such as `<b>` to `<strong>`, are not listed. The warning never blocks Apply; it is there so a change that looks fine in the source does not vanish without a word.
+
 In a disabled editor the modal opens read-only: the text area cannot be changed and there is no Apply button.
 
 ## Where the button is

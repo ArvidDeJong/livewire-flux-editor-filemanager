@@ -3,6 +3,7 @@
  * Generic implementation that works for all Flux editors
  */
 
+import { DOMParser as ProseMirrorDOMParser, DOMSerializer } from '@tiptap/pm/model'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { getDragDropConfig, processImageFile } from './drag-drop-config.js'
 
@@ -522,6 +523,54 @@ function showImageEditModal(editor, img) {
 
 const BLOCK_CLOSING_TAGS = /<\/(p|h[1-6]|ul|ol|li|blockquote|table|thead|tbody|tr|figure|div)>/g
 
+// Tags the schema renders under another name, so they are not reported as dropped.
+const TAG_ALIASES = { b: 'strong', i: 'em', strike: 's', del: 's' }
+
+/**
+ * Collect the tag names and the attribute names per tag in a DOM tree, as "tag" and "tag[attribute]".
+ * @param {ParentNode} root
+ * @returns {{ tags: Set<string>, attributes: Set<string> }}
+ */
+function collectMarkup(root) {
+    const tags = new Set()
+    const attributes = new Set()
+
+    for (const element of root.querySelectorAll('*')) {
+        const tag = TAG_ALIASES[element.localName] || element.localName
+        tags.add(tag)
+
+        for (const { name } of element.attributes) {
+            attributes.add(`${tag}[${name}]`)
+        }
+    }
+
+    return { tags, attributes }
+}
+
+/**
+ * Find the tags and attributes setContent() would drop from this HTML: parse it through the schema of the editor,
+ * the way setContent() does, serialize the result and compare the names with the input. Values are not compared,
+ * because the schema normalises them. Tags are reported as "table", attributes as "p[style]".
+ * @param {object} editor - The TipTap editor instance
+ * @param {string} html
+ * @returns {{ tags: string[], attributes: string[] }}
+ */
+function findDroppedMarkup(editor, html) {
+    const input = new window.DOMParser().parseFromString(`<body>${html}</body>`, 'text/html').body
+    const document = ProseMirrorDOMParser.fromSchema(editor.schema).parse(input)
+    const output = DOMSerializer.fromSchema(editor.schema).serializeFragment(document.content)
+
+    const before = collectMarkup(input)
+    const after = collectMarkup(output)
+
+    const tags = [...before.tags].filter((tag) => !after.tags.has(tag))
+    const attributes = [...before.attributes]
+        .filter((attribute) => !after.attributes.has(attribute))
+        .filter((attribute) => !tags.includes(attribute.slice(0, attribute.indexOf('['))))
+
+    return { tags, attributes }
+}
+
 /**
  * Put every block on its own line, so the HTML is readable in the textarea.
  * The inside of <pre> is left alone, because a newline there is content.
@@ -556,7 +605,7 @@ function showHtmlSourceModal(editorElement) {
                 <div class="form-group">
                     <label>${t('html_source', 'HTML')}:</label>
                     <textarea class="html-source" rows="16" spellcheck="false"${editable ? '' : ' readonly'}></textarea>
-                    ${editable ? `<p class="form-hint">${t('html_source_hint', 'Apply replaces the content with this HTML. Tags and attributes the editor does not know are dropped.')}</p>` : ''}
+                    ${editable ? '<p class="form-hint" aria-live="polite"></p>' : ''}
                 </div>
             </div>
             <div class="file-link-modal-footer">
@@ -574,6 +623,33 @@ function showHtmlSourceModal(editorElement) {
     textarea.focus()
     textarea.setSelectionRange(0, 0)
     textarea.scrollTop = 0
+
+    // The hint under the textarea names the tags and attributes Apply would drop, so a change that looks fine in the
+    // source does not vanish without a word. It never blocks Apply.
+    const hint = modal.querySelector('.form-hint')
+    const refreshHint = () => {
+        if (!hint) return
+
+        let dropped = []
+        try {
+            const { tags, attributes } = findDroppedMarkup(editor, textarea.value)
+            dropped = [...tags.map((tag) => `<${tag}>`), ...attributes]
+        } catch (error) {
+            console.warn('Flux Filemanager: could not check the HTML against the editor schema.', error)
+        }
+
+        hint.classList.toggle('form-hint-warning', dropped.length > 0)
+        hint.textContent = dropped.length > 0
+            ? t('html_source_dropped', 'Apply drops :list, because the editor does not know them.').replace(':list', dropped.join(', '))
+            : t('html_source_hint', 'Apply replaces the content with this HTML. Tags and attributes the editor does not know are dropped.')
+    }
+
+    let hintTimer
+    textarea.addEventListener('input', () => {
+        clearTimeout(hintTimer)
+        hintTimer = setTimeout(refreshHint, 200)
+    })
+    refreshHint()
 
     const close = () => modal.remove()
     const apply = () => {

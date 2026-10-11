@@ -18,7 +18,7 @@ Use this skill when you add a rich text editor with images or file links to a fo
 | Single click on an image | Resize menu: presets from `resize_presets`, custom `%`, align | `width`, `style` (width, margins, `display: block` for center), `class` (`align-*`), `data-align` |
 | Double click on an image | Edit modal: alt, title, width, alignment, extra classes, extra styles | Same, plus `alt` and `title`; extra classes and styles are kept |
 | Click on a link | Link modal in edit mode, `extendMarkRange('link')` | The whole link replaced with new text and attributes |
-| HTML button (`data-editor="html-source"`) | Modal with the HTML from `editor.getHTML()`; Apply calls `setContent()` | The whole content replaced with the edited HTML; tags and attributes without an extension dropped |
+| HTML button (`data-editor="html-source"`) | Modal with the HTML from `editor.getHTML()`; Apply calls `setContent()` | The whole content replaced with the edited HTML; tags and attributes without an extension dropped, named in the hint under the text area beforehand |
 | Drop or paste image files | `createImageDropPastePlugin()` on the Image extension | Base64 `<img>` or, with `drag_drop.method = upload`, the uploaded URL |
 
 All of it is event delegation on `document`, keyed on the closest `ui-editor` element and its `editor` property, so editors rendered later by Livewire work too.

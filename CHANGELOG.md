@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.7.1] - 2026-10-09
+### Added
+- The HTML source modal warns which tags and attributes Apply would drop. The hint under the text area checks the HTML against the schema of the editor while you type and names what does not survive, as `<table>` or `p[style]`; Apply is never blocked. New translation key `html_source_dropped`
 
 ## [1.7.1] - 2026-10-09
 

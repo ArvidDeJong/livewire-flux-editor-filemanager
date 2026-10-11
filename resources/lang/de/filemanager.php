@@ -12,6 +12,7 @@ return [
     'edit_html' => 'HTML bearbeiten',
     'html_source' => 'HTML',
     'html_source_hint' => 'Anwenden ersetzt den Inhalt durch dieses HTML. Tags und Attribute, die der Editor nicht kennt, werden entfernt.',
+    'html_source_dropped' => 'Anwenden entfernt :list, weil der Editor sie nicht kennt.',
     'close' => 'Schließen',
 
     // Image edit modal

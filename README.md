@@ -13,7 +13,7 @@ A Laravel package that connects [Laravel Filemanager](https://github.com/UniShar
 
 ## View and edit the HTML source
 
-New in 1.7. The Flux editor has no way to see the HTML it writes. This package adds it: an HTML button opens the source of the content in a modal, where an editor reads it, changes it and applies the result with Apply or Cmd/Ctrl + Enter. A disabled editor shows the source read-only.
+New in 1.7. The Flux editor has no way to see the HTML it writes. This package adds it: an HTML button opens the source of the content in a modal, where an editor reads it, changes it and applies the result with Apply or Cmd/Ctrl + Enter. The hint under the text area names the tags and attributes the editor would drop. A disabled editor shows the source read-only.
 
 ```blade
 <x-flux-filemanager-editor wire:model="content" toolbar="full" />
