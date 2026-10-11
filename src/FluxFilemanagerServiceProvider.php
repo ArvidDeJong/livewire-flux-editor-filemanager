@@ -6,7 +6,10 @@ use Darvis\FluxFilemanager\Console\CheckCommand;
 use Darvis\FluxFilemanager\Console\InstallCommand;
 use Darvis\FluxFilemanager\Support\FluxFilemanagerConfig;
 use Darvis\FluxFilemanager\View\Components\Editor;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Factory as ViewFactory;
+use Illuminate\View\FileViewFinder;
 
 class FluxFilemanagerServiceProvider extends ServiceProvider
 {
@@ -31,6 +34,16 @@ class FluxFilemanagerServiceProvider extends ServiceProvider
             'editor' => Editor::class,
         ]);
 
+        // The toolbar buttons double as Flux toolbar items: <flux:editor.image /> and the
+        // `toolbar="heading | image"` string syntax resolve them by file name. A copy published
+        // with --tag=flux-filemanager-views is registered first, so it wins there as it does
+        // in @include('flux-filemanager::flux.editor.image').
+        $this->callAfterResolving('view', function (ViewFactory $view): void {
+            foreach ($this->toolbarItemPaths($view) as $path) {
+                Blade::anonymousComponentPath($path, 'flux');
+            }
+        });
+
         // The demo and checklist pages are unauthenticated, so they are opt-in.
         if (FluxFilemanagerConfig::demoRoutes()) {
             $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
@@ -47,5 +60,25 @@ class FluxFilemanagerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/lang' => $this->app->langPath('vendor/flux-filemanager'),
         ], 'flux-filemanager-lang');
+    }
+
+    /**
+     * The directories that hold the Flux toolbar items, in lookup order: the flux/ directory of
+     * every path the flux-filemanager view namespace reads, published copies before the package's own.
+     *
+     * @return array<int, string>
+     */
+    protected function toolbarItemPaths(ViewFactory $view): array
+    {
+        $finder = $view->getFinder();
+        $hints = $finder instanceof FileViewFinder ? $finder->getHints() : [];
+
+        /** @var array<int, string> $viewPaths */
+        $viewPaths = $hints['flux-filemanager'] ?? [__DIR__.'/../resources/views'];
+
+        return array_values(array_filter(
+            array_map(fn (string $viewPath): string => $viewPath.'/flux', $viewPaths),
+            'is_dir',
+        ));
     }
 }

@@ -4,6 +4,9 @@
  * Guards the rules of the GitHub Pages site in docs/: front matter, Liquid use,
  * single-source facts and the developer credit. Nothing here breaks loudly otherwise.
  */
+
+use Darvis\FluxFilemanager\View\Components\Editor;
+
 function docsPath(string $path = ''): string
 {
     return dirname(__DIR__).'/docs'.($path === '' ? '' : '/'.$path);
@@ -225,4 +228,47 @@ test('the Google Search Console verification file stays, served as is and outsid
     expect($file)->toContain("layout: null\n")
         ->toContain("sitemap: false\n")
         ->toEndWith("---\ngoogle-site-verification: googled7bb80897da6bbe3.html\n");
+});
+
+test('the toolbar page quotes every preset exactly as the component defines it', function () {
+    $page = (string) file_get_contents(docsPath('toolbar.md'));
+
+    expect(Editor::PRESETS)->not->toBeEmpty();
+
+    foreach (Editor::PRESETS as $items) {
+        expect($page)->toContain($items);
+    }
+});
+
+test('the toolbar page names every package toolbar item', function () {
+    $views = glob(packagePath('resources/views/flux/editor/*.blade.php'));
+    expect($views)->not->toBeEmpty();
+
+    $page = (string) file_get_contents(docsPath('toolbar.md'));
+
+    foreach ($views as $view) {
+        expect($page)->toContain('`'.basename($view, '.blade.php').'`');
+    }
+});
+
+test('a docs table never has a pipe inside a code span, because GitHub splits the cell there', function () {
+    $offenders = [];
+
+    foreach (glob(docsPath('*.md')) ?: [] as $file) {
+        foreach (file($file) ?: [] as $index => $line) {
+            if (! str_starts_with(ltrim($line), '|')) {
+                continue;
+            }
+
+            preg_match_all('/`[^`\n]+`/', $line, $matches);
+
+            foreach ($matches[0] as $span) {
+                if (str_contains($span, '|')) {
+                    $offenders[] = basename($file).':'.($index + 1).' '.$span;
+                }
+            }
+        }
+    }
+
+    expect($offenders)->toBe([], 'an escaped pipe shows the backslash on the site; use a list instead of a table');
 });

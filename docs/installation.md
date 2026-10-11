@@ -143,7 +143,7 @@ FLUX_FILEMANAGER_DEMO_ROUTES=true
 
 | URL | What it shows |
 | --- | --- |
-| `/darvis/editor-demo` | An editor with the `full` toolbar, a preview of the HTML, and a warning when `APP_URL` does not match the host in your browser |
+| `/darvis/editor-demo` | An editor with the `full` toolbar plus the checklist button, a preview of the HTML, and a warning when `APP_URL` does not match the host in your browser |
 | `/darvis/filemanager-checklist` | The same checks as `flux-filemanager:check`, plus a check that the `APP_URL` host matches the current host |
 
 If the pages return a 404 after you changed `.env`, run `php artisan config:clear`. The file manager popup on the demo page still needs you to be logged in.

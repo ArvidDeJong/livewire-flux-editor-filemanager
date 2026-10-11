@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting"
-nav_order: 12
+nav_order: 13
 description: "Symptoms, causes and fixes for the Flux editor with Laravel Filemanager: dead toolbar buttons, popup problems, broken images and failed drops."
 ---
 
@@ -121,9 +121,9 @@ After every change to `.env` or a config file, run `php artisan config:clear`. A
 
 ## The checklist button in the toolbar opens a 404
 
-**Cause.** The button opens `checklist_url`, by default `/darvis/filemanager-checklist`. That page only exists when `demo_routes` is on.
+**Cause.** The button opens `checklist_url`, by default `/darvis/filemanager-checklist`. That page only exists when `demo_routes` is on. Since 1.9.0 no preset contains the button; it renders only when `checklist` is in the toolbar string, for example `toolbar="full | checklist"`.
 
-**Fix.** Locally, set `FLUX_FILEMANAGER_DEMO_ROUTES=true`. In production, use a [custom toolbar](configuration.md#a-custom-toolbar) without the button, or point `checklist_url` at a page of your own.
+**Fix.** Locally, set `FLUX_FILEMANAGER_DEMO_ROUTES=true`. In production, take `checklist` out of the toolbar string, or point `checklist_url` at a page of your own. See [Toolbar buttons](toolbar.md).
 
 ## The demo pages return a 404
 

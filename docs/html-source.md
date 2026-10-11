@@ -1,6 +1,6 @@
 ---
 title: "HTML source"
-nav_order: 7
+nav_order: 8
 description: "How editors open the HTML of the content in a modal with the HTML button, read it, change it and apply it, and what the editor does with tags it does not know."
 ---
 
@@ -24,7 +24,7 @@ In a disabled editor the modal opens read-only: the text area cannot be changed 
 
 ## Where the button is
 
-The `full` toolbar preset has it, after Flux's code button. The `default` and `minimal` presets do not. In a custom toolbar, include it where you want it:
+The `full` toolbar preset has it, in the last group before the spacer. The `default` and `minimal` presets do not; `toolbar="default | html-source"` adds it to the default toolbar, and [Toolbar buttons](toolbar.md) has the syntax. In a toolbar you write in Blade, put it where you want it:
 
 ```blade
 <x-flux-filemanager-editor wire:model="content" :toolbar="false">
@@ -32,9 +32,11 @@ The `full` toolbar preset has it, after Flux's code button. The `default` and `m
         <flux:editor.bold />
         <flux:editor.italic />
         <flux:editor.separator />
-        @include('flux-filemanager::flux.editor.html-source')
+        <flux:editor.html-source />
     </flux:editor.toolbar>
 </x-flux-filemanager-editor>
 ```
+
+`@include('flux-filemanager::flux.editor.html-source')`, the form from before 1.9, renders the same button. A published copy of the view is used by both forms.
 
 The tooltip and the modal texts come from the language files: `view_html`, `edit_html`, `html_source`, `html_source_hint`, `apply`, `cancel` and `close`. See [Localization](localization.md).

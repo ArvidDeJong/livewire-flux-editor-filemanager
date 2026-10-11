@@ -1,6 +1,6 @@
 ---
 title: "Localization"
-nav_order: 10
+nav_order: 11
 description: "The language files of the editor buttons, menus and modals (en, nl, de), which texts they do not cover, how to change a text and how to add a language."
 ---
 

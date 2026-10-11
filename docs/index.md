@@ -21,7 +21,7 @@ The Flux editor has no way to see the HTML it writes. This package adds it: an H
 <x-flux-filemanager-editor wire:model="content" toolbar="full" />
 ```
 
-The `full` toolbar has the button; a custom toolbar includes it with one line. [HTML source](html-source.md) has the details.
+The `full` toolbar has the button; `toolbar="default | html-source"` adds it to the default toolbar. [HTML source](html-source.md) has the details.
 
 ## Who it is for
 
@@ -64,6 +64,7 @@ Then use the component where you would use `<flux:editor>`:
 
 - [Installation](installation.md): the Flux Pro requirement, the installer step by step, and how to check that it works
 - [Your first editor](first-editor.md): one complete example, from migration to the public page
+- [Toolbar buttons](toolbar.md): turn buttons on and off, the presets, every button
 - [Configuration](configuration.md): every key in `config/flux-filemanager.php` and the component attributes
 - [Image editing](image-editing.md): the image button, the resize menu, the edit modal and the HTML they write
 - [File links](file-links.md): insert a link to a PDF or another file, and edit a link

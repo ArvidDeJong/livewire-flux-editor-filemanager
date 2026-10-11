@@ -924,6 +924,9 @@ export function initLaravelFilemanager() {
  */
 function setupImageButtonListener() {
 
+    // The hr and code-block buttons are run by Flux's own toolbar click handler through its
+    // data-editor command map. Don't handle them here as well, or the command runs twice.
+
     // Event listener for image button (works for all Flux editors)
     document.addEventListener('click', (e) => {
         const imageButton = e.target.closest('[data-editor="image"]')
@@ -967,6 +970,22 @@ function setupImageButtonListener() {
             }
 
             showHtmlSourceModal(editorElement)
+            return
+        }
+
+        // Event listener for the clear formatting button
+        const clearFormatButton = e.target.closest('[data-editor="clear-format"]')
+        if (clearFormatButton) {
+            e.preventDefault()
+            e.stopPropagation()
+
+            const editorElement = clearFormatButton.closest('ui-editor')
+            if (!editorElement?.editor) {
+                return
+            }
+
+            editorElement.editor.chain().focus().clearNodes().unsetAllMarks().run()
+            syncLivewire(editorElement)
             return
         }
 

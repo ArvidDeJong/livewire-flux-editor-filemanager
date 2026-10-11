@@ -15,6 +15,11 @@ return [
     'html_source_dropped' => 'Toepassen laat :list vervallen, want de editor kent ze niet.',
     'close' => 'Sluiten',
 
+    // Toolbar buttons
+    'horizontal_rule' => 'Horizontale lijn',
+    'code_block' => 'Codeblok',
+    'clear_formatting' => 'Opmaak wissen',
+
     // Image edit modal
     'edit_image' => 'Afbeelding bewerken',
     'image' => 'Afbeelding',

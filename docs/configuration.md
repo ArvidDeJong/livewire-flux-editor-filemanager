@@ -1,6 +1,6 @@
 ---
 title: "Configuration"
-nav_order: 4
+nav_order: 5
 description: "Every key in config/flux-filemanager.php with its default, the two env variables, the attributes of the editor component, custom toolbars and the publish tags."
 ---
 
@@ -40,7 +40,7 @@ The two `messages` come from the config, not from the language files. They stay 
 
 ### The checklist button
 
-The `default` and `full` toolbars contain a checklist button that opens `checklist_url`. That page only exists while `demo_routes` is on, so with the defaults the button opens a 404 page. For a production form, either set `checklist_url` to a page of your own or use a custom toolbar without the button.
+No toolbar preset contains the checklist button. It renders when `checklist` is in the toolbar string, for example `toolbar="full | checklist"` while you set up locally, and opens `checklist_url` in a new tab. That page only exists while `demo_routes` is on, so in production the button opens a 404 page unless `checklist_url` points at a page of your own.
 
 ### How the settings reach the JavaScript
 
@@ -58,7 +58,7 @@ If your application defines `window.fluxFilemanagerConfig` before the first butt
 
 | Attribute | Default | What it does |
 | --- | --- | --- |
-| `toolbar` | `default` | `default`: heading, bold, italic, strike, bullet list, ordered list, blockquote, image, link, file link, checklist, align. `minimal`: bold, italic, link. `full`: the default plus underline, code and the HTML source button. `:toolbar="false"`: you render your own toolbar in the slot |
+| `toolbar` | `default` | A preset name (`minimal`, `default`, `full`), a Flux toolbar string, or `false` to render your own toolbar in the slot; see [Toolbar buttons](toolbar.md) |
 | `id` | none | Passed to `<flux:editor>` |
 | `rows` | `12` | Rendered as a `rows` attribute on the editor element. Flux's editor has no `rows` prop (checked against Flux Pro 2.20), so it does not change the height |
 
@@ -72,21 +72,7 @@ To change the height, use the class the [Flux editor documentation](https://flux
 
 ## A custom toolbar
 
-`resources/views/livewire/page-form.blade.php`:
-
-```blade
-<x-flux-filemanager-editor wire:model="content" :toolbar="false">
-    <flux:editor.toolbar>
-        <flux:editor.bold />
-        <flux:editor.italic />
-        <flux:editor.separator />
-        @include('flux-filemanager::flux.editor.image')
-        @include('flux-filemanager::flux.editor.file-link')
-    </flux:editor.toolbar>
-</x-flux-filemanager-editor>
-```
-
-With `:toolbar="false"` the component prints your slot instead of a preset. The two package buttons are the views `flux-filemanager::flux.editor.image` and `flux-filemanager::flux.editor.file-link`. What makes a button work is the attribute `data-editor="image"` or `data-editor="file-link"` on a `<flux:editor.button>`, so you can also write your own button with your own icon.
+The `toolbar` attribute takes a Flux toolbar string, such as `toolbar="heading | bold italic | image link file-link"`, and with `:toolbar="false"` the component prints your own `<flux:editor.toolbar>` from the slot. [Toolbar buttons](toolbar.md) has the syntax, the three presets, every button and the Blade form.
 
 ## Publish the views or the translations
 
@@ -95,7 +81,7 @@ php artisan vendor:publish --tag=flux-filemanager-views
 php artisan vendor:publish --tag=flux-filemanager-lang
 ```
 
-Published views live in `resources/views/vendor/flux-filemanager`. They no longer receive updates from the package, so publish them only when you change them. Translations are covered in [Localization](localization.md).
+Published views live in `resources/views/vendor/flux-filemanager`. They no longer receive updates from the package, so publish them only when you change them. A published toolbar button, such as `flux/editor/image.blade.php`, is used by the presets, by the toolbar string and by `<flux:editor.image />` as well as by `@include`. Translations are covered in [Localization](localization.md).
 
 ## The JavaScript and the stylesheets
 

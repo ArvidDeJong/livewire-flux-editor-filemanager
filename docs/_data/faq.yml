@@ -25,7 +25,10 @@
   a: Click the file link button in the toolbar, pick the file in Laravel Filemanager and set the link text, target, classes and styles in the modal. Click an existing link to edit it. With the default `public` disk the file is a public URL that anyone with the address can open.
 
 - q: Can I see or edit the HTML of the Flux editor content?
-  a: Yes. The HTML button in the toolbar opens a modal with the HTML of the content. Change it and click Apply to replace the content; tags and attributes the editor does not know are dropped, and the hint under the text area names them before you apply. The `full` toolbar preset has the button, a custom toolbar includes `flux-filemanager::flux.editor.html-source`. Flux's own `</>` button is different, it marks selected text as inline code and shows nothing without a selection.
+  a: Yes. The HTML button in the toolbar opens a modal with the HTML of the content. Change it and click Apply to replace the content; tags and attributes the editor does not know are dropped, and the hint under the text area names them before you apply. The `full` toolbar preset has the button, and `toolbar="default | html-source"` adds it to the default preset. Flux's own `</>` button is different, it marks selected text as inline code and shows nothing without a selection.
+
+- q: How do I add or remove toolbar buttons?
+  a: Set the `toolbar` attribute of `<x-flux-filemanager-editor>` to one string with the button names in order, `|` for a separator and `~` for a spacer, for example `toolbar="heading | bold italic | image link file-link"`. A preset name inside the string expands to its buttons, so `toolbar="default | html-source"` is the default toolbar plus the HTML source button. The presets are `minimal`, `default` and `full`, and the Toolbar buttons page of the documentation lists every button name.
 
 - q: Nothing happens when I click the image button in the Flux editor. What now?
   a: Run `php artisan flux-filemanager:check`. It checks Laravel Filemanager, `config/lfm.php`, the routes, the authentication, the storage link, the TipTap npm packages, your `app.js` and the build, and prints a fix for each problem. If it passes, open the browser console, because one failing import stops all of `app.js`, and restart `npm run dev` after an update of the package.

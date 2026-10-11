@@ -15,6 +15,11 @@ return [
     'html_source_dropped' => 'Anwenden entfernt :list, weil der Editor sie nicht kennt.',
     'close' => 'Schließen',
 
+    // Toolbar buttons
+    'horizontal_rule' => 'Horizontale Linie',
+    'code_block' => 'Codeblock',
+    'clear_formatting' => 'Formatierung entfernen',
+
     // Image edit modal
     'edit_image' => 'Bild Bearbeiten',
     'image' => 'Bild',

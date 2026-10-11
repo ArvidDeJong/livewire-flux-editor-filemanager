@@ -19,7 +19,7 @@ New in 1.7. The Flux editor has no way to see the HTML it writes. This package a
 <x-flux-filemanager-editor wire:model="content" toolbar="full" />
 ```
 
-The `full` toolbar has the button; a custom toolbar includes it with `@include('flux-filemanager::flux.editor.html-source')`. See [HTML source](https://arviddejong.github.io/livewire-flux-editor-filemanager/html-source.html).
+The `full` toolbar has the button, and `toolbar="default | html-source"` adds it to the default toolbar; see [Toolbar buttons](https://arviddejong.github.io/livewire-flux-editor-filemanager/toolbar.html). [HTML source](https://arviddejong.github.io/livewire-flux-editor-filemanager/html-source.html) has the details.
 
 ## Features
 
@@ -28,6 +28,8 @@ The `full` toolbar has the button; a custom toolbar includes it with `@include('
 - Double click on an image: alt text, title, width, alignment, extra CSS classes and inline styles
 - File links with text, target, classes and styles; click a link in the editor to edit it
 - An HTML button that opens the source of the content in a modal, to read it or to edit it and apply the result
+- Toolbar on one line: `toolbar="heading | bold italic | image link file-link"`, three presets, and preset names expand inside the string
+- Horizontal rule, code block and clear formatting buttons
 - Drop and paste of image files, embedded as base64 or uploaded to Laravel Filemanager
 - Plain HTML output: `<img>` and `<a>` tags with attributes, no shortcodes
 - `flux-filemanager:install` sets up Laravel Filemanager, the npm packages and your `app.js`; `flux-filemanager:check` verifies the result
@@ -76,6 +78,7 @@ Full documentation: **https://arviddejong.github.io/livewire-flux-editor-fileman
 
 - [Installation](docs/installation.md): the Flux Pro requirement, the installer step by step, and how to check that it works
 - [Your first editor](docs/first-editor.md): one complete example, from migration to the public page
+- [Toolbar buttons](docs/toolbar.md): turn buttons on and off, the presets, every button
 - [Configuration](docs/configuration.md): every config key and the component attributes
 - [Image editing](docs/image-editing.md): the resize menu, the edit modal and the HTML they write
 - [File links](docs/file-links.md): insert and edit links to files

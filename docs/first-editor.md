@@ -192,6 +192,7 @@ Run `php artisan flux-filemanager:check` and read [Troubleshooting](troubleshoot
 
 ## Next
 
-- [Configuration](configuration.md): the toolbar presets, the component attributes, every config key
+- [Toolbar buttons](toolbar.md): the presets, and turning a button on or off
+- [Configuration](configuration.md): the component attributes, every config key
 - [Drag and drop](drag-and-drop.md): base64 or uploading to the file manager
 - [Testing](testing.md): a test for the form you just built

@@ -47,7 +47,7 @@
         <flux:field>
             <flux:label>{{ __('flux-filemanager::filemanager.demo_content_label') }}</flux:label>
 
-            <x-flux-filemanager-editor wire:model="content" toolbar="full" :rows="15" />
+            <x-flux-filemanager-editor wire:model="content" toolbar="full | checklist" :rows="15" />
         </flux:field>
 
         <flux:text class="mt-4">

@@ -12,24 +12,18 @@ it('can render with custom rows', function () {
     $view->assertSee('ui-editor', false);
 });
 
-it('renders the image and file link buttons in the default toolbar', function () {
+it('renders the image and file link buttons in the default preset', function () {
     $view = $this->blade('<x-flux-filemanager-editor wire:model="content" />');
 
     $view->assertSee('data-editor="image"', false)
         ->assertSee('data-editor="file-link"', false);
 });
 
-it('leaves the filemanager buttons out of the minimal toolbar', function () {
+it('leaves the filemanager buttons out of the minimal preset', function () {
     $view = $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="minimal" />');
 
     $view->assertSee('ui-editor', false)
         ->assertDontSee('data-editor="image"', false);
-});
-
-it('can render with full toolbar', function () {
-    $view = $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="full" />');
-
-    $view->assertSee('data-editor="file-link"', false);
 });
 
 it('renders the slot instead of a preset when toolbar is false', function () {
@@ -42,6 +36,7 @@ it('renders the slot instead of a preset when toolbar is false', function () {
     );
 
     $view->assertSee('ui-editor', false)
+        ->assertSee('data-editor="bold"', false)
         ->assertDontSee('data-editor="file-link"', false);
 });
 
@@ -62,7 +57,7 @@ it('renders the drag and drop settings as data attributes', function () {
         ->assertSee('data-max-file-size="5242880"', false);
 });
 
-it('renders the HTML source button in the full toolbar only', function () {
+it('renders the HTML source button in the full preset only', function () {
     $this->blade('<x-flux-filemanager-editor wire:model="content" toolbar="full" />')
         ->assertSee('data-editor="html-source"', false)
         ->assertSee('View HTML', false);

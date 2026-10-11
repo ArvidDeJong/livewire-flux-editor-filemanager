@@ -1,6 +1,6 @@
 ---
 title: "Image editing"
-nav_order: 5
+nav_order: 6
 description: "How editors insert an image from Laravel Filemanager, resize and align it with one click, edit alt text and classes, and which HTML is saved."
 ---
 

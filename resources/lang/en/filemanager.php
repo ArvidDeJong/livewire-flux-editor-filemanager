@@ -15,6 +15,11 @@ return [
     'html_source_dropped' => 'Apply drops :list, because the editor does not know them.',
     'close' => 'Close',
 
+    // Toolbar buttons
+    'horizontal_rule' => 'Horizontal rule',
+    'code_block' => 'Code block',
+    'clear_formatting' => 'Clear formatting',
+
     // Image edit modal
     'edit_image' => 'Edit Image',
     'image' => 'Image',

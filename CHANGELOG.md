@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `toolbar` on `<x-flux-filemanager-editor>` accepts Flux's toolbar string (`toolbar="heading | bold italic | image link file-link"`, `|` is a separator, `~` a spacer), and a preset name inside it expands to its items (`toolbar="default | html-source"`). The package buttons are Flux toolbar items: `image`, `file-link`, `html-source` and `checklist` work by name in that string and as `<flux:editor.image />` in a Blade toolbar; `@include('flux-filemanager::flux.editor.image')` keeps working, and a published copy of a button view is used by every form
+- Three toolbar buttons: `hr` inserts a horizontal rule, `code-block` toggles a code block (Flux's editor runs both), `clear-format` removes the formatting of the selection. New translation keys `horizontal_rule`, `code_block` and `clear_formatting`
+- Docs page "Toolbar buttons": the one place that explains turning buttons on and off
+
+### Changed
+- The `full` preset gains highlight, subscript, superscript, code block, horizontal rule, clear formatting, undo and redo; `Editor::PRESETS` holds the three presets as strings
+- The checklist button is no longer in the `default` and `full` presets, because it opens a 404 unless the demo routes are on. Add `checklist` to the toolbar string while setting up locally, for example `toolbar="full | checklist"`
+- An unknown name in `toolbar` throws `Flux component [editor.<name>] does not exist.`; up to 1.8 any value other than the three preset names silently rendered the `default` preset
+
+### Fixed
+- The Boost guideline that `boost:update` writes into a host application showed its `<flux:editor>` mentions as compiled Flux HTML, because Flux's tag compiler ran on them when Boost rendered the file; the text now sits in a verbatim block
+
 ## [1.8.0] - 2026-10-11
 
 ### Added
